@@ -17,8 +17,8 @@ class ExecutorSsh(Executor):
 
     implementation = 'ssh'
 
-    def __init__(self, user: str, hostname: str, port: str="22",
-                 ssl_private_key: str=None, name: str="ExecutorSsh", **kwargs):
+    def __init__(self, user: str, hostname: str, port: str = "22",
+                 ssl_private_key: str = None, name: str = "ExecutorSsh", **kwargs):
         super(ExecutorSsh, self).__init__()
         self.hostname = kwargs.get('executor_hostname', hostname)
         self.port = kwargs.get('executor_port', port)
@@ -27,7 +27,6 @@ class ExecutorSsh(Executor):
         self.ssl_private_key = kwargs.get('executor_ssl_private_key', ssl_private_key)
 
     def _execute(self, command):
-
         ssh_args = ['ssh', '-p', '%s' % self.port]
 
         # If an SSL private key given, use it

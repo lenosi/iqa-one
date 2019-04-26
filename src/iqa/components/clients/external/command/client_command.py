@@ -1,4 +1,3 @@
-
 """
 Abstract (base) implementations of supported external client commands.
 All options here are common to all kind of client commands, be it a
@@ -18,6 +17,7 @@ class ClientCommand(Command):
     implementation details (based on states of internal ClientOptionsBase
     properties).
     """
+
     def __init__(self):
         super().__init__()
         raise NotImplementedError()
@@ -54,9 +54,9 @@ class ClientCommand(Command):
 
         # Generates parameters list (only allowed will be added)
         params = [
-            opt.generate(all_options).split(' ', 1)
-            for opt in valid_options
-            if opt.satisfied(all_options)
+                opt.generate(all_options).split(' ', 1)
+                for opt in valid_options
+                if opt.satisfied(all_options)
         ]
         params_flat = [item for param in params for item in param]
 
@@ -68,9 +68,9 @@ class ConnectorClientCommand(ClientCommand):
     Abstract implementation of common Connector client options.
     """
 
-    def __init__(self, stdout: bool=False, stderr: bool=False,
-                   daemon: bool=False, timeout: int=0,
-                   encoding: str="utf-8"):
+    def __init__(self, stdout: bool = False, stderr: bool = False,
+                 daemon: bool = False, timeout: int = 0,
+                 encoding: str = "utf-8"):
         super(ClientCommand, self).__init__([], stdout, stderr, daemon, timeout, encoding)
         self.control = ControlOptionsCommon()
         self.logging = LoggingOptionsCommon()
@@ -83,9 +83,9 @@ class ReceiverClientCommand(ClientCommand):
     Abstract implementation of common Receiver client options.
     """
 
-    def __init__(self, stdout: bool=False, stderr: bool=False,
-                   daemon: bool=False, timeout: int=0,
-                   encoding: str="utf-8"):
+    def __init__(self, stdout: bool = False, stderr: bool = False,
+                 daemon: bool = False, timeout: int = 0,
+                 encoding: str = "utf-8"):
         super(ClientCommand, self).__init__([], stdout, stderr, daemon, timeout, encoding)
         self.control = ControlOptionsReceiver()
         self.logging = LoggingOptionsSenderReceiver()
@@ -99,9 +99,9 @@ class SenderClientCommand(ClientCommand):
         Abstract implementation of common Sender client options.
     """
 
-    def __init__(self, stdout: bool=False, stderr: bool=False,
-                   daemon: bool=False, timeout: int=0,
-                   encoding: str="utf-8"):
+    def __init__(self, stdout: bool = False, stderr: bool = False,
+                 daemon: bool = False, timeout: int = 0,
+                 encoding: str = "utf-8"):
         super(ClientCommand, self).__init__([], stdout, stderr, daemon, timeout, encoding)
         self.control = ControlOptionsSenderReceiver()
         self.logging = LoggingOptionsSenderReceiver()

@@ -29,7 +29,7 @@ class Artemis(Broker, ServerComponent):
         self.config = ArtemisConfig(self, **kwargs)
         self.users = self.config.users
 
-    def queues(self, refresh: bool=True) -> List[Queue]:
+    def queues(self, refresh: bool = True) -> List[Queue]:
         """
         Retrieves and lists all queues
         :param refresh:
@@ -41,7 +41,7 @@ class Artemis(Broker, ServerComponent):
         self._refresh_addresses_and_queues()
         return self._queues
 
-    def addresses(self, refresh: bool=True) -> List[Address]:
+    def addresses(self, refresh: bool = True) -> List[Address]:
         """
         Retrieves and lists all addresses
         :param refresh:
@@ -175,4 +175,3 @@ class Artemis(Broker, ServerComponent):
         if routing_type == RoutingType.BOTH:
             return 'ANYCAST, MULTICAST'
         return routing_type.name
-

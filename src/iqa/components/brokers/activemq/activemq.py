@@ -6,6 +6,7 @@ from iqa.components.brokers.artemis.management import ArtemisJolokiaClient
 from iqa.messaging.abstract.destination.address import Address
 from iqa.messaging.abstract.destination.queue import Queue
 from iqa.messaging.abstract.destination.routing_type import RoutingType
+from iqa.messaging.abstract.listener import Listener
 from iqa.messaging.abstract.server.broker import Broker
 from iqa.components import protocols
 from iqa.components.brokers.activemq.activemq_config import ActiveMQConfig
@@ -29,7 +30,7 @@ class Activemq(Broker, ServerComponent):
         self.config = ActiveMQConfig(**kwargs)
         self.users = self.config.users
 
-    def queues(self, refresh: bool=True) -> List[Queue]:
+    def queues(self, refresh: bool = True) -> List[Queue]:
         """
         Retrieves and lists all queues
         :param refresh:
@@ -41,7 +42,7 @@ class Activemq(Broker, ServerComponent):
         self._refresh_addresses_and_queues()
         return self._queues
 
-    def addresses(self, refresh: bool=True) -> List[Address]:
+    def addresses(self, refresh: bool = True) -> List[Address]:
         """
         Retrieves and lists all addresses
         :param refresh:
@@ -156,3 +157,8 @@ class Activemq(Broker, ServerComponent):
             return 'ANYCAST, MULTICAST'
         return routing_type.name
 
+    def get_url(self, port: int = None, listener: Listener = None) -> str:
+        pass
+
+    def get_urls(self, schema: str) -> [Listener]:
+        pass

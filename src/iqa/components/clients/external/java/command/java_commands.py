@@ -1,4 +1,3 @@
-
 """
 Specialized implementation of external command for java clients (currently cli-qpid.jar only). 
 """
@@ -14,9 +13,10 @@ class JavaConnectorClientCommand(ConnectorClientCommand):
     In Java client we must provide --broker and (optionally) --address.
     The control property instance used here is JavaControlOptionsCommon.
     """
-    def __init__(self, stdout: bool=False, stderr: bool=False,
-                   daemon: bool=False, timeout: int=0,
-                   encoding: str="utf-8"):
+
+    def __init__(self, stdout: bool = False, stderr: bool = False,
+                 daemon: bool = False, timeout: int = 0,
+                 encoding: str = "utf-8"):
         super(JavaConnectorClientCommand, self).__init__(stdout, stderr, daemon, timeout, encoding)
         self.control = JavaControlOptionsCommon()
         self.connection = JavaConnectionOptionsCommon()
@@ -27,9 +27,9 @@ class JavaConnectorClientCommand(ConnectorClientCommand):
 
 class JavaReceiverClientCommand(ReceiverClientCommand):
 
-    def __init__(self, stdout: bool=False, stderr: bool=False,
-                   daemon: bool=False, timeout: int=0,
-                   encoding: str="utf-8"):
+    def __init__(self, stdout: bool = False, stderr: bool = False,
+                 daemon: bool = False, timeout: int = 0,
+                 encoding: str = "utf-8"):
         """
         Java receiver client command specialization.
         In Java client we must provide --broker and (optionally) --address.
@@ -44,9 +44,9 @@ class JavaReceiverClientCommand(ReceiverClientCommand):
 
 
 class JavaSenderClientCommand(SenderClientCommand):
-    def __init__(self, stdout: bool=False, stderr: bool=False,
-                   daemon: bool=False, timeout: int=0,
-                   encoding: str="utf-8"):
+    def __init__(self, stdout: bool = False, stderr: bool = False,
+                 daemon: bool = False, timeout: int = 0,
+                 encoding: str = "utf-8"):
         """
         Java sender client command specialization.
         In Java client we must provide --broker and (optionally) --address.

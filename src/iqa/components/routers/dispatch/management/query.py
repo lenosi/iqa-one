@@ -14,18 +14,19 @@ class RouterQuery(object):
     Provides methods that can be used to query the Dispatch Router.
     Connections are closed after each query.
     """
-    def __init__(self, host="0.0.0.0", port=5672, router: Router=None):
+
+    def __init__(self, host="0.0.0.0", port=5672, router: Router = None):
 
         self._logger = logging.getLogger(self.__module__)
         self.port = port
         self.host = host
         self._router = router
         self._connection_options = {
-            'sasl_enabled': False,
-            'ssl_domain': None,
-            'allow_insecure_mechs': True,
-            'user': None,
-            'password': None
+                'sasl_enabled':         False,
+                'ssl_domain':           None,
+                'allow_insecure_mechs': True,
+                'user':                 None,
+                'password':             None
         }
 
         if self._router:
@@ -43,7 +44,7 @@ class RouterQuery(object):
                 self._connection_options['user'] = self._router.user
                 self._connection_options['password'] = self._router.password
 
-    def query(self, entity_type: str='org.apache.qpid.dispatch.router.node') -> NamedTuple:
+    def query(self, entity_type: str = 'org.apache.qpid.dispatch.router.node') -> NamedTuple:
         """
         Queries the related router instance, retrieving information for
         the provided Entity Type. The result is an array of a named tuple,

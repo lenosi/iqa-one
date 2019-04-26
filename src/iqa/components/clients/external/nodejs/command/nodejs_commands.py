@@ -1,4 +1,3 @@
-
 """
 Specialized implementation of external command for cli-rhea clients (NodeJS). 
 """
@@ -14,9 +13,10 @@ class NodeJSConnectorClientCommand(ConnectorClientCommand):
     In Node JS client we must provide --broker and (optionally) --address.
     The control property instance used here is RHEAControlOptionsCommon.
     """
-    def __init__(self, stdout: bool=False, stderr: bool=False,
-                   daemon: bool=False, timeout: int=0,
-                   encoding: str="utf-8"):
+
+    def __init__(self, stdout: bool = False, stderr: bool = False,
+                 daemon: bool = False, timeout: int = 0,
+                 encoding: str = "utf-8"):
         super(NodeJSConnectorClientCommand, self).__init__(stdout, stderr, daemon, timeout, encoding)
         self.control = NodeJSControlOptionsCommon()
         self.connection = NodeJSConnectionOptionsCommon()
@@ -31,9 +31,10 @@ class NodeJSReceiverClientCommand(ReceiverClientCommand):
     In Node JS client we must provide --broker and (optionally) --address.
     The control property instance used here is RHEAControlOptionsCommon.
     """
-    def __init__(self, stdout: bool=False, stderr: bool=False,
-                   daemon: bool=False, timeout: int=0,
-                   encoding: str="utf-8"):
+
+    def __init__(self, stdout: bool = False, stderr: bool = False,
+                 daemon: bool = False, timeout: int = 0,
+                 encoding: str = "utf-8"):
         super(NodeJSReceiverClientCommand, self).__init__(stdout, stderr, daemon, timeout, encoding)
         self.control = NodeJSControlOptionsReceiver()
         self.connection = NodeJSConnectionOptionsCommon()
@@ -50,9 +51,10 @@ class NodeJSSenderClientCommand(SenderClientCommand):
     In Node JS client we must provide --broker and (optionally) --address.
     The control property instance used here is RHEAControlOptionsCommon.
     """
-    def __init__(self, stdout: bool=False, stderr: bool=False,
-                   daemon: bool=False, timeout: int=0,
-                   encoding: str="utf-8"):
+
+    def __init__(self, stdout: bool = False, stderr: bool = False,
+                 daemon: bool = False, timeout: int = 0,
+                 encoding: str = "utf-8"):
         super(NodeJSSenderClientCommand, self).__init__(stdout, stderr, daemon, timeout, encoding)
         self.control = NodeJSControlOptionsSender()
         self.connection = NodeJSConnectionOptionsCommon()

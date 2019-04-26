@@ -29,9 +29,8 @@ class TcpUtil(object):
     """
     TCP Utility class.
     """
-
     @staticmethod
-    def is_tcp_port_available(port, host="0.0.0.0"):
+    def is_tcp_port_available(port, host):
         """
         Returns True if a given port is accessibly on the specified host.
         :param port:

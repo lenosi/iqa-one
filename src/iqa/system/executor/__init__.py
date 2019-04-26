@@ -1,6 +1,3 @@
-from iqa.system.command.command_base import *
-from iqa.system.command.command_ansible import *
-from iqa.system.command.command_container import *
 from .execution import *
 from .execution_kubernetes import *
 from .executor_base import *
@@ -16,7 +13,7 @@ class ExecutorFactory(object):
     """
 
     @staticmethod
-    def create_executor(exec_impl: str= 'ansible', **kwargs):
+    def create_executor(exec_impl: str = 'ansible', **kwargs):
 
         for exec_class in Executor.__subclasses__():
             if exec_class.implementation != exec_impl:

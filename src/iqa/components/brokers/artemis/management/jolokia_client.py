@@ -14,6 +14,7 @@ class ArtemisJolokiaClientResult(Exception):
     """
     Wraps the response object providing a simpler representation.
     """
+
     def __init__(self):
         self.success = False
         self.error = None
@@ -68,6 +69,7 @@ class ArtemisJolokiaClient(object):
     """
     Provides a generic mechanism to query Jolokia API exposed by ActiveMQ Artemis.
     """
+
     def __init__(self, broker_name: str, ip: str, port: str, user: str, password: str):
         # Internal only
         self._ip = ip
@@ -142,7 +144,7 @@ class ArtemisJolokiaClient(object):
         request.arguments = [name, remove_consumers]
         return self._execute(request)
 
-    def create_address(self, name: str, routing_type: str='ANYCAST') -> ArtemisJolokiaClientResult:
+    def create_address(self, name: str, routing_type: str = 'ANYCAST') -> ArtemisJolokiaClientResult:
         """
         Creates a new address
         :param name:
@@ -155,7 +157,7 @@ class ArtemisJolokiaClient(object):
         return self._execute(request)
 
     def create_queue(self, address_name: str, queue_name: str, durable: bool = True,
-                     routing_type: str='ANYCAST') -> ArtemisJolokiaClientResult:
+                     routing_type: str = 'ANYCAST') -> ArtemisJolokiaClientResult:
         """
         Creates a new queue nested to the provided Address
         :param address_name:

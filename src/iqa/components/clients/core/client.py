@@ -37,7 +37,8 @@ class CoreMessagingClient(MessagingClient, Component):
 #
 # class Client(MessagingHandler):
 #     # TODO error handling is not incorporated, this is just a raw idea
-#     """Client represents an entity in the framework capable of manipulation with messages (sending, receiving, parsing ...)
+#     """Client represents an entity in the framework capable of manipulation
+#     with messages (sending, receiving, parsing ...)
 #     """
 #
 #     def __init__(self, blocking=False):

@@ -21,7 +21,7 @@ class ServiceFactory(object):
     _logger = logging.getLogger(__name__)
 
     @staticmethod
-    def create_service(executor: Executor, service_name: str=None, **kwargs) -> Service:
+    def create_service(executor: Executor, service_name: str = None, **kwargs) -> Service:
         if service_name:
             # Validate if systemd is available
             svc_cmd_exec: Execution = executor.execute(Command(['pidof', 'systemd'], stdout=True, timeout=30))

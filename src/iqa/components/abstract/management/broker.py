@@ -28,7 +28,7 @@ class ManagementBroker(ManagementClient):
         pass
 
     @abc.abstractmethod
-    def create_queue(self, queue: Queue, address: Address, durable: bool =True):
+    def create_queue(self, queue: Queue, address: Address, durable: bool = True):
         """
         Creates a queue using its name and specialized type, nested to the given address.
         :param queue:

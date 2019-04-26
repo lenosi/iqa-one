@@ -22,7 +22,7 @@ class ReceiverJava(Receiver, ClientJava):
     def _set_url(self, url: str):
         p_url = urlparse(url)
         self._command.control.broker = '{}://{}:{}'.\
-            format(p_url.scheme or 'amqp', p_url.hostname or '127.0.0.1', p_url.port or '5672')
+            format(p_url.scheme, p_url.hostname, p_url.port)
         self._command.control.address = urlunparse(('', '', p_url.path or '', p_url.params or '',
                                                     p_url.query or '', p_url.fragment or ''))
 

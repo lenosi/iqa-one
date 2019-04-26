@@ -23,9 +23,8 @@ class Client(ABC):
         pass
 
     @abstractmethod
-    def set_endpoint(self, listener : Listener):
+    def set_endpoint(self, listener: Listener):
         pass
-
 
     @abstractmethod
     def connect(self):

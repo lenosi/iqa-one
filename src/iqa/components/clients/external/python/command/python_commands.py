@@ -1,4 +1,3 @@
-
 """
 Implementation of cli-proton-python external client command.
 """
@@ -14,8 +13,9 @@ class PythonConnectorClientCommand(ConnectorClientCommand):
     In Python client there is --broker-url parameter and so we need
     to replace control instance by PythonControlOptionsCommon.
     """
-    def __init__(self, stdout: bool=False, stderr: bool=False, daemon: bool=False,
-                 timeout: int=0, encoding: str="utf-8"):
+
+    def __init__(self, stdout: bool = False, stderr: bool = False, daemon: bool = False,
+                 timeout: int = 0, encoding: str = "utf-8"):
         super(PythonConnectorClientCommand, self).__init__(stdout, stderr, daemon, timeout, encoding)
         self.control = PythonControlOptionsCommon()
         self.connection = PythonConnectionOptionsCommon()
@@ -30,8 +30,9 @@ class PythonReceiverClientCommand(ReceiverClientCommand):
     In Python client there is --broker-url parameter and so we need
     to replace control instance by PythonControlOptionsCommon.
     """
-    def __init__(self, stdout: bool=False, stderr: bool=False, daemon: bool=False,
-                 timeout: int=0, encoding: str="utf-8"):
+
+    def __init__(self, stdout: bool = False, stderr: bool = False, daemon: bool = False,
+                 timeout: int = 0, encoding: str = "utf-8"):
         super(PythonReceiverClientCommand, self).__init__(stdout, stderr, daemon, timeout, encoding)
         self.control = PythonControlOptionsReceiver()
         self.link = LinkOptionsReceiver()
@@ -48,8 +49,9 @@ class PythonSenderClientCommand(SenderClientCommand):
     In Python client there is --broker-url parameter and so we need
     to replace control instance by PythonControlOptionsCommon.
     """
-    def __init__(self, stdout: bool=False, stderr: bool=False, daemon: bool=False,
-                 timeout: int=0, encoding: str="utf-8"):
+
+    def __init__(self, stdout: bool = False, stderr: bool = False, daemon: bool = False,
+                 timeout: int = 0, encoding: str = "utf-8"):
         super(PythonSenderClientCommand, self).__init__(stdout, stderr, daemon, timeout, encoding)
         self.control = PythonControlOptionsSenderReceiver()
         self.link = LinkOptionsSenderReceiver()

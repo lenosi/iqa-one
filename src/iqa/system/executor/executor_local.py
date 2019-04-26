@@ -16,7 +16,7 @@ class ExecutorLocal(Executor):
 
     implementation = "local"
 
-    def __init__(self, name: str="ExecutorLocal", **kwargs):
+    def __init__(self, name: str = "ExecutorLocal", **kwargs):
         super(ExecutorLocal, self).__init__(**kwargs)
         self.name = name
 

@@ -30,7 +30,8 @@ class Execution(abc.ABC):
     It wraps the command that was triggered as well as the executor
     who generated the Execution instance.
     """
-    def __init__(self, command: Command, executor, modified_args: list=None, env=None):
+
+    def __init__(self, command: Command, executor, modified_args: list = None, env=None):
         """
         Instance is initialized with the command that was effectively
         executed and the Executor instance that produced this new object.
@@ -106,7 +107,7 @@ class Execution(abc.ABC):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def read_stdout(self, lines: bool=False):
+    def read_stdout(self, lines: bool = False):
         """
         Returns a string with the whole STDOUT content if the original
         command has stdout property defined as True. Otherwise
@@ -118,7 +119,7 @@ class Execution(abc.ABC):
         raise NotImplementedError()
 
     @abc.abstractmethod
-    def read_stderr(self, lines: bool=False):
+    def read_stderr(self, lines: bool = False):
         """
         Returns a string with the whole STDERR content if the original
         command has stderr property defined as True. Otherwise
@@ -172,7 +173,7 @@ class ExecutionProcess(Execution):
     Executors that want to run a given command as a Process must use this Execution strategy.
     """
 
-    def __init__(self, command: Command, executor, modified_args: list=None, env=None):
+    def __init__(self, command: Command, executor, modified_args: list = None, env=None):
         """
         Instance is initialized with the command that was effectively
         executed and the Executor instance that produced this new object.
@@ -207,6 +208,7 @@ class ExecutionProcess(Execution):
         the TimeoutCallback will be canceled.
         :return:
         """
+
         def start_process():
             """
             Trigger method for separate thread that will effectively run the command.
@@ -275,7 +277,7 @@ class ExecutionProcess(Execution):
                      % (self.command.timeout, self._process.pid, self.args))
         self.terminate()
 
-    def read_stdout(self, lines: bool=False):
+    def read_stdout(self, lines: bool = False):
         """
         Returns a string with the whole STDOUT content if the original
         command has stdout property defined as True. Otherwise
@@ -296,7 +298,7 @@ class ExecutionProcess(Execution):
 
         return self.fh_stdout.read()
 
-    def read_stderr(self, lines: bool=False):
+    def read_stderr(self, lines: bool = False):
         """
         Returns a string with the whole STDERR content if the original
         command has stderr property defined as True. Otherwise

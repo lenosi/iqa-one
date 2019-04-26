@@ -21,5 +21,4 @@ class RoutingType(Enum):
         elif value.__contains__('MULTICAST'):
             return RoutingType.MULTICAST
         else:
-            # If some unexpected value, then return both
-            return RoutingType.BOTH
+            raise ValueError('Value "%s" does not match.' % value)

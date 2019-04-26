@@ -37,7 +37,7 @@ class Broker(MessagingServer):
         self.ha_member = ha_component
 
     @abc.abstractmethod
-    def queues(self, refresh: bool=True) -> List[Queue]:
+    def queues(self, refresh: bool = True) -> List[Queue]:
         """
         Must return existing queues
         :return:
@@ -45,7 +45,7 @@ class Broker(MessagingServer):
         pass
 
     @abc.abstractmethod
-    def addresses(self, refresh: bool=True) -> List[Address]:
+    def addresses(self, refresh: bool = True) -> List[Address]:
         """
         Must return existing addresses
         :return:

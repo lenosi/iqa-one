@@ -117,11 +117,9 @@ class ServiceFakeArtemis(ServiceFake):
         """
         command = 'runuser -l %s %s %s' % (self.service_username, self.service_path, service_state.system_state)
         if isinstance(self.executor, ExecutorAnsible):
-            state = service_state.ansible_state
             return CommandAnsible(command,
                                   ansible_module='command',
                                   stdout=True,
                                   timeout=self.TIMEOUT)
         else:
-            state = service_state.system_state
             return Command(command.split(), stdout=True, timeout=self.TIMEOUT)

@@ -18,10 +18,9 @@ class AnsibleVirtualComponent(object):
 
 
 class AnsibleInventory(object):
-
     virt_component = 'virtual_component'
 
-    def __init__(self, inventory: str=None, extra_vars: dict=None):
+    def __init__(self, inventory: str = None, extra_vars: dict = None):
         self._logger = logging.getLogger(self.__class__.__module__)
         self.inventory = inventory
         self.loader = DataLoader()
@@ -31,7 +30,7 @@ class AnsibleInventory(object):
         self.var_mgr = VariableManager(loader=self.loader, inventory=self.inv_mgr)
         self.var_mgr.extra_vars = extra_vars or dict()
 
-    def get_hosts_containing(self, var: str=None) -> list:
+    def get_hosts_containing(self, var: str = None) -> list:
         hosts = []
 
         for host in self.inv_mgr.get_hosts():

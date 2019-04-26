@@ -76,8 +76,7 @@ class Dispatch(Router, ServerComponent):
             cmd = self.node.execute(['qdrouterd', '-v'])
             return cmd
 
-
-    def set_credentials(self, user: str=None, password: str=None):
+    def set_credentials(self, user: str = None, password: str = None):
         """
         Stores user and password that must be used to communicate with the router instance
         through the main port defined in constructor method.
@@ -88,7 +87,7 @@ class Dispatch(Router, ServerComponent):
         self.user = user
         self.password = password
 
-    def set_ssl_auth(self, pem_file: str=None, key_file: str=None, key_password: str=None):
+    def set_ssl_auth(self, pem_file: str = None, key_file: str = None, key_password: str = None):
         """
         Defines SSL credentials that must be used to communicate with this router instance
         through its main port.

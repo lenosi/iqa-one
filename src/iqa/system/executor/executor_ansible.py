@@ -15,8 +15,8 @@ class ExecutorAnsible(Executor):
     """
     implementation = 'ansible'
 
-    def __init__(self, ansible_host: str=None, inventory: str=None, ansible_user: str=None, module: str="raw",
-                 name: str="ExecutorAnsible", **kwargs):
+    def __init__(self, ansible_host: str = None, inventory: str = None, ansible_user: str = None, module: str = "raw",
+                 name: str = "ExecutorAnsible", **kwargs):
         """
         Initializes the ExecutorAnsible instance based on provided arguments.
         When an inventory is provided, the 'ansible_host' can be an ip address or any

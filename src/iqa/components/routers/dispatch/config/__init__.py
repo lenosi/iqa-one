@@ -12,9 +12,6 @@ class _Attribute:
     def __str__(self):
         return self.value
 
-    # def __get__(self, instance, owner):
-    #     return self
-
     def __set__(self, instance, value):
         self.value = value
 

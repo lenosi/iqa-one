@@ -20,7 +20,6 @@ class MessagingClient(Client):
         self.messages = []  # type: list
         self.message_counter = 0  # type: int
 
-
     @property
     def last_message(self):
         """Method for pickup last received message.

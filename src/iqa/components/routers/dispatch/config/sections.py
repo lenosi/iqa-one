@@ -44,9 +44,10 @@ class connectionRole(_Section):
 
     def __init__(self, role=None, cost=None, name=None):
         """
-        :param role: The role of an established connection. In the normal role, the connection is assumed to be used for
-        AMQP clients that are doing normal message delivery over the connection. In the inter-router role, the connection
-        is assumed to be to another router in the network. Inter-router discovery and routing protocols can only be used
+        :param role: The role of an established connection. In the normal role, the connection is assumed to be used
+        for AMQP clients that are doing normal message delivery over the connection. In the inter-router role,
+        the connection is assumed to be to another router in the network. Inter-router discovery and routing
+        protocols can only be used
         over inter-router connections. route-container role can be used for router-container connections, for example,
         a router-broker connection. on-demand role has been deprecated.
         (One of [‘normal’, ‘inter-router’, ‘route-container’, ‘on-demand’], default=’normal’)
@@ -54,7 +55,8 @@ class connectionRole(_Section):
 
         :param cost: For the ‘inter-router’ role only. This value assigns a cost metric to the inter-router connection.
         The default (and minimum) value is one. Higher values represent higher costs. The cost is used to influence the
-        routing algorithm as it attempts to use the path with the lowest total cost from ingress to egress. (default=‘1’)
+        routing algorithm as it attempts to use the path with the lowest total cost from ingress to egress.
+        (default=‘1’)
         :type cost: string
 
         :param name: [THIS IS NOT DOCUMENTED] Name of connectionTole section
@@ -100,8 +102,8 @@ class sslProfile(_Section):
         the ‘password’ option. Don’t use both password and passwordFile in the same profile.
         :type password: string
 
-        :param uidFormat: A list of x509 client certificate fields that will be used to build a string that will uniquely
-        identify the client certificate owner. For e.g. a value of ‘cou’ indicates that the uid will consist
+        :param uidFormat: A list of x509 client certificate fields that will be used to build a string that will
+        uniquely identify the client certificate owner. For e.g. a value of ‘cou’ indicates that the uid will consist
         of c - common name concatenated with o - organization-company name concatenated with u - organization unit;
         or a value of ‘o2’ indicates that the uid will consist of o (organization name) concatenated with
         2 (the sha256 fingerprint of the entire certificate) . Allowed values can be any combination of comma separated
@@ -149,9 +151,9 @@ class router(_Section):
         :param id: Router's unique identity.
         :type id: string
 
-        :param mode: In standalone mode, the router operates as a single component.  It does not participate in
-        the routing protocol and therefore will not cooperate with other routers.  In  interior mode, the router operates
-        in cooperation with other interior routers in an interconnected network.
+        :param mode: In standalone mode, the router operates as a single component. It does not participate in
+        the routing protocol and therefore will not cooperate with other routers. In interior mode, the router
+        operates in cooperation with other interior routers in an interconnected network.
         (One of ['standalone', 'interior'], default='standalone')
         :type mode: string
 
@@ -169,7 +171,8 @@ class router(_Section):
         fluctuations. (default=4)
         :type raIntervalFlux: string
 
-        :param remoteLsMaxAge: Time in seconds after which link state is declared stale if no RA is received. (default=60)
+        :param remoteLsMaxAge: Time in seconds after which link state is declared stale if no RA is received.
+        (default=60)
         :type remoteLsMaxAge: string
 
         :param workerThreads: The number of threads that will be created to process message traffic and other application
@@ -299,14 +302,14 @@ class listener(_Section):
         (path)
         :type trustedCerts: string
 
-        :param maxFrameSize: Defaults to 16384. If specified, it is the maximum frame size in octets that will be used in
-        the connection-open negotiation with a connected peer. The frame size is the largest contiguous set of
+        :param maxFrameSize: Defaults to 16384. If specified, it is the maximum frame size in octets that will be used
+        in the connection-open negotiation with a connected peer. The frame size is the largest contiguous set of
         uninterrupted data that can be sent for a message delivery over the connection. Interleaving of messages on
         different links is done at frame granularity. (default=16384)
         :type maxFrameSize: string
 
-        :param idleTimeoutSeconds: The idle timeout, in seconds, for connections through this listener. If no frames are
-        received on the connection for this time interval, the connection shall be closed. (defaults=16)
+        :param idleTimeoutSeconds: The idle timeout, in seconds, for connections through this listener. If no frames
+         are received on the connection for this time interval, the connection shall be closed. (defaults=16)
         :type idleTimeoutSeconds: string
 
         :param stripAnnotations: [‘in’, ‘out’, ‘both’, ‘no’] in: Strip the dispatch router specific annotations only
@@ -384,11 +387,11 @@ class connector(_Section):
         If not specified, the protocol family will be automatically determined from the address.
         :type protocolFamily: string
 
-        :param role: The role of an established connection. In the normal role, the connection is assumed to be used for
-        AMQP clients that are doing normal message delivery over the connection. In the inter-router role, the connection
-        is assumed to be to another router in the network. Inter-router discovery and routing protocols can only be used
-        over inter-router connections. route-container role can be used for router-container connections, for example,
-        a router-broker connection. on-demand role has been deprecated.
+        :param role: The role of an established connection. In the normal role, the connection is assumed to be used
+        for AMQP clients that are doing normal message delivery over the connection. In the inter-router role,
+        the connection is assumed to be to another router in the network. Inter-router discovery and routing
+        protocols can only be used over inter-router connections. route-container role can be used for router-container
+        connections, for example, a router-broker connection. on-demand role has been deprecated.
         :type role: string
 
         :param cost: For the ‘inter-router’ role only. This value assigns a cost metric to the inter-router connection.
@@ -400,8 +403,8 @@ class connector(_Section):
         certificate authorities (CA). (path)
         :type certDb: string
 
-        :param certFile: The path to the file containing the PEM-formatted public certificate to be used on the local end
-        of any connections using this profile. (path)
+        :param certFile: The path to the file containing the PEM-formatted public certificate to be used on the local
+        end of any connections using this profile. (path)
         :type  certFile: string
 
         :param keyFile: The path to the file containing the PEM-formatted private key for the above certificate. (path)
@@ -416,8 +419,9 @@ class connector(_Section):
         ‘password’ option. Don’t use both password and passwordFile in the same profile.
         :type password: string
 
-        :param uidFormat: A list of x509 client certificate fields that will be used to build a string that will uniquely
-        identify the client certificate owner. For e.g. a value of ‘cou’ indicates that the uid will consist of
+        :param uidFormat: A list of x509 client certificate fields that will be used to build a string that will
+        uniquely  identify the client certificate owner. For e.g. a value of ‘cou’ indicates that the uid will
+        consist of
         c - common name concatenated with
         o - organization-company name concatenated with
         u - organization unit;
@@ -430,8 +434,8 @@ class connector(_Section):
         ‘o’(Organization - Company Name),
         ‘u’(Organization Unit - typically certificate type or brand),
         ‘n’(CommonName - typically a user name for client certificates)
-        and ‘1’(sha1 certificate fingerprint, as displayed in the fingerprints section when looking at a certificate with
-        say a web browser is the hash of the entire certificate)
+        and ‘1’(sha1 certificate fingerprint, as displayed in the fingerprints section when looking at a certificate
+        with say a web browser is the hash of the entire certificate)
         and 2 (sha256 certificate fingerprint) and 5 (sha512 certificate fingerprint).
         :type uidFormat: string
 
@@ -451,7 +455,8 @@ class connector(_Section):
         :type maxFrameSize: string
 
         :param idleTimeoutSeconds: The idle timeout, in seconds, for connections through this connector.
-        If no frames are received on the connection for this time interval, the connection shall be closed. (default=16)
+        If no frames are received on the connection for this time interval, the connection shall be closed.
+        (default=16)
         :type idleTimeoutSeconds: string
 
         :param stripAnnotations: [‘in’, ‘out’, ‘both’, ‘no’] in: Strip the dispatch router specific annotations only on
@@ -534,8 +539,9 @@ class log(_Section):
 
         :param enable: Levels are: trace, debug, info, notice, warning, error, critical. The enable string is
         a comma-separated list of levels. A level may have a trailing ‘+’ to enable that level and above.
-        For example ‘trace,debug,warning+’ means enable trace, debug, warning, error and critical. The value ‘none’ means
-        disable logging for the module. The value ‘default’ means use the value from the DEFAULT module.
+        For example ‘trace,debug,warning+’ means enable trace, debug, warning, error and critical.
+        The value ‘none’ means disable logging for the module. The value ‘default’ means use the value from the
+        DEFAULT module.
         (default=’default’, required)
         :type enable: string
 
@@ -666,16 +672,18 @@ class policy(_Section):
     def __init__(self, maximumConnections=None, enableAccessRules=None, policyFolder=None, defaultApplication=None,
                  defaultApplicationEnabled=None):
         """
-        :param maximumConnections:  Global maximum number of concurrent client connections allowed. Zero implies no limit.
+        :param maximumConnections:  Global maximum number of concurrent client connections allowed. Zero implies no
+        limit.
         This limit is always enforced even if no other policy settings have been defined.
         :type maximumConnections: string
 
         :param enableAccessRules: Enable user rule set processing and connection denial.
         :type enableAccessRules: string
 
-        :param policyFolder: The path to a folder that holds policyRuleset definition .json files. For a small system the
-        rulesets may all be defined in this file. At a larger scale it is better to have the policy files in their own
-        folder and to have none of the rulesets defined here. All rulesets in all .json files in this folder are
+        :param policyFolder: The path to a folder that holds policyRuleset definition .json files. For a small system
+        the rulesets may all be defined in this file. At a larger scale it is better to have the policy files in
+        their own folder and to have none of the rulesets defined here. All rulesets in all .json files in this
+        folder are
         processed.
         :type policyFolder: string
 
@@ -715,17 +723,17 @@ class policyRuleset(_Section):
         :param userGroups: A map where each key is a user group name and the corresponding value is a CSV string naming
         the users in that group. Users who are assigned to one or more groups are deemed ‘restricted’. Restricted users
         are subject to connection ingress policy and are assigned policy settings based on the assigned user groups.
-        Unrestricted users may be allowed or denied. If unrestricted users are allowed to connect then they are assigned
-        to user group default.
+        Unrestricted users may be allowed or denied. If unrestricted users are allowed to connect then they are
+        assigned to user group default.
         :param ingressHostGroups: A map where each key is an ingress host group name and the corresponding value is
-        a CSV string naming the IP addresses or address ranges in that group. IP addresses may be FQDN strings or numeric
-        IPv4 or IPv6 host addresses. A host range is two host addresses of the same address family separated with
-        a hyphen. The wildcard host address ‘*’ represents any host address.
+        a CSV string naming the IP addresses or address ranges in that group. IP addresses may be FQDN strings or
+        numeric IPv4 or IPv6 host addresses. A host range is two host addresses of the same address family separated
+        with a hyphen. The wildcard host address ‘*’ represents any host address.
         :param ingressPolicies: A map where each key is a user group name and the corresponding value is a CSV string
         naming the ingress host group names that restrict the ingress host for the user group. Users who are members of
         the user group are allowed to connect only from a host in one of the named ingress host groups.
-        :param connectionAllowDefault: Unrestricted users, those who are not members of a defined user group, are allowed
-        to connect to this application. Unrestricted users are assigned to the ‘default’ user group and receive
+        :param connectionAllowDefault: Unrestricted users, those who are not members of a defined user group, are
+        allowed to connect to this application. Unrestricted users are assigned to the ‘default’ user group and receive
         ‘default’ settings.
         :param settings: A map where each key is a user group name and the value is a map of the corresponding settings
         for that group.

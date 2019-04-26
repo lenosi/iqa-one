@@ -12,7 +12,7 @@ from iqa.system.node import Node
 class NodeAnsible(Node):
     """Ansible implementation for Node interface."""
 
-    def __init__(self, hostname: str, executor: Executor, ip: str=None):
+    def __init__(self, hostname: str, executor: Executor, ip: str = None):
         super(NodeAnsible, self).__init__(hostname, executor, ip)
         logging.getLogger().info('Initialization of NodeAnsible: %s' % self.hostname)
 

@@ -16,7 +16,8 @@ class ExecutorContainer(Executor):
 
     implementation = 'docker'
 
-    def __init__(self, container_name: str=None, container_user: str=None, name: str="ExecutorContainer", **kwargs):
+    def __init__(self, container_name: str = None, container_user: str = None, name: str = "ExecutorContainer",
+                 **kwargs):
         super(ExecutorContainer, self).__init__()
         self.container_name = kwargs.get('inventory_hostname', container_name)
         self.name = kwargs.get('executor_name', name)

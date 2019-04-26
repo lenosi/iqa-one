@@ -8,7 +8,6 @@ from kubernetes import config, client
 from kubernetes.client.apis import core_v1_api
 from kubernetes.stream import stream
 
-
 # Logger for ExecutionKubernetes
 from iqa.system.command.command_base import Command
 from iqa.system.executor import Execution, ExecutionException
@@ -23,7 +22,7 @@ class ExecutionKubernetes(Execution):
     Executors that want to run a given command through the Kubernetes Client API must use this Execution strategy.
     """
 
-    def __init__(self, command: Command, executor, modified_args: list=None, env=None):
+    def __init__(self, command: Command, executor, modified_args: list = None, env=None):
         """
         Instance is initialized with the command that was effectively
         executed and the Executor instance that produced this new object.
