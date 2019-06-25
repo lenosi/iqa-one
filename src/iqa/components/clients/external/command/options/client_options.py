@@ -1,4 +1,3 @@
-from optconstruct import OptionAbstract
 from optconstruct.types import Toggle, Prefixed, KWOption, ListOption
 
 """
