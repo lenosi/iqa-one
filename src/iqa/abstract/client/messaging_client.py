@@ -14,8 +14,8 @@ class MessagingClient(Client):
     name = None
     version = None
 
-    def __init__(self, name: str, **kwargs):
-        super(MessagingClient).__init__(name, **kwargs)
+    def __init__(self, **kwargs):
+        super(MessagingClient).__init__(**kwargs)
         self.message_buffer = None  # type: bool
         self.messages = []  # type: list
         self.message_counter = 0  # type: int

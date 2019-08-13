@@ -1,11 +1,15 @@
 from iqa.system.executor import ExecutorAnsible, ExecutorContainer
 from iqa.system.node.node import Node
 from iqa.system.node.node_docker import NodeDocker
-from .node_ansible import *
 from .node_local import *
+from .node_ansible import *
+from .node import *
+
+import logging
 
 
 class NodeFactory(object):
+
     logger = logging.getLogger(__name__)
 
     @staticmethod

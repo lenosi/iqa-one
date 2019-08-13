@@ -4,7 +4,7 @@ from typing import Union
 
 from iqa.system.command.command_ansible import CommandAnsible
 from iqa.system.executor import ExecutorAnsible, ExecutorContainer, Execution, CommandContainer
-from iqa.system.service import Service, ServiceStatus
+from iqa.system.service.service import Service, ServiceStatus
 from iqa.utils.docker_util import DockerUtil
 
 

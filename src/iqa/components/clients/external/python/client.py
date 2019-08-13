@@ -1,5 +1,5 @@
 from iqa.components.clients.external import ClientExternal, protocols
-from iqa.system.node import Node, Executor
+from iqa.system.node import Node
 
 
 class ClientPython(ClientExternal):
@@ -9,5 +9,5 @@ class ClientPython(ClientExternal):
     implementation = 'python'
     version = '1.0.1'
 
-    def __init__(self, name: str, node: Node, executor: Executor, **kwargs):
-        super(ClientPython, self).__init__(name, node, executor, **kwargs)
+    def __init__(self, name: str, node: Node, **kwargs):
+        super(ClientPython, self).__init__(name, node, **kwargs)
