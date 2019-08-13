@@ -29,7 +29,7 @@ class AnsibleInventory(object):
         self._logger.debug('Extra variables: %s' % extra_vars)
         self.inv_mgr = InventoryManager(loader=self.loader, sources=self.inventory)
         self.var_mgr = VariableManager(loader=self.loader, inventory=self.inv_mgr)
-        self.var_mgr.extra_vars = extra_vars or dict()
+        self.var_mgr._extra_vars = extra_vars or dict()
 
     def get_hosts_containing(self, var: str = None) -> list:
         hosts = []
