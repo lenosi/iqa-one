@@ -24,6 +24,7 @@ class Properties:
     The properties section is used for a defined set of standard properties of the message. The properties section
     is part of the bare message; therefore, if retransmitted by an intermediary, it MUST remain unaltered.
     """
+
     def __init__(self,
                  message_id=None,
                  user_id=None,
@@ -38,7 +39,6 @@ class Properties:
                  group_id=None,
                  group_sequence=None,
                  reply_to_group_id=None):
-
         self.message_id = message_id
         self.user_id = user_id
         self.to = to

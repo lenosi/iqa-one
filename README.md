@@ -1,2 +1,4 @@
-# Temporary refactor stuff repo
+# IQA
+
+Temporary short of living fork of Messaging testing project.
 

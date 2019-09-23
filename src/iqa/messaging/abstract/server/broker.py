@@ -1,6 +1,6 @@
-from typing import List
 import abc
 import logging
+from typing import List
 
 from iqa.messaging.abstract.destination.address import Address
 from iqa.messaging.abstract.destination.queue import Queue

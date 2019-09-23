@@ -1,12 +1,13 @@
-from . import Header, DeliveryAnnotations, MessageAnnotations,\
+from dataclasses import dataclass, field
+
+from . import Header, DeliveryAnnotations, MessageAnnotations, \
     Properties, ApplicationProperties, ApplicationData, Footer
 
 
+# noinspection PyDunderSlots
+@dataclass(frozen=False)
 class Message:
-    """
-    @TODO Create just abstract message class
-
-    Mapping to specification is '1:1'
+    """Mapping to specification is '1:1'
 
     This class is based on AMQP 1.0 specifics (3.2) Message Format
 
@@ -23,22 +24,27 @@ class Message:
                                                  |
                                           Annotated Message
     """
-    def __init__(
-            self,
-            header=Header(),
-            delivery_annotations=DeliveryAnnotations(),
-            message_annotations=MessageAnnotations(),
-            properties=Properties(),
-            application_properties=None,
-            application_data=ApplicationData(),
-            footer=Footer()):
+    __slots__ = ['header', 'delivery_annotations', 'message_annotations',
+                 'properties', 'application_properties', 'application_data',
+                 'footer']
 
-        if application_properties is None:
-            application_properties = ApplicationProperties()
-        self.header = header
-        self.delivery_annotations = delivery_annotations
-        self.message_annotations = message_annotations
-        self.properties = properties
-        self.application_properties = application_properties
-        self.application_data = application_data
-        self.footer = footer
+    header: Header = \
+        field(default_factory=Header)
+
+    delivery_annotations: DeliveryAnnotations = \
+        field(default_factory=DeliveryAnnotations)
+
+    message_annotations: MessageAnnotations = \
+        field(default_factory=MessageAnnotations)
+
+    properties: Properties = \
+        field(default_factory=Properties)
+
+    application_properties: ApplicationProperties = \
+        field(default_factory=ApplicationProperties)
+
+    application_data: ApplicationData = \
+        field(default_factory=ApplicationData)
+
+    footer: Footer = \
+        field(default_factory=Footer)

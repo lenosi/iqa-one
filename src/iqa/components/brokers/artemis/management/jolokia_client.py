@@ -2,12 +2,12 @@
 Generic client for communicating with Jolokia API through POST requests.
 """
 
-import requests
-import json
 import copy
+import json
 import logging
 
-from requests import ConnectionError, RequestException
+import requests
+from requests import RequestException
 
 
 class ArtemisJolokiaClientResult(Exception):

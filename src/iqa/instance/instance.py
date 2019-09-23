@@ -3,21 +3,17 @@ IQAInstance which is populated based on an ansible compatible inventory file.
 """
 from typing import List
 
-from autologging import logged, traced
-from iqa.system.ansible.ansible_inventory import AnsibleInventory
-from iqa.system.executor import ExecutorFactory
-from iqa.messaging.abstract import *
-
-from iqa.system.node import NodeFactory
-from iqa.system.service import *
 from iqa.components.brokers import BrokerFactory
 from iqa.components.clients import ClientFactory
 from iqa.components.routers import RouterFactory
+from iqa.messaging.abstract import Client, Sender, Receiver, Broker, Router
+from iqa.system.ansible.ansible_inventory import AnsibleInventory
+from iqa.system.executor import ExecutorFactory
+from iqa.system.node import NodeFactory, Node
+from iqa.system.service import *
 
 
-@logged
-@traced
-class IQAInstance:
+class Instance:
     """IQA helper class
 
     Store variables, node and related things
@@ -28,11 +24,12 @@ class IQAInstance:
         self._inv_mgr = AnsibleInventory(inventory=self.inventory, extra_vars=cli_args)
         self.nodes = []
         self.components = []
+
         self._load_components()
 
     def _load_components(self):
         """
-        Parses the mandatory ansible inventory file and load all defined
+        Parses the mandatory Ansible inventory file and load all defined
         messaging components.
         :return:
         """
@@ -49,6 +46,7 @@ class IQAInstance:
         nodes = []
 
         for cmp in inventory_hosts:
+            component = None
             # Make a shallow copy (important as retrieved keys are deleted)
             # print('ansible host = %s' % cmp)
             cmp_vars = dict(self._inv_mgr.get_host_vars(host=cmp))
@@ -69,19 +67,42 @@ class IQAInstance:
             # Now loading variables that are specific to each component
             if cmp_type == 'client':
                 # Add list of clients into component list
-                components += ClientFactory.create_clients(implementation=cmp_impl, node=node, executor=executor,
-                                                           **cmp_vars)
+                component = ClientFactory.create_clients(
+                    implementation=cmp_impl,
+                    node=node,
+                    executor=executor,
+                    **cmp_vars
+                )
+                self.new_component(component)
+
             elif cmp_type in ['router', 'broker']:
                 # A service name is expected
                 cmp_svc = get_and_remove_key(cmp_vars, 'service')
-                svc = ServiceFactory.create_service(executor=executor, service_name=cmp_svc, **cmp_vars)
+                svc = ServiceFactory.create_service(
+                    executor=executor,
+                    service_name=cmp_svc,
+                    **cmp_vars
+                )
 
                 if cmp_type == 'router':
-                    components.append(RouterFactory.create_router(implementation=cmp_impl, node=node, executor=executor,
-                                                                  service_impl=svc, **cmp_vars))
+                    component = RouterFactory.create_router(
+                        implementation=cmp_impl,
+                        node=node,
+                        executor=executor,
+                        service_impl=svc,
+                        **cmp_vars
+                    )
+
                 elif cmp_type == 'broker':
-                    components.append(BrokerFactory.create_broker(implementation=cmp_impl, node=node, executor=executor,
-                                                                  service_impl=svc, **cmp_vars))
+                    component = BrokerFactory.create_broker(
+                        implementation=cmp_impl,
+                        node=node,
+                        executor=executor,
+                        service_impl=svc,
+                        **cmp_vars
+                    )
+
+                self.new_component(component)
 
         self.nodes = nodes
         self.components = components
@@ -97,14 +118,12 @@ class IQAInstance:
         :return:
         :rtype:
         """
-        node = Node(hostname=hostname, ip=ip, ansible=self.ansible)
+        node = Node(hostname=hostname, ip=ip)
         self.nodes.append(node)
         return node
 
-    def new_component(self, node: Node, component):
-        """Create new node under iQA instance
-
-        @TODO Pass inventory by true way for Ansible
+    def new_component(self, component):
+        """Create new component in IQA instance
 
         :param node:
         :type node:

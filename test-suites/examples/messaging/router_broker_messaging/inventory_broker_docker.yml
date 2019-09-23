@@ -1,0 +1,42 @@
+#
+# This sample inventory file defines a node that provides a Broker component
+# which is running as a docker container in the local machine (ansible_connection: docker).
+#
+# The following node variables are mandatory:
+# - component (determines a component that can be parsed by iqa [router, broker, client])
+# - implementation (for router, we currently just have: dispatch)
+#
+# Broker component required variables:
+# - broker_name
+# - broker_web_port
+# - broker_path
+# - service (not needed when running as a container)
+# - executor (defines the executor instance to be used for communicating with the node)
+#
+all:
+  children:
+    routers:
+      hosts:
+        broker1:
+          ansible_connection: docker
+          component: broker
+          implementation: artemis
+          broker_name: 0.0.0.0
+          broker_web_port: 8161
+          broker_path: /opt/broker1
+          executor: docker
+    clients:
+      hosts:
+        cli-java:
+          implementation: java
+          ansible_user: cli-java
+        cli-proton-python:
+          implementation: python
+          ansible_user: cli-proton-python
+        cli-rhea:
+          implementation: nodejs
+          ansible_user: cli-rhea
+      vars:
+        component: client
+        executor: docker
+        ansible_connection: docker

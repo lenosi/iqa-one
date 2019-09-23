@@ -20,9 +20,10 @@
 """
 Utility classes to retrieve information from local docker environment.
 """
-import os
-import docker
 import logging
+import os
+
+import docker
 
 
 class DockerUtil(object):

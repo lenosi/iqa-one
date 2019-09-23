@@ -1,6 +1,3 @@
-
-
-from autologging import logged, traced
 from iqa.components.clients.external.nodejs.client import ClientNodeJS
 from iqa.components.clients.external.nodejs.command.nodejs_commands import NodeJSReceiverClientCommand
 from iqa.messaging.abstract.client.receiver import Receiver
@@ -14,8 +11,6 @@ except ImportError:
     from urllib.parse import urlparse, urlunparse, quote, unquote
 
 
-@logged
-@traced
 class ReceiverNodeJS(Receiver, ClientNodeJS):
     """External NodeJS receiver client."""
 

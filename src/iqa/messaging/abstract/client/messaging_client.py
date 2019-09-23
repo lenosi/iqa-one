@@ -1,5 +1,3 @@
-from abc import ABC, abstractmethod
-
 from iqa.messaging.abstract.client import Client
 from iqa.messaging.abstract.listener import Listener
 
@@ -27,3 +25,12 @@ class MessagingClient(Client):
         :rtype: iqa.iqa.messaging.abstract.message.Message
         """
         return self.messages[-1] if self.messages else None
+
+    def set_endpoint(self, listener: Listener):
+        pass
+
+    def connect(self):
+        pass
+
+    def set_url(self, url: str):
+        pass

@@ -1,7 +1,7 @@
 from iqa.system.command.command_ansible import CommandAnsible
 from iqa.system.command.command_base import Command
-from .executor_base import Executor
 from .execution import ExecutionProcess
+from .executor_base import Executor
 
 """
 Executor implementation that uses the "ansible" CLI to

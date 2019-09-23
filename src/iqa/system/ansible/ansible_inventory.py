@@ -1,9 +1,10 @@
+import logging
+
 from ansible.inventory.host import Host
 from ansible.inventory.manager import InventoryManager
 from ansible.parsing.dataloader import DataLoader
-from ansible.vars.manager import VariableManager
 from ansible.template import Templar
-import logging
+from ansible.vars.manager import VariableManager
 
 
 class AnsibleVirtualComponent(object):

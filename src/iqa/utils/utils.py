@@ -1,4 +1,3 @@
-
 class Utils():
     @staticmethod
     def remove_prefix(str, prefix):

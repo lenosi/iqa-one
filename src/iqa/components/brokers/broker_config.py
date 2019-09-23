@@ -5,7 +5,6 @@ from iqa.components.abstract.configuration import Configuration
 
 
 class BrokerConfiguration(Configuration):
-
     users = {}
     ports = {}
 

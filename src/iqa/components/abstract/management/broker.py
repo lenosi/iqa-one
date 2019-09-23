@@ -1,9 +1,8 @@
 import abc
-from abc import ABC
 
 from iqa.components.abstract.management.client import ManagementClient
-from iqa.messaging.abstract.destination.destination import Destination
 from iqa.messaging.abstract.destination.address import Address
+from iqa.messaging.abstract.destination.destination import Destination
 from iqa.messaging.abstract.destination.queue import Queue
 
 

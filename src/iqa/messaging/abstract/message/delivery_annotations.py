@@ -20,5 +20,6 @@ class DeliveryAnnotations:
     an empty map of annotations.
 
     """
+
     def __init__(self):
         pass

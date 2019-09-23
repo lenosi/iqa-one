@@ -1,0 +1,47 @@
+#
+# This sample inventory file defines a node that provides a Broker component
+# which is running in the local machine (ansible_connection: docker).
+#
+# The following node variables are mandatory:
+# - component (determines a component that can be parsed by iqa [router, broker, client])
+# - implementation (for broker, we currently just have: artemis)
+#
+# Broker component required variables:
+# - broker_name
+# - broker_web_port
+# - broker_path
+# - service (not needed when running as a container)
+# - executor (defines the executor instance to be used for communicating with the node)
+#
+all:
+  children:
+    brokers:
+      children:
+        broker_cluster1:
+          hosts:
+              broker1:
+                ansible_host: 127.0.0.1
+                ansible_user: root
+                component: broker
+                implementation: artemis
+                broker_name: amq-127-0-0-1a
+                broker_web_port: 8161
+                broker_path: "/home/jamq/artemis-amq"
+                executor: ansible
+                data_config_file: "<path>"
+
+              broker2:
+                ansible_host: 127.0.0.1
+                ansible_user: root
+                component: broker
+                implementation: artemis
+                broker_name: amq-127-0-0-1b
+                broker_web_port: 8161
+                broker_path: "/home/jamq/artemis-amq"
+                executor: ansible
+                data_config_file: "<path>"
+          vars:
+            virtual_component: broker_cluster
+            implementation: artemis_cluster
+            broker_cluster_group: "lala"
+

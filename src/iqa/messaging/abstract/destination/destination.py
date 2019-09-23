@@ -1,3 +1,2 @@
-
 class Destination(object):
     pass

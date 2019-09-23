@@ -1,5 +1,3 @@
-from autologging import logged, traced
-
 from iqa.components.clients import ClientJava
 from iqa.components.clients.external.java.command.java_commands import JavaConnectorClientCommand
 from iqa.system.node import Node
@@ -11,8 +9,6 @@ except ImportError:
     from urllib.parse import urlparse, urlunparse, quote, unquote
 
 
-@logged
-@traced
 class ConnectorJava(ClientJava):
     """External Java Qpid JMS connector client."""
 
@@ -20,7 +16,7 @@ class ConnectorJava(ClientJava):
 
     def _set_url(self, url: str):
         p_url = urlparse(url)
-        self._command.control.broker = '{}://{}:{}'.\
+        self._command.control.broker = '{}://{}:{}'. \
             format(p_url.scheme or 'amqp', p_url.hostname or '127.0.0.1', p_url.port or '5672')
 
         # Java client expects unquoted username and passwords

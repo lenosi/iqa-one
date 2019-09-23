@@ -1,8 +1,5 @@
-import os
-from sys import implementation
-
-from .executor_base import Executor
 from .execution import Execution
+from .executor_base import Executor
 
 """
 Runs a local command using SSH CLI.

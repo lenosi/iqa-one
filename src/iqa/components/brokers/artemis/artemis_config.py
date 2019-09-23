@@ -4,10 +4,9 @@ import posixpath
 from amqcfg import amqcfg
 
 from iqa.components.abstract.component import Component
-from iqa.messaging.abstract.user import User
 from iqa.components.brokers.broker_config import BrokerConfiguration
+from iqa.messaging.abstract.user import User
 from iqa.utils.iqa_exceptions import IQAConfigurationException
-
 from iqa.utils.utils import Utils
 
 
@@ -22,37 +21,37 @@ class ArtemisConfig(BrokerConfiguration):
     DEFAULT_INSTANCE_HOME = "/opt/jboss-amq-7-i0"
     DEFAULT_INSTANCE_NAME = "amq"
     DEFAULT_USERS = {
-        "admin": {
-            "password": "admin",
-            "role": "amq",
-            "key": "/path/to/key",
-            "ticket": "/path/to/ticket"
-        },
-        "tckuser": {
-            "password": "tckuser",
-            "role": "amq"
-        },
-        "superuser": {
-            "password": "superuser",
-            "role": "amq"
-        },
-        "administrator": {
-            "password": "administrator",
-            "role": "amq"
-        },
-        "nobody": {
-            "password": "nobody",
-            "role": "amq"
-        }
+            "admin"        : {
+                    "password": "admin",
+                    "role"    : "amq",
+                    "key"     : "/path/to/key",
+                    "ticket"  : "/path/to/ticket"
+            },
+            "tckuser"      : {
+                    "password": "tckuser",
+                    "role"    : "amq"
+            },
+            "superuser"    : {
+                    "password": "superuser",
+                    "role"    : "amq"
+            },
+            "administrator": {
+                    "password": "administrator",
+                    "role"    : "amq"
+            },
+            "nobody"       : {
+                    "password": "nobody",
+                    "role"    : "amq"
+            }
     }
     DEFAULT_PORTS = {
-        "openwire": 61616,
-        "amqp": 5672,
-        "mqtt": 1883,
-        "core": 5445,
-        "stomp": 61613,
-        "web": 8161,
-        "jmx": 1099
+            "openwire": 61616,
+            "amqp"    : 5672,
+            "mqtt"    : 1883,
+            "core"    : 5445,
+            "stomp"   : 61613,
+            "web"     : 8161,
+            "jmx"     : 1099
     }
     DEFAULT_PORT_JMX = 1099
     DEFAULT_PORT_WEB = 8161

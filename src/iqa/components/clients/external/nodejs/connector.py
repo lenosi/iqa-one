@@ -1,7 +1,3 @@
-
-
-from autologging import logged, traced
-
 from iqa.components.clients.external.nodejs.command.nodejs_commands import NodeJSConnectorClientCommand
 from iqa.system.node import Node, Executor
 from .client import ClientNodeJS
@@ -13,8 +9,6 @@ except ImportError:
     from urllib.parse import urlparse, urlunparse, quote, unquote
 
 
-@logged
-@traced
 class ConnectorNodeJS(ClientNodeJS):
     """External NodeJS connector client."""
 

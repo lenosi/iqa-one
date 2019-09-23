@@ -1,10 +1,8 @@
 from iqa.system.service.service import Service
+from .service_artemis import *
 from .service_docker import *
 from .service_system_init import *
 from .service_systemd import *
-from .service_artemis import *
-
-import logging
 
 
 class ServiceFactory(object):

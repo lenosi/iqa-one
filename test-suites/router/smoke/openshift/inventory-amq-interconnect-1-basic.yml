@@ -1,0 +1,30 @@
+all:
+  vars:
+    ansible_user: root
+    ansible_ssh_extra_args: '-o StrictHostKeyChecking=no'
+  children:
+    routers:
+      hosts:
+        router1:
+          ansible_host: "{{ lookup('env', 'router1_ip') }}"
+          ansible_connection: ssh
+          component: router
+          router_port: 5672
+          router_config: /etc/qpid-dispatch/qdrouterd.conf
+          implementation: dispatch
+          service: qdrouterd
+    clients:
+      hosts:
+        cli-java:
+          implementation: java
+          url: "amqp://{{ lookup('env', 'router1_ip') }}:5672/address.java"
+        cli-proton-python:
+          implementation: python
+          url: "amqp://{{ lookup('env', 'router1_ip') }}:5672/address.python"
+        cli-rhea:
+          implementation: nodejs
+          url: "amqp://{{ lookup('env', 'router1_ip') }}:5672/address.nodejs"
+      vars:
+        ansible_connection: docker
+        component: client
+        executor: docker

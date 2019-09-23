@@ -1,14 +1,8 @@
-
-
-from autologging import logged, traced
-
 from iqa.components import protocols
 from iqa.components.clients.external import ClientExternal
 from iqa.system.node import Node, Executor
 
 
-@logged
-@traced
 class ClientNodeJS(ClientExternal):
     """NodeJS RHEA client"""
 

@@ -1,14 +1,8 @@
-
-
-from autologging import logged, traced
-
 from iqa.components.clients.external.python.command.python_commands import PythonConnectorClientCommand
 from iqa.system.node import Node, Executor
 from .client import ClientPython
 
 
-@logged
-@traced
 class ConnectorPython(ClientPython):
     """External Python-Proton connector client."""
 

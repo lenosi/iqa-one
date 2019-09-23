@@ -3,8 +3,10 @@ IQAInstance which is populated based on an ansible compatible inventory file.
 """
 from typing import List
 
-from autologging import logged, traced
-
+from iqa.components.abstract.component import *
+from iqa.components.brokers import BrokerFactory
+from iqa.components.clients import ClientFactory
+from iqa.components.routers import RouterFactory
 from iqa.messaging.abstract.client import Client
 from iqa.messaging.abstract.client.receiver import Receiver
 from iqa.messaging.abstract.client.sender import Sender
@@ -12,10 +14,6 @@ from iqa.messaging.abstract.server.broker import Broker
 from iqa.messaging.abstract.server.router import Router
 from iqa.system.ansible.ansible_inventory import AnsibleInventory
 from iqa.system.executor import ExecutorFactory
-from iqa.components.abstract.component import *
-from iqa.components.brokers import BrokerFactory
-from iqa.components.clients import ClientFactory
-from iqa.components.routers import RouterFactory
 from iqa.system.node import NodeFactory
 from iqa.system.service import *
 
@@ -28,7 +26,8 @@ class IQAInstance:
 
     Store variables, node and related things
     """
-    def __init__(self, inventory='', cli_args: dict=None):
+
+    def __init__(self, inventory='', cli_args: dict = None):
         self.inventory = inventory
         self._inv_mgr = AnsibleInventory(inventory=self.inventory, extra_vars=cli_args)
         self.nodes = []
@@ -42,7 +41,7 @@ class IQAInstance:
         :return:
         """
 
-        def get_and_remove_key(vars_dict: dict, key: str, default: str=None):
+        def get_and_remove_key(vars_dict: dict, key: str, default: str = None):
             val = vars_dict.get(key, default)
             if key in vars_dict:
                 del vars_dict[key]
@@ -109,7 +108,7 @@ class IQAInstance:
         self.nodes.append(node)
         return node
 
-    def new_component(self, node: Node, component):
+    def new_component(self, component):
         """Create new node under iQA instance
 
         @TODO Pass inventory by true way for Ansible
@@ -144,7 +143,7 @@ class IQAInstance:
         return [component for component in self.components
                 if isinstance(component, Client)]
 
-    def get_clients(self, client_type: type, implementation: str=None):
+    def get_clients(self, client_type: type, implementation: str = None):
         """
         Get all client instances on this node
         @TODO
@@ -153,7 +152,7 @@ class IQAInstance:
         return [component for component in self.clients
                 if isinstance(component, client_type) and
                 (implementation is None or
-                component.implementation == implementation.lower())]
+                 component.implementation == implementation.lower())]
 
     def get_receiver(self, hostname: str):
         """

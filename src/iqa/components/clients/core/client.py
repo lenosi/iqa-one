@@ -1,13 +1,9 @@
-from autologging import logged, traced
-
 from iqa.components import protocols
 from iqa.components.abstract.component import Component
 from iqa.messaging.abstract.client import MessagingClient
 from iqa.system.node.node import Node
 
 
-@logged
-@traced
 class CoreMessagingClient(MessagingClient, Component):
     """Internal core Proton mapping client."""
 

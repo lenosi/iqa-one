@@ -1,14 +1,10 @@
-from autologging import logged, traced
-
 from iqa.components.abstract.server.server_component import ServerComponent
 from iqa.messaging.abstract.server.router import Router
-from .management import QDManage, QDStat
 from .config import Config
 from .log import Log
+from .management import QDManage, QDStat
 
 
-@logged
-@traced
 class Dispatch(Router, ServerComponent):
     """
     Dispatch router component

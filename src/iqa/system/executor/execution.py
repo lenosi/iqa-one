@@ -1,8 +1,8 @@
+import abc
+import logging
 import subprocess
 import tempfile
-import logging
 import threading
-import abc
 from typing import IO
 
 from iqa.system.command.command_base import Command

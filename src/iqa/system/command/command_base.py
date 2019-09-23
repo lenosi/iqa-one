@@ -9,6 +9,7 @@ class Command(object):
     Represents a command that can be executed against different
     executors, behaving similarly across them.
     """
+
     def __init__(self, args: object, stdout: object = False, stderr: object = False,
                  daemon: object = False, timeout: object = 0, encoding: object = "utf-8") -> object:
         """

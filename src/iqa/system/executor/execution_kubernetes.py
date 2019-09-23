@@ -1,12 +1,13 @@
+import logging
 import os
 import tempfile
 import threading
-import logging
+
 import urllib3
-from kubernetes.stream.ws_client import WSClient
 from kubernetes import config, client
 from kubernetes.client.apis import core_v1_api
 from kubernetes.stream import stream
+from kubernetes.stream.ws_client import WSClient
 
 # Logger for ExecutionKubernetes
 from iqa.system.command.command_base import Command

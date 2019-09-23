@@ -1,11 +1,7 @@
-from autologging import logged, traced
-
 from iqa.components.clients.external import ClientExternal, protocols
 from iqa.system.node import Node, Executor
 
 
-@logged
-@traced
 class ClientPython(ClientExternal):
     """Python Proton client (base abstract class)."""
 

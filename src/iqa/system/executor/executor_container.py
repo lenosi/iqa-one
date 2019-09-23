@@ -1,7 +1,7 @@
-from iqa.system.command.command_base import Command
-from iqa.system.command.command_container import CommandContainer
-from .executor_base import Executor
 from .execution import ExecutionProcess
+from .executor_base import Executor
+from ..command.command_base import Command
+from ..command.command_container import CommandContainer
 
 """
 Executor instance that runs a given Command instance using

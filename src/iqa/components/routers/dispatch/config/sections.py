@@ -4,6 +4,7 @@
 from . import _Section, _Attribute
 
 
+# noinspection PyPep8Naming,PyPep8Naming
 class addrPort(_Section):
     """
     Attributes for internet address and port.
@@ -34,6 +35,7 @@ class addrPort(_Section):
         self.name = _Attribute(name='name', value=name)
 
 
+# noinspection PyPep8Naming
 class connectionRole(_Section):
     """
     Attribute for the role of a connection.
@@ -70,6 +72,7 @@ class connectionRole(_Section):
         self.name = _Attribute(name='name', value=name)
 
 
+# noinspection PyPep8Naming,PyPep8Naming,PyPep8Naming,PyPep8Naming,PyPep8Naming,PyPep8Naming,PyPep8Naming
 class sslProfile(_Section):
     """
     Attributes for setting TLS/SSL configuration for connections.
@@ -138,6 +141,7 @@ class sslProfile(_Section):
         self.name = _Attribute(name='name', value=name)
 
 
+# noinspection PyPep8Naming,PyPep8Naming,PyPep8Naming,PyPep8Naming,PyPep8Naming,PyPep8Naming,PyPep8Naming,PyPep8Naming,PyPep8Naming,PyPep8Naming
 class router(_Section):
     """
     Tracks peer routers and computes routes to destinations.
@@ -205,6 +209,7 @@ class router(_Section):
         self.saslConfigName = _Attribute(name='saslConfigName', value=saslConfigName)
 
 
+# noinspection PyPep8Naming,PyPep8Naming,PyPep8Naming,PyPep8Naming,PyPep8Naming,PyPep8Naming,PyPep8Naming,PyPep8Naming,PyPep8Naming,PyPep8Naming,PyPep8Naming,PyPep8Naming,PyPep8Naming,PyPep8Naming,PyPep8Naming,PyPep8Naming,PyPep8Naming,PyPep8Naming,PyPep8Naming,PyPep8Naming
 class listener(_Section):
     """
     Listens for incoming connections to the router.
@@ -364,6 +369,7 @@ class listener(_Section):
         self.name = _Attribute(name='name', value=name)
 
 
+# noinspection PyPep8Naming,PyPep8Naming,PyPep8Naming,PyPep8Naming,PyPep8Naming,PyPep8Naming,PyPep8Naming,PyPep8Naming,PyPep8Naming,PyPep8Naming,PyPep8Naming,PyPep8Naming,PyPep8Naming,PyPep8Naming,PyPep8Naming,PyPep8Naming,PyPep8Naming,PyPep8Naming,PyPep8Naming,PyPep8Naming
 class connector(_Section):
     """
     Establishes an outgoing connection from the router.
@@ -522,6 +528,7 @@ class connector(_Section):
         self.name = _Attribute(name='name', value=name)
 
 
+# noinspection PyPep8Naming
 class log(_Section):
     """
     Configure logging for a particular module. You can use the UPDATE operation to change
@@ -564,6 +571,7 @@ class log(_Section):
         self.output = _Attribute(name='output', value=output)
 
 
+# noinspection PyPep8Naming,PyPep8Naming,PyPep8Naming
 class address(_Section):
     """
     Entity type for address configuration. This is used to configure the treatment of message-routed deliveries
@@ -600,6 +608,7 @@ class address(_Section):
         self.egressPhase = _Attribute(name='egressPhase', value=egressPhase)
 
 
+# noinspection PyPep8Naming,PyPep8Naming
 class linkRoute(_Section):
     """
     Entity type for link-route configuration. This is used to identify remote containers that shall be destinations
@@ -627,6 +636,7 @@ class linkRoute(_Section):
         self.dir = _Attribute(name='dir', value=dir)
 
 
+# noinspection PyPep8Naming,PyPep8Naming
 class autoLink(_Section):
     """
     Entity type for configuring auto-links. Auto-links are links whose lifecycle is managed by the router.
@@ -662,6 +672,7 @@ class autoLink(_Section):
         self.connection = _Attribute(name='connection', value=connection)
 
 
+# noinspection PyPep8Naming,PyPep8Naming,PyPep8Naming,PyPep8Naming,PyPep8Naming,PyPep8Naming
 class policy(_Section):
     """
     Defines global connection limit
@@ -705,6 +716,7 @@ class policy(_Section):
         self.defaultApplicationEnabled = _Attribute(name='defaultApplicationEnabled', value=defaultApplicationEnabled)
 
 
+# noinspection PyPep8Naming,PyPep8Naming,PyPep8Naming,PyPep8Naming,PyPep8Naming,PyPep8Naming,PyPep8Naming,PyPep8Naming
 class policyRuleset(_Section):
     """
     Per application definition of the locations from which users may connect and the groups to which users belong.

@@ -1,0 +1,13 @@
+*.pyenv*
+logs
+.idea
+*.py[co]
+*.idea
+*venv*
+*.log
+*.cache*
+*.eggs*
+*.tox*
+*.retry
+*.pytest_cache*
+*__pycache--*

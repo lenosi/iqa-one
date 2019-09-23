@@ -1,4 +1,3 @@
-
 class _Attribute:
     def __init__(self, name, value, deprecated=False):
         self.name = name
@@ -53,6 +52,7 @@ class _Section:
 
 class Config(list):
     """Qpid Dispatch configuration"""
+
     def __init__(self):
         super().__init__()
 

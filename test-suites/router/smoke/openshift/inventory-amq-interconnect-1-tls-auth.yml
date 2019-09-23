@@ -1,0 +1,38 @@
+all:
+  vars:
+    ansible_user: root
+    ansible_ssh_extra_args: "-o StrictHostKeyChecking=no"
+  children:
+    routers:
+      hosts:
+        router1:
+          ansible_host: "{{ lookup('env', 'router1_ip') }}"
+          ansible_connection: local
+          component: router
+          router_port: 5671
+          router_config: /etc/qpid-dispatch/qdrouterd.conf
+          implementation: dispatch
+          service: qdrouterd
+          pem_file: "client.crt"
+          key_file: "client-key.pem"
+          key_password:
+    clients:
+      hosts:
+        cli-java:
+          implementation: java
+          url: "amqps://{{ lookup('env', 'router1_ip') }}:5671/address.java"
+        cli-proton-python:
+          implementation: python
+          url: "amqps://{{ lookup('env', 'router1_ip') }}:5671/address.python"
+        cli-rhea:
+          implementation: nodejs
+          url: "amqps://{{ lookup('env', 'router1_ip') }}:5671/address.nodejs"
+      vars:
+        ansible_connection: docker
+        component: client
+        executor: docker
+        pem_file: "/client.crt"
+        key_file: "/client-key.pem"
+        keystore: "/clientkeystore"
+        keystore_pass: "redhat"
+        keystore_alias: "client"

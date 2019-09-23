@@ -1,10 +1,10 @@
+import logging
 from collections import namedtuple
 from typing import NamedTuple
 
+import proton
 from proton import Url, SSLDomain
 from proton.utils import BlockingConnection, SyncRequestResponse
-import proton
-import logging
 
 from iqa.messaging.abstract.server.router import Router
 
@@ -22,11 +22,11 @@ class RouterQuery(object):
         self.host = host
         self._router = router
         self._connection_options = {
-                'sasl_enabled':         False,
-                'ssl_domain':           None,
+                'sasl_enabled'        : False,
+                'ssl_domain'          : None,
                 'allow_insecure_mechs': True,
-                'user':                 None,
-                'password':             None
+                'user'                : None,
+                'password'            : None
         }
 
         if self._router:

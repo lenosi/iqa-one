@@ -2,8 +2,8 @@
 Basic concrete implementation of Node interface.
 """
 
-import re
 import logging
+import re
 
 from iqa.system.executor import Executor, Command
 from iqa.system.node import Node
@@ -12,7 +12,7 @@ from iqa.system.node import Node
 class NodeLocal(Node):
     """Node component."""
 
-    def __init__(self, hostname: str, executor: Executor, ip: str=None):
+    def __init__(self, hostname: str, executor: Executor, ip: str = None):
         super(NodeLocal, self).__init__(hostname, executor, ip)
         logging.getLogger().info('Initialization of NodeLocal: %s' % self.hostname)
 
@@ -21,9 +21,9 @@ class NodeLocal(Node):
         cmd_ping = Command([], stdout=True, timeout=20)
 
         # If unable to determine ip address, then do not perform ping
-        if self._get_ip() is None:
+        if self.get_ip() is None:
             return False
-        cmd_ping.args = ['ping', '-c', '1', self._get_ip()]
+        cmd_ping.args = ['ping', '-c', '1', self.get_ip()]
 
         execution = self.executor.execute(cmd_ping)
 

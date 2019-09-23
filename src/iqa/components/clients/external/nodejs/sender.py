@@ -1,8 +1,3 @@
-
-
-from autologging import logged, traced
-
-
 from iqa.components.clients.external.nodejs.client import ClientNodeJS
 from iqa.components.clients.external.nodejs.command.nodejs_commands import NodeJSSenderClientCommand
 from iqa.messaging.abstract.client.sender import Sender
@@ -16,8 +11,6 @@ except ImportError:
     from urllib.parse import urlparse, urlunparse, quote, unquote
 
 
-@logged
-@traced
 class SenderNodeJS(Sender, ClientNodeJS):
     """External NodeJS sender client."""
 

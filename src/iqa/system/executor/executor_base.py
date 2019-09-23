@@ -1,7 +1,8 @@
-from iqa.system.command.command_base import Command
-from .execution import Execution
-from .execution import ExecutionProcess
 import logging
+
+from iqa.system.command.command_base import Command
+from iqa.system.executor.execution import Execution
+from iqa.system.executor.execution import ExecutionProcess
 
 """
 Defines the generic Executor class, which is responsible for
@@ -14,6 +15,7 @@ class Executor(object):
     """
     Abstract and generic definition of a Command executor.
     """
+
     def __init__(self, **kwargs):
         self._logger = logging.getLogger(self.__class__.__module__)
         self.name = None
@@ -71,7 +73,7 @@ class ExecutorLocal(Executor):
 
     implementation = "local"
 
-    def __init__(self, name: str="ExecutorLocal", **kwargs):
+    def __init__(self, name: str = "ExecutorLocal", **kwargs):
         super(ExecutorLocal, self).__init__(**kwargs)
         self.name = name
 

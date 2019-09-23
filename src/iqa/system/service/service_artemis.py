@@ -1,6 +1,6 @@
+import logging
 import posixpath
 import re
-import logging
 import time
 from enum import Enum
 
@@ -54,7 +54,8 @@ class ServiceFakeArtemis(ServiceFake):
         # (dead)
 
         # On RHEL7> service is automatically redirected to systemctl
-        cmd_status = Command(['runuser', '-l', self.service_username, '%s status' % self.service_path], stdout=True, timeout=self.TIMEOUT)
+        cmd_status = Command(['runuser', '-l', self.service_username, '%s status' % self.service_path], stdout=True,
+                             timeout=self.TIMEOUT)
         execution = self.executor.execute(cmd_status)
 
         if not execution.read_stdout():

@@ -1,0 +1,41 @@
+sudo: required
+language: python
+python:
+  - "3.6"
+
+addons:
+  apt:
+    packages:
+      - python-pip
+      - python-dev
+
+services:
+  - docker
+
+before_install:
+  # Docker-CE Installation + git
+  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+  - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+  - sudo apt-get update
+  - sudo apt-get -y install docker-ce git
+
+  # Related repositories
+  - git clone https://github.com/rh-messaging-qe/iqa.messaging_abstract.git
+  - git clone https://github.com/rh-messaging-qe/messaging_components.git
+  - git clone https://github.com/rh-messaging-qe/iqa_common.git
+  - git clone https://github.com/rh-messaging-qe/iqa_topologies.git
+
+  # Setup dependency
+  - cd messaging_abstract;    python setup.py install; cd ..
+  - cd messaging_components;  python setup.py install; cd ..
+  - cd iqa_common;            python setup.py install; cd ..
+
+jobs:
+  include:
+    - stage: IQA Test Suite
+      script:
+        # Deploy docker based test topology
+        - true
+
+        # Deploy components' containers to test
+        - true

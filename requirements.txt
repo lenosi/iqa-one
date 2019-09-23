@@ -1,0 +1,8 @@
+ansible
+python-qpid-proton
+amqcfg
+dpath
+optconstruct
+docker
+urllib3
+kuberneetes

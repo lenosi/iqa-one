@@ -1,16 +1,9 @@
-
-
-from autologging import logged, traced
-
-
 from iqa.components.clients.external.python.command.python_commands import PythonReceiverClientCommand
 from iqa.messaging.abstract.client.receiver import Receiver
 from iqa.system.node import Node, Executor
 from .client import ClientPython
 
 
-@logged
-@traced
 class ReceiverPython(Receiver, ClientPython):
     """External Python-Proton receiver client."""
 

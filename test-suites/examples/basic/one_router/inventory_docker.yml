@@ -1,0 +1,25 @@
+#
+# This sample inventory file defines a node that provides a Router component
+# which is running as a docker container in the local machine (ansible_connection: docker).
+#
+# The following node variables are mandatory:
+# - component (determines a component that can be parsed by iqa [router, broker, client])
+# - implementation (for router, we currently just have: dispatch)
+#
+# Router component required variables:
+# - router_port
+# - router_config
+# - service (not needed when running as a container)
+# - executor (defines the executor instance to be used for communicating with the node)
+#
+all:
+  children:
+    routers:
+      hosts:
+        router1:
+          ansible_connection: docker
+          component: router
+          router_port: 5672
+          router_config: /etc/qpid-dispatch/qdrouterd.conf
+          implementation: dispatch
+          executor: docker

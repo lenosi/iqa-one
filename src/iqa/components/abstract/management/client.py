@@ -13,7 +13,7 @@ class ManagementClient(ABC):
     def create_destination(self, destination: Destination):
         """
         Creates an address using its name and specialized type (ANYCAST, MULTICAST).
-        :param address:
+        :param destination:
         :return:
         """
         pass

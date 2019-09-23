@@ -1,5 +1,4 @@
-from optconstruct import OptionAbstract
-from optconstruct.types import Toggle, Prefixed, KWOption, ListOption
+from optconstruct.types import Prefixed
 
 from iqa.components.clients.external.command.options.client_options import ControlOptionsCommon, \
     ControlOptionsSenderReceiver, ControlOptionsReceiver, ConnectionOptionsCommon

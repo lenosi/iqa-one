@@ -5,11 +5,10 @@ in case the running program completes and process is still running.
 It waits for a pre-defined amount of time * attempts, before killing
 the running process.
 """
-import time
-import subprocess
 import atexit
-import traceback
 import logging
+import subprocess
+import time
 
 
 class Process(subprocess.Popen):

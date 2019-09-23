@@ -12,7 +12,7 @@ from iqa.utils.docker_util import DockerUtil
 class NodeDocker(Node):
     """Ansible implementation for Node interface."""
 
-    def __init__(self, hostname: str, executor: Executor, ip: str=None):
+    def __init__(self, hostname: str, executor: Executor, ip: str = None):
         super(NodeDocker, self).__init__(hostname, executor, ip)
         self.docker_util = DockerUtil()
         self.ip = ip

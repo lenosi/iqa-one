@@ -2,8 +2,8 @@
 Ansible Node implementation of Node Interface.
 """
 
-import re
 import logging
+import re
 
 from iqa.system.executor import Executor, CommandAnsible
 from iqa.system.node import Node

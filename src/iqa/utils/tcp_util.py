@@ -21,14 +21,15 @@
 """
 Provides utility classes and methods to deal with TCP communication.
 """
-import socket
 import logging
+import socket
 
 
 class TcpUtil(object):
     """
     TCP Utility class.
     """
+
     @staticmethod
     def is_tcp_port_available(port, host):
         """

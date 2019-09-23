@@ -1,9 +1,10 @@
 from .execution import *
 from .execution_kubernetes import *
-from .executor_base import *
 from .executor_ansible import *
-from .executor_ssh import *
+from .executor_base import *
 from .executor_container import *
+from .executor_kubernetes import *
+from .executor_ssh import *
 
 
 class ExecutorFactory(object):
@@ -22,3 +23,20 @@ class ExecutorFactory(object):
             return exec_class(**kwargs)
 
         raise ValueError('Invalid Executor implementation given: %s' % exec_impl)
+
+
+class ExecutorFactory2(object):
+    @staticmethod
+    def create_executor(impl: str, **kwargs) -> Executor:
+        if impl == ExecutorLocal.implementation:
+            return ExecutorLocal()
+        elif impl == ExecutorSsh.implementation:
+            return ExecutorSsh(**kwargs)
+        elif impl == ExecutorContainer.implementation:
+            return ExecutorContainer(**kwargs)
+        elif impl == ExecutorAnsible.implementation:
+            return ExecutorAnsible(**kwargs)
+        elif impl == ExecutorKubernetes.implementation:
+            return ExecutorKubernetes(**kwargs)
+        else:
+            raise ValueError('Invalid executor implementation')

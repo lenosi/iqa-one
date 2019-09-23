@@ -21,6 +21,7 @@
 Utility class to help executing OpenShift standard operations
 """
 import logging
+
 from iqa.system.executor import Executor, Execution, Command
 
 
@@ -42,10 +43,12 @@ class OpenShiftUtil(object):
         Decorator used to enforce a oc login will be issued before another command.
         :return:
         """
+
         def wrap(*args, **kwargs):
             instance = args[0]
             assert instance.login().completed_successfully()
             return func(*args, **kwargs)
+
         return wrap
 
     def login(self, timeout=TIMEOUT) -> Execution:

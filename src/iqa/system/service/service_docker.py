@@ -1,8 +1,6 @@
+import logging
 from enum import Enum
 from typing import Union
-
-
-import logging
 
 from iqa.system.command.command_ansible import CommandAnsible
 from iqa.system.executor import ExecutorAnsible, ExecutorContainer, Execution, CommandContainer

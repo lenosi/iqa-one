@@ -1,5 +1,3 @@
-from autologging import logged, traced
-
 from iqa.components.clients.external.java.client import ClientJava
 from iqa.components.clients.external.java.command.java_commands import JavaSenderClientCommand
 from iqa.messaging.abstract.client.sender import Sender
@@ -13,8 +11,6 @@ except ImportError:
     from urllib.parse import urlparse, urlunparse, quote, unquote
 
 
-@logged
-@traced
 class SenderJava(Sender, ClientJava):
     """External Java Qpid JMS sender client."""
 
@@ -22,7 +18,7 @@ class SenderJava(Sender, ClientJava):
 
     def _set_url(self, url: str):
         p_url = urlparse(url)
-        self._command.control.broker = '{}://{}:{}'.\
+        self._command.control.broker = '{}://{}:{}'. \
             format(p_url.scheme or 'amqp', p_url.hostname or '127.0.0.1', p_url.port or '5672')
         self._command.control.address = urlunparse(('', '', p_url.path or '', p_url.params or '',
                                                     p_url.query or '', p_url.fragment or ''))

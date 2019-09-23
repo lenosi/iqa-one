@@ -1,9 +1,9 @@
 import abc
+import logging
 import os
 import posixpath
 
 import dpath
-import logging
 import yaml
 
 from iqa.components.abstract.component import Component
@@ -23,7 +23,7 @@ class Configuration(object):
     LOGGER = logging.getLogger(__name__)
     config_file = 'data_config_file'
     original_config_file = None
-    local_config_dir = None  # local cconfiguration directory (ansible inventory dir)
+    local_config_dir = None  # local configuration directory (ansible inventory dir)
     node_config_dir = None  # remote configuration directory
     object_list = []
     yaml_data = None
@@ -76,7 +76,7 @@ class Configuration(object):
                 raise IQAConfigurationException("Unable to load file '%s' for '%s'" % (path, self.__class__.__name__))
 
             if "artemis" not in self.yaml_data['render']['template']:
-                raise IQAConfigurationException("Incompatible data structure for %s !" % (self.__class__.__name__))
+                raise IQAConfigurationException("Incompatible data structure for %s !" % self.__class__.__name__)
 
     @abc.abstractmethod
     def load_configuration(self):
@@ -100,12 +100,15 @@ class Configuration(object):
     def copy_configuration_files(self):
         cmd_copy_files = None
         if isinstance(self.component.node, NodeAnsible):
-            cmd_copy_files = CommandAnsible(ansible_module="synchronize",
-                                            ansible_args='src=%s dest=%s' % (self.local_config_dir,
-                                                                             self.node_config_dir),
-                                            stdout=True,
-                                            stderr=True,
-                                            timeout=20)
+            cmd_copy_files = CommandAnsible(
+                ansible_module="synchronize",
+                ansible_args='src=%s dest=%s' %
+                             (self.local_config_dir,
+                              self.node_config_dir),
+                stdout=True,
+                stderr=True,
+                timeout=20
+            )
         elif isinstance(self.component.node, NodeLocal):
             cmd_copy_files = Command([], stdout=True, timeout=20)
         elif isinstance(self.component.node, NodeDocker):

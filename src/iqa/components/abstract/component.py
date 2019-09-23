@@ -1,7 +1,5 @@
 from inspect import signature
 
-from iqa.system.command.command_base import Command
-from iqa.system.executor import Execution
 from iqa.system.node.node import Node
 
 
@@ -13,10 +11,6 @@ class Component(object):
     def __init__(self, name: str, node: Node):
         self.name: str = name
         self.node: Node = node
-
-    def execute(self, command: Command) -> Execution:
-        # TODO want to have it here?
-        return self.node.executor.execute(command)
 
     @property
     def implementation(self):
@@ -30,7 +24,6 @@ class Component(object):
         it will be called if kwargs contains the following keys:
         pem_file, key_file, keystore, keystore_pass and keystore_alias.
         :param func:
-        :param extra_args:
         :return:
         """
         # kwargs not informed

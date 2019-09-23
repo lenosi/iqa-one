@@ -1,6 +1,7 @@
-import re
 import logging
+import re
 from enum import Enum
+
 from iqa.system.executor import Command, Execution, ExecutorAnsible, CommandAnsible, Executor
 from iqa.system.service import Service, ServiceStatus
 
