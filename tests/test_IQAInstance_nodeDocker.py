@@ -17,10 +17,10 @@ class TestIQAInstanceNodeDocker:
 
         executor = ExecutorContainer(
             name="Docker executor",
-            container_name='iqa-example-node'
+            container_name='sshd-iqa'
         )
 
-        example_node = NodeDocker(hostname="iqa-example-node", executor=executor)
+        example_node = NodeDocker(hostname="sshd-iqa", executor=executor)
         instance.nodes.append(example_node)
 
         node: NodeDocker = instance.nodes[0]

@@ -11,10 +11,10 @@ class TestNodeDocker:
 
         executor = ExecutorContainer(
             name="Docker executor",
-            container_name='iqa-example-node'
+            container_name='sshd-iqa'
         )
 
-        node = NodeDocker(hostname="iqa-example-node", executor=executor)
+        node = NodeDocker(hostname="sshd-iqa", executor=executor)
 
         return node
 
