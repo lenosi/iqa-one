@@ -6,15 +6,15 @@ from iqa.system.command.command_base import Command
 
 class TestExecutorSsh:
     def test_execute(self):
-        ip_process = run(["docker", "inspect", "-f", "{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}",
-                                    "sshd-iqa"], stdout=PIPE)
-        ip = ip_process.stdout.decode('utf-8').rstrip()
+        ip_process = run(['docker', 'inspect', '-f', '"{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}"',
+                                    'sshd-iqa'], stdout=PIPE)
+        ip = ip_process.stdout.decode('utf-8').strip('\n\"')
 
         executor = ExecutorSsh(
             user="root",
             hostname=ip,
             name="SSH executor",
-            ssl_private_key="/images/sshd_image/identity"
+            ssl_private_key="images/sshd_image/identity"
         )
 
         cmd = Command(args=["whoami"])

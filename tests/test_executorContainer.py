@@ -6,7 +6,7 @@ class TestExecutorContainer:
     def test_execute(self):
         executor = ExecutorContainer(
             name="Container executor",
-            container_name='iqa-example-node'
+            container_name='sshd-iqa'
         )
 
         cmd = Command(args=["whoami"])
