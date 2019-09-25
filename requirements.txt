@@ -5,4 +5,4 @@ dpath
 optconstruct
 docker
 urllib3
-kuberneetes
+kubernetes

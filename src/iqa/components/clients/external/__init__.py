@@ -1,6 +1,7 @@
 import logging
 
 from .client_external import ClientExternal
+from .command.client_command import ClientCommand
 from .java import *
 from .nodejs import *
 from .python import *

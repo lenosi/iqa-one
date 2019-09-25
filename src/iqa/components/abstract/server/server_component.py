@@ -11,8 +11,8 @@ class ServerComponent(Component):
     Super class for all Server component implementations (for now Routers and Brokers).
     """
 
-    def __init__(self, name: str, node: Node, service: Service, listeners: list[Listener],
-                 management: ManagementClient = None, configuration: Configuration = None):
+    def __init__(self, name: str, node: Node, service: Service, listeners=[],
+                 management=None, configuration=None):
         super(ServerComponent, self).__init__(name, node)
         self.service = service
         self.name = name
