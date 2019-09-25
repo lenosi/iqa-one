@@ -1,4 +1,4 @@
-from iqa.components.clients import ClientJava
+from .client import ClientJava
 from iqa.components.clients.external.java.command.java_commands import JavaConnectorClientCommand
 from iqa.system.node import Node
 
@@ -42,7 +42,7 @@ class ConnectorJava(ClientJava):
                                           timeout=timeout, encoding=encoding)
 
     def connect(self) -> bool:
-        self.execution = self.execute(self.command)
+        self.execution = self.node.execute(self.command)
         if self.execution.completed_successfully():
             return True
         return False

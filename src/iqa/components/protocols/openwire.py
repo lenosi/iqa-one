@@ -3,5 +3,5 @@ from iqa.components.abstract.network.transport import TCP
 
 
 class Openwire(Protocol):
-    def __init__(self, transport=TCP, default_port=5672):
-        super(Openwire, self).__init__(transport, default_port)
+    def __init__(self, transport=TCP):
+        super(Openwire, self).__init__(transport)
