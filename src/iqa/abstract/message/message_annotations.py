@@ -1,3 +1,7 @@
+from dataclasses import dataclass
+
+# noinspection PyDunderSlots
+@dataclass(frozen=False)
 class MessageAnnotations:
     """
     @TODO
@@ -22,6 +26,4 @@ class MessageAnnotations:
     If the message-annotations section is omitted, it is equivalent to a message-annotations section containing
     an empty map of annotations.
     """
-
-    def __init__(self):
-        pass
+    non: None = None

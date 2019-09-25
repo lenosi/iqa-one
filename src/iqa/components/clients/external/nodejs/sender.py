@@ -1,6 +1,6 @@
 from iqa.components.clients.external.nodejs.client import ClientNodeJS
 from iqa.components.clients.external.nodejs.command.nodejs_commands import NodeJSSenderClientCommand
-from iqa.messaging.abstract.client.sender import Sender
+from iqa.abstract.client import Sender
 from iqa.messaging.abstract.message import Message
 from iqa.system.node import Node, Executor
 

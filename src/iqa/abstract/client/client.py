@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from iqa.messaging.abstract.listener import Listener
+from iqa.abstract.listener import Listener
 
 
 class Client(ABC):
@@ -8,15 +8,37 @@ class Client(ABC):
     Abstract class for every abstract client
     """
 
-    # Required variables
-    supported_protocols = []
-    name = None
-    version = None
-
-    def __init__(self, name: str, **kwargs):
+    def __init__(self, **kwargs):
         self.url = None  # connectionUrl
         self.users = None
         self.logs = None
+
+    @property
+    @abstractmethod
+    def name(self):
+        """
+
+        :return: String
+        """
+        pass
+
+    @property
+    @abstractmethod
+    def version(self):
+        """
+
+        :return: String
+        """
+        pass
+
+    @property
+    @abstractmethod
+    def supported_protocols(self):
+        """
+
+        :return: List
+        """
+        pass
 
     @abstractmethod
     def set_url(self, url: str):

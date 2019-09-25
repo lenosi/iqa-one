@@ -21,37 +21,37 @@ class ArtemisConfig(BrokerConfiguration):
     DEFAULT_INSTANCE_HOME = "/opt/jboss-amq-7-i0"
     DEFAULT_INSTANCE_NAME = "amq"
     DEFAULT_USERS = {
-            "admin"        : {
+            "admin": {
                     "password": "admin",
-                    "role"    : "amq",
-                    "key"     : "/path/to/key",
-                    "ticket"  : "/path/to/ticket"
+                    "role": "amq",
+                    "key": "/path/to/key",
+                    "ticket": "/path/to/ticket"
             },
-            "tckuser"      : {
+            "tckuser": {
                     "password": "tckuser",
-                    "role"    : "amq"
+                    "role": "amq"
             },
             "superuser"    : {
                     "password": "superuser",
-                    "role"    : "amq"
+                    "role": "amq"
             },
             "administrator": {
                     "password": "administrator",
-                    "role"    : "amq"
+                    "role": "amq"
             },
-            "nobody"       : {
+            "nobody": {
                     "password": "nobody",
-                    "role"    : "amq"
+                    "role": "amq"
             }
     }
     DEFAULT_PORTS = {
             "openwire": 61616,
-            "amqp"    : 5672,
-            "mqtt"    : 1883,
-            "core"    : 5445,
-            "stomp"   : 61613,
-            "web"     : 8161,
-            "jmx"     : 1099
+            "amqp": 5672,
+            "mqtt": 1883,
+            "core": 5445,
+            "stomp": 61613,
+            "web": 8161,
+            "jmx": 1099
     }
     DEFAULT_PORT_JMX = 1099
     DEFAULT_PORT_WEB = 8161

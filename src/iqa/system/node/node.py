@@ -15,7 +15,7 @@ class Node:
                  ip: str = None):
         self.hostname: str = hostname
         self.name: str = name if name else hostname
-        self.executor: Executor = executor
+        self.executor = executor
         self.ip: str = ip
 
     def execute(self, command: Command) -> Execution:

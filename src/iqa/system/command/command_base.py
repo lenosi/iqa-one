@@ -4,24 +4,28 @@ Executor instances.
 """
 
 
-class Command(object):
+class Command:
     """
     Represents a command that can be executed against different
     executors, behaving similarly across them.
     """
 
-    def __init__(self, args: object, stdout: object = False, stderr: object = False,
-                 daemon: object = False, timeout: object = 0, encoding: object = "utf-8") -> object:
+    def __init__(self, args, stdout=False, stderr=False, daemon=False,
+                 timeout=0, encoding="utf-8"):
         """
         Creates an instance of a Command representation that can be passed to
         an Executor instance.
         :param args: List of arguments that compose the command to be executed
-        :param stdout: If True stdout will be available at the resulting Execution instance.
-        :param stderr: If True stderr will be available at the resulting Execution instance.
-        :param daemon: If True process is executed without blocking current thread. When running as a daemon
-                       it is important to cancel the execution timer when a timeout value is provided.
-        :param timeout: If a positive number provided, the process will be terminated on timeout
-                        and the registered timeout callbacks will be invoked.
+        :param stdout: If True stdout will be available at the
+        resulting Execution instance.
+        :param stderr: If True stderr will be available at the
+        resulting Execution instance.
+        :param daemon: If True process is executed without blocking
+        current thread. When running as a daemon it is important to cancel
+        the execution timer when a timeout value is provided.
+        :param timeout: If a positive number provided, the process
+        will be terminated on timeout and the registered timeout
+        callbacks will be invoked.
         :param encoding: Encoding when reading stdout and stderr.
         """
         self._args = args
@@ -30,6 +34,7 @@ class Command(object):
         self.daemon = daemon
         self.timeout = timeout
         self.encoding = encoding
+
         self._timeout_callbacks = []
         self._interrupt_callbacks = []
         self._pre_exec_hooks = []

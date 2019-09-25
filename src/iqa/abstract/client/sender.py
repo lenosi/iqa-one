@@ -1,7 +1,7 @@
 from abc import abstractmethod
 
-from iqa.messaging.abstract.client import MessagingClient
-from iqa.messaging.abstract.message import Message
+from iqa.abstract.client import MessagingClient
+from iqa.abstract.message import Message
 
 
 class Sender(MessagingClient):

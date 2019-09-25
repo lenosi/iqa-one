@@ -22,21 +22,24 @@ class RouterQuery(object):
         self.host = host
         self._router = router
         self._connection_options = {
-                'sasl_enabled'        : False,
-                'ssl_domain'          : None,
+                'sasl_enabled': False,
+                'ssl_domain': None,
                 'allow_insecure_mechs': True,
-                'user'                : None,
-                'password'            : None
+                'user': None,
+                'password': None
         }
 
         if self._router:
             # Enable SASL when credentials provided
-            self._connection_options['sasl_enabled'] = self._router.has_ssl_keys() or self._router.has_credentials()
+            self._connection_options['sasl_enabled'] = \
+                self._router.has_ssl_keys() or self._router.has_credentials()
 
             # If SSL certificates provided, use them
             if self._router.has_ssl_keys():
                 ssl_domain = SSLDomain(SSLDomain.MODE_CLIENT)
-                ssl_domain.set_credentials(self._router.pem_file, self._router.key_file, self._router.key_password)
+                ssl_domain.set_credentials(self._router.pem_file,
+                                           self._router.key_file,
+                                           self._router.key_password)
                 self._connection_options['ssl_domain'] = ssl_domain
 
             # If User and Password provided
@@ -44,7 +47,8 @@ class RouterQuery(object):
                 self._connection_options['user'] = self._router.user
                 self._connection_options['password'] = self._router.password
 
-    def query(self, entity_type: str = 'org.apache.qpid.dispatch.router.node') -> NamedTuple:
+    def query(self, entity_type: str = 'org.apache.qpid.dispatch.router.node') \
+            -> NamedTuple:
         """
         Queries the related router instance, retrieving information for
         the provided Entity Type. The result is an array of a named tuple,
@@ -62,7 +66,8 @@ class RouterQuery(object):
 
         # URL to test
         url = Url("%s://%s:%s/$management" % (scheme, self.host, self.port))
-        self._logger.info("Querying router at: %s://%s:%s/$management" % (scheme, self.host, self.port))
+        self._logger.info("Querying router at: %s://%s:%s/$management" %
+                          (scheme, self.host, self.port))
 
         # Proton connection
         self._logger.debug("Connection options: %s" % self._connection_options)
@@ -73,7 +78,8 @@ class RouterQuery(object):
 
         # Request message object
         request = proton.Message()
-        request.properties = {u'operation': u'QUERY', u'entityType': u'%s' % entity_type}
+        request.properties = {u'operation': u'QUERY',
+                              u'entityType': u'%s' % entity_type}
         request.body = {u'attributeNames': []}
 
         # Sending the request
@@ -84,7 +90,8 @@ class RouterQuery(object):
 
         # Namedtuple that represents the query response from the router
         # so fields can be read based on their attribute names.
-        RouterQueryResults = namedtuple('RouterQueryResults', response.body["attributeNames"])
+        RouterQueryResults = namedtuple('RouterQueryResults',
+                                        response.body["attributeNames"])
         records = []
 
         for record in response.body["results"]:

@@ -2,9 +2,9 @@ import abc
 import logging
 from typing import List
 
-from iqa.messaging.abstract.destination.address import Address
-from iqa.messaging.abstract.destination.queue import Queue
-from iqa.messaging.abstract.server.messaging_server import MessagingServer
+from iqa.abstract.destination.address import Address
+from iqa.abstract.destination.queue import Queue
+from iqa.abstract.server.messaging_server import MessagingServer
 
 
 class Broker(MessagingServer):

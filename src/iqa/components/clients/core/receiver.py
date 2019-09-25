@@ -1,5 +1,5 @@
 from iqa.components.clients.core.client import CoreMessagingClient
-from iqa.messaging.abstract.client.receiver import Receiver
+from iqa.abstract.client import Receiver
 from iqa.system.node import Node, Executor
 
 

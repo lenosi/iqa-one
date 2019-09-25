@@ -1,6 +1,6 @@
 from typing import List
 
-from iqa.messaging.abstract.destination.routing_type import RoutingType
+from iqa.abstract.destination.routing_type import RoutingType
 
 
 class Address:

@@ -12,15 +12,14 @@ from iqa.system.command.command_base import Command
 
 class ClientCommand(Command):
     """
-    Base abstraction class for external clients commands. It encapsulates the args
-    property and getter generates a new list based on ClientCommand's
+    Base abstraction class for external clients commands. It encapsulates the
+    args property and getter generates a new list based on ClientCommand's
     implementation details (based on states of internal ClientOptionsBase
     properties).
     """
 
-    def __init__(self):
-        super().__init__()
-        raise NotImplementedError()
+    def __init__(self, args):
+        super().__init__(args)
 
     @property
     def args(self):
@@ -31,7 +30,7 @@ class ClientCommand(Command):
         List of arguments needed to run the client implementation.
         :return:
         """
-        raise NotImplementedError()
+        return NotImplemented
 
     def _build_command(self) -> list:
         """
@@ -49,7 +48,8 @@ class ClientCommand(Command):
                 continue
             # List of populated options
             all_options.update(opt_value.to_dict())
-            # Append list of valid options for each ClientOptionsBase implementation
+            # Append list of valid options for each ClientOptionsBase
+            # implementation
             valid_options += opt_value.valid_options()
 
         # Generates parameters list (only allowed will be added)
@@ -68,10 +68,14 @@ class ConnectorClientCommand(ClientCommand):
     Abstract implementation of common Connector client options.
     """
 
+    def main_command(self) -> list:
+        return NotImplemented
+
     def __init__(self, stdout: bool = False, stderr: bool = False,
                  daemon: bool = False, timeout: int = 0,
                  encoding: str = "utf-8"):
-        super(ClientCommand, self).__init__([], stdout, stderr, daemon, timeout, encoding)
+        super(ClientCommand, self).__init__([], stdout, stderr, daemon,
+                                            timeout, encoding)
         self.control = ControlOptionsCommon()
         self.logging = LoggingOptionsCommon()
         self.connection = ConnectionOptionsCommon()
@@ -83,10 +87,14 @@ class ReceiverClientCommand(ClientCommand):
     Abstract implementation of common Receiver client options.
     """
 
+    def main_command(self) -> list:
+        return NotImplemented
+
     def __init__(self, stdout: bool = False, stderr: bool = False,
                  daemon: bool = False, timeout: int = 0,
                  encoding: str = "utf-8"):
-        super(ClientCommand, self).__init__([], stdout, stderr, daemon, timeout, encoding)
+        super(ClientCommand, self).__init__([], stdout, stderr, daemon,
+                                            timeout, encoding)
         self.control = ControlOptionsReceiver()
         self.logging = LoggingOptionsSenderReceiver()
         self.transaction = TransactionOptionsSenderReceiver()
@@ -99,10 +107,14 @@ class SenderClientCommand(ClientCommand):
         Abstract implementation of common Sender client options.
     """
 
+    def main_command(self) -> list:
+        pass
+
     def __init__(self, stdout: bool = False, stderr: bool = False,
                  daemon: bool = False, timeout: int = 0,
                  encoding: str = "utf-8"):
-        super(ClientCommand, self).__init__([], stdout, stderr, daemon, timeout, encoding)
+        super(ClientCommand, self).__init__([], stdout, stderr, daemon,
+                                            timeout, encoding)
         self.control = ControlOptionsSenderReceiver()
         self.logging = LoggingOptionsSenderReceiver()
         self.transaction = TransactionOptionsSenderReceiver()

@@ -4,7 +4,7 @@ Ansible Node implementation of Node Interface.
 
 import logging
 
-from iqa.system.executor import Executor
+from iqa.system.executor import ExecutorContainer
 from iqa.system.node import Node
 from iqa.utils.docker_util import DockerUtil
 
@@ -12,19 +12,23 @@ from iqa.utils.docker_util import DockerUtil
 class NodeDocker(Node):
     """Ansible implementation for Node interface."""
 
-    def __init__(self, hostname: str, executor: Executor, ip: str = None):
+    def __init__(self, hostname: str, executor: ExecutorContainer,
+                 ip: str = None):
         super(NodeDocker, self).__init__(hostname, executor, ip)
         self.docker_util = DockerUtil()
         self.ip = ip
-        logging.getLogger().info('Initialization of NodeDocker: %s' % self.hostname)
+        logging.getLogger().info('Initialization of NodeDocker: %s' %
+                                 self.hostname)
 
     def ping(self) -> bool:
         """Send ping to Docker node"""
         try:
-            container = DockerUtil().get_container(self.executor.container_name)
+            container = self.docker_util.get_container(
+                self.executor.container_name)
             return container.attrs['State']['Running']
         except:
-            logging.info("Unable to get container status for: %s" % self.executor.container_name)
+            logging.info("Unable to get container status for: %s" %
+                         self.executor.container_name)
             return False
 
     def get_ip(self) -> str:
@@ -34,14 +38,17 @@ class NodeDocker(Node):
 
         try:
             docker_network = self.executor.docker_network or 'bridge'
-            logging.debug("Retrieving container's ip for network: %s" % docker_network)
-            ip = self.docker_util.get_container_ip(self.executor.container_name,
-                                                   docker_network)
+            logging.debug("Retrieving container's ip for network: %s" %
+                          docker_network)
+            ip = self.docker_util.get_container_ip(
+                self.executor.container_name,docker_network)
         except:
-            logging.debug("Unable to determine IP for container: %s" % self.executor.container_name)
+            logging.debug("Unable to determine IP for container: %s" %
+                          self.executor.container_name)
             # TODO fix this
             return None
 
-        logging.debug("Container [%s] - IP [%s]" % (self.executor.container_name, ip))
+        logging.debug("Container [%s] - IP [%s]" %
+                      (self.executor.container_name, ip))
         self.ip = ip
         return ip

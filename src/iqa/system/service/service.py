@@ -1,3 +1,4 @@
+from abc import ABC, abstractmethod
 from enum import Enum
 
 from iqa.system.executor import Executor, Execution
@@ -10,7 +11,7 @@ class ServiceStatus(Enum):
     UNKNOWN = 'unknown'
 
 
-class Service(object):
+class Service(ABC):
     """
     Represents a service used to control a Server component (Router or Broker).
     """
@@ -21,25 +22,31 @@ class Service(object):
         self.name = name
         self.executor = executor
 
+    @abstractmethod
     def status(self) -> ServiceStatus:
         """
         Returns the service status
         :return: The status of this specific service
         :rtype: ServiceStatus
         """
-        raise NotImplementedError()
+        return NotImplemented
 
+    @abstractmethod
     def start(self, wait_for_messaging=False) -> Execution:
-        raise NotImplementedError()
+        return NotImplemented
 
+    @abstractmethod
     def stop(self) -> Execution:
-        raise NotImplementedError()
+        return NotImplemented
 
+    @abstractmethod
     def restart(self, wait_for_messaging=False) -> Execution:
-        raise NotImplementedError()
+        return NotImplemented
 
+    @abstractmethod
     def enable(self) -> Execution:
-        raise NotImplementedError()
+        return NotImplemented
 
+    @abstractmethod
     def disable(self) -> Execution:
-        raise NotImplementedError()
+        return NotImplemented

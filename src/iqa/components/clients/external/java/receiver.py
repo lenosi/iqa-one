@@ -1,6 +1,6 @@
 from iqa.components.clients.external.java.client import ClientJava
 from iqa.components.clients.external.java.command.java_commands import JavaReceiverClientCommand
-from iqa.messaging.abstract.client.receiver import Receiver
+from iqa.abstract.client import Receiver
 from iqa.system.node import Node, Executor
 
 try:

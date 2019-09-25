@@ -31,24 +31,24 @@ class ServiceFake(Service):
         :return: The status of this specific service
         :rtype: ServiceStatus
         """
-        raise NotImplementedError()
+        return NotImplemented
 
     @abc.abstractmethod
     def start(self, wait_for_messaging=False) -> Execution:
-        raise NotImplementedError()
+        return NotImplemented
 
     @abc.abstractmethod
     def stop(self) -> Execution:
-        raise NotImplementedError()
+        return NotImplemented
 
     @abc.abstractmethod
     def restart(self, wait_for_messaging=False) -> Execution:
-        raise NotImplementedError()
+        return NotImplemented
 
     @abc.abstractmethod
     def enable(self) -> Execution:
-        raise NotImplementedError()
+        return NotImplemented
 
     @abc.abstractmethod
     def disable(self) -> Execution:
-        raise NotImplementedError()
+        return NotImplemented

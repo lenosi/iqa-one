@@ -1,5 +1,5 @@
 from iqa.components.clients.external.python.command.python_commands import PythonReceiverClientCommand
-from iqa.messaging.abstract.client.receiver import Receiver
+from iqa.abstract.client import Receiver
 from iqa.system.node import Node, Executor
 from .client import ClientPython
 

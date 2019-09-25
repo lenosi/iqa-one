@@ -1,5 +1,7 @@
-from iqa.messaging.abstract.client import Client
-from iqa.messaging.abstract.listener import Listener
+from abc import abstractmethod
+
+from iqa.abstract.client import Client
+from iqa.abstract.listener import Listener
 
 
 class MessagingClient(Client):
@@ -26,11 +28,14 @@ class MessagingClient(Client):
         """
         return self.messages[-1] if self.messages else None
 
+    @abstractmethod
     def set_endpoint(self, listener: Listener):
         pass
 
+    @abstractmethod
     def connect(self):
         pass
 
+    @abstractmethod
     def set_url(self, url: str):
         pass

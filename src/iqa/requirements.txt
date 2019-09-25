@@ -1,5 +1,0 @@
-autologging
-python-qpid-proton
-amqcfg
-dpath
-optconstructs

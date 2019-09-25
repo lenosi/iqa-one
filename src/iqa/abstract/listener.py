@@ -2,4 +2,5 @@ from abc import ABC
 
 
 class Listener(ABC):
-    pass
+    def __init__(self):
+        pass

@@ -1,6 +1,6 @@
 from iqa.components import protocols
 from iqa.components.abstract.component import Component
-from iqa.messaging.abstract.client import MessagingClient
+from iqa.abstract.client import MessagingClient
 from iqa.system.node.node import Node
 
 
