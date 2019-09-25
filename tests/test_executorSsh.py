@@ -14,7 +14,7 @@ class TestExecutorSsh:
             user="root",
             hostname=ip,
             name="SSH executor",
-            ssl_private_key="images/sshd_image/identity"
+            ssl_private_key="tests/images/sshd_image/identity"
         )
 
         cmd = Command(args=["whoami"])
