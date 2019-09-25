@@ -6,7 +6,7 @@ from typing import List
 from iqa.components.brokers import BrokerFactory
 from iqa.components.clients import ClientFactory
 from iqa.components.routers import RouterFactory
-from iqa.messaging.abstract import Client, Sender, Receiver, Broker, Router
+from iqa.abstract import Client, Sender, Receiver, Broker, Router
 from iqa.system.ansible.ansible_inventory import AnsibleInventory
 from iqa.system.executor import ExecutorFactory
 from iqa.system.node import NodeFactory, Node

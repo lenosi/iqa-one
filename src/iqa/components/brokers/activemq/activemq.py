@@ -2,14 +2,14 @@ import logging
 from typing import List
 
 from iqa.components import protocols
-from iqa.components.abstract.server.server_component import ServerComponent
-from iqa.components.brokers.activemq.activemq_config import ActiveMQConfig
+from iqa.components.abstract.server import ServerComponent
+from iqa.components.brokers.activemq import ActiveMQConfig
 from iqa.components.brokers.artemis.management import ArtemisJolokiaClient
-from iqa.messaging.abstract.destination.address import Address
-from iqa.messaging.abstract.destination.queue import Queue
-from iqa.messaging.abstract.destination.routing_type import RoutingType
-from iqa.messaging.abstract.listener import Listener
-from iqa.messaging.abstract.server.broker import Broker
+from iqa.abstract.destination import Address
+from iqa.abstract.destination import Queue
+from iqa.abstract.destination import RoutingType
+from iqa.abstract import Listener
+from iqa.abstract.server import Broker
 
 
 class Activemq(Broker, ServerComponent):

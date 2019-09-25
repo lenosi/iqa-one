@@ -1,4 +1,4 @@
-from iqa.messaging.abstract.server.broker import Broker
+from iqa.abstract.server.broker import Broker
 from iqa.system.node import Node, Executor
 from iqa.system.service import Service
 from .artemis import Artemis

@@ -1,7 +1,7 @@
 from iqa.components.clients.external.nodejs.client import ClientNodeJS
 from iqa.components.clients.external.nodejs.command.nodejs_commands import NodeJSSenderClientCommand
 from iqa.abstract.client import Sender
-from iqa.messaging.abstract.message import Message
+from iqa.abstract.message import Message
 from iqa.system.node import Node, Executor
 
 try:

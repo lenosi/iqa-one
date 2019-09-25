@@ -2,7 +2,7 @@ from iqa.components.clients.external.command.client_command import ClientCommand
 from iqa.components.clients.external.python.client import ClientPython
 from iqa.components.clients.external.python.command.python_commands import PythonSenderClientCommand
 from iqa.abstract.client import Sender
-from iqa.messaging.abstract.message import Message
+from iqa.abstract.message import Message
 from iqa.system.node import Node, Executor
 
 

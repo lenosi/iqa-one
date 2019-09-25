@@ -1,5 +1,5 @@
 from iqa.components.abstract.server.server_component import ServerComponent
-from iqa.messaging.abstract.server.router import Router
+from iqa.abstract.server.router import Router
 from .config import Config
 from .log import Log
 from .management import QDManage, QDStat

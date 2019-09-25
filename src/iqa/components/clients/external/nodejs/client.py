@@ -1,7 +1,7 @@
 from iqa.components import protocols
 from iqa.components.clients.external import ClientExternal
 from iqa.components.clients.external.command.client_command import ClientCommand
-from iqa.messaging.abstract.listener import Listener
+from iqa.abstract.listener import Listener
 from iqa.system.node import Node, Executor
 
 

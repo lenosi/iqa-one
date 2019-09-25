@@ -1,7 +1,7 @@
 import abc
 from abc import ABC
 
-from iqa.messaging.abstract.destination.destination import Destination
+from iqa.abstract.destination.destination import Destination
 
 
 class ManagementClient(ABC):

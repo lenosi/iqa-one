@@ -5,7 +5,7 @@ from amqcfg import amqcfg
 
 from iqa.components.abstract.component import Component
 from iqa.components.brokers.broker_config import BrokerConfiguration
-from iqa.messaging.abstract.user import User
+from iqa.abstract.user import User
 from iqa.utils.iqa_exceptions import IQAConfigurationException
 from iqa.utils.utils import Utils
 
@@ -31,7 +31,7 @@ class ArtemisConfig(BrokerConfiguration):
                     "password": "tckuser",
                     "role": "amq"
             },
-            "superuser"    : {
+            "superuser": {
                     "password": "superuser",
                     "role": "amq"
             },

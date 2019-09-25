@@ -10,8 +10,8 @@ from iqa.components.routers import RouterFactory
 from iqa.abstract.client import Client
 from iqa.abstract.client import Receiver
 from iqa.abstract.client import Sender
-from iqa.messaging.abstract.server.broker import Broker
-from iqa.messaging.abstract.server.router import Router
+from iqa.abstract.server.broker import Broker
+from iqa.abstract.server.router import Router
 from iqa.system.ansible.ansible_inventory import AnsibleInventory
 from iqa.system.executor import ExecutorFactory
 from iqa.system.node import NodeFactory

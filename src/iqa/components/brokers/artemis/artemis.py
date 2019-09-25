@@ -5,10 +5,10 @@ from iqa.components import protocols
 from iqa.components.abstract.server.server_component import ServerComponent
 from iqa.components.brokers.artemis.artemis_config import ArtemisConfig
 from iqa.components.brokers.artemis.management import ArtemisJolokiaClient
-from iqa.messaging.abstract.destination.address import Address
-from iqa.messaging.abstract.destination.queue import Queue
-from iqa.messaging.abstract.destination.routing_type import RoutingType
-from iqa.messaging.abstract.server.broker import Broker
+from iqa.abstract.destination import Address
+from iqa.abstract.destination.queue import Queue
+from iqa.abstract.destination.routing_type import RoutingType
+from iqa.abstract.server.broker import Broker
 
 
 class Artemis(Broker, ServerComponent):

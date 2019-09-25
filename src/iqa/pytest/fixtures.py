@@ -2,7 +2,7 @@
 
 import pytest
 
-from iqa.messaging.abstract import *
+from iqa.abstract import *
 
 
 @pytest.fixture()

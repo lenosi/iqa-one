@@ -14,7 +14,7 @@ class Sender(MessagingClient):
     def send(self, message: Message, **kwargs):
         """Method for send message.
         :param message: Message to be sent
-        :type: iqa.iqa.messaging.abstract.message.Message
+        :type: iqa.iqa.abstract.message.Message
         """
         if self.message_buffer:
             self.messages.append(message)  # single sent Message

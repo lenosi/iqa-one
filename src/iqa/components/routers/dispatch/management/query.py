@@ -6,7 +6,7 @@ import proton
 from proton import Url, SSLDomain
 from proton.utils import BlockingConnection, SyncRequestResponse
 
-from iqa.messaging.abstract.server.router import Router
+from iqa.abstract.server.router import Router
 
 
 class RouterQuery(object):

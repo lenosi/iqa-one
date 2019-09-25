@@ -1,6 +1,6 @@
 from iqa.components import protocols
 from iqa.components.abstract.server.server_component import ServerComponent
-from iqa.messaging.abstract.server.broker import Broker
+from iqa.abstract.server.broker import Broker
 
 
 class Qpid(Broker, ServerComponent):

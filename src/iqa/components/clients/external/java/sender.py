@@ -1,7 +1,7 @@
 from iqa.components.clients.external.java.client import ClientJava
 from iqa.components.clients.external.java.command.java_commands import JavaSenderClientCommand
 from iqa.abstract.client import Sender
-from iqa.messaging.abstract.message import Message
+from iqa.abstract.message import Message
 from iqa.system.node import Node, Executor
 
 try:
