@@ -1,4 +1,4 @@
-from subprocess import run, PIPE
+from subprocess import check_output
 
 from iqa.system.executor.executor_ssh import ExecutorSsh
 from iqa.system.command.command_base import Command
@@ -6,9 +6,9 @@ from iqa.system.command.command_base import Command
 
 class TestExecutorSsh:
     def test_execute(self):
-        ip_process = run(['docker', 'inspect', '-f', '"{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}"',
-                                    'sshd-iqa'], stdout=PIPE)
-        ip = ip_process.stdout.decode('utf-8').strip('\n\"')
+        ip = check_output(
+            ['docker', 'inspect', '-f', '"{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}"',
+             'sshd-iqa'], encoding='utf-8').strip('\n\"')
 
         executor = ExecutorSsh(
             user="root",
