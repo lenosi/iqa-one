@@ -15,6 +15,9 @@ matrix:
 install:
 - pip install tox
 
+before_script:
+  - echo -e "Host 172.17.*.*\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
+
 script:
 - bash tests/images/sshd_image/run_sshd_image.sh
 - tox -e $TOX_ENV
