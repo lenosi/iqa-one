@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
 
-import iqa.abstract.message as message
+from iqa.abstract.message import Header, DeliveryAnnotations, MessageAnnotations, Properties, ApplicationProperties, \
+    ApplicationData, Footer
 
 # noinspection PyDunderSlots
 @dataclass(frozen=False)
@@ -26,23 +27,23 @@ class Message:
     #              'properties', 'application_properties', 'application_data',
     #              'footer']
 
-    header: message.Header = \
-        field(default_factory=message.Header)
+    header: Header = \
+        field(default_factory=Header)
 
-    delivery_annotations: message.DeliveryAnnotations = \
-        field(default_factory=message.DeliveryAnnotations)
+    delivery_annotations: DeliveryAnnotations = \
+        field(default_factory=DeliveryAnnotations)
 
-    message_annotations: message.MessageAnnotations = \
-        field(default_factory=message.MessageAnnotations)
+    message_annotations: MessageAnnotations = \
+        field(default_factory=MessageAnnotations)
 
-    properties: message.Properties = \
-        field(default_factory=message.Properties)
+    properties: Properties = \
+        field(default_factory=Properties)
 
-    application_properties: message.ApplicationProperties = \
-        field(default_factory=message.ApplicationProperties)
+    application_properties: ApplicationProperties = \
+        field(default_factory=ApplicationProperties)
 
-    application_data: message.ApplicationData = \
-        field(default_factory=message.ApplicationData)
+    application_data: ApplicationData = \
+        field(default_factory=ApplicationData)
 
-    footer: message.Footer = \
-        field(default_factory=message.Footer)
+    footer: Footer = \
+        field(default_factory=Footer)
