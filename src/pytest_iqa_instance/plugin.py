@@ -10,8 +10,6 @@ from .logger import get_logger
 
 # Default timeout settings
 CLIENTS_TIMEOUT = 60
-DEFAULT_LOG_FORMAT = '%(asctime)s [%(levelname)s] (%(pathname)s:%(lineno)s) - %(message)s'
-DEFAULT_LOG_DATE_FORMAT = '%Y-%m-%d %H:%M:%S'
 cleanup_file_list = []
 
 # linting
@@ -20,9 +18,9 @@ cleanup_file_list = []
 log = get_logger(__name__)
 
 
+
 def pytest_addoption(parser):
     """Add options to control ansible."""
-    log.debug("pytest_addoption() called")
 
     group = parser.getgroup('pytest-iqa')
     group.addoption('--inventory',
@@ -31,27 +29,6 @@ def pytest_addoption(parser):
                     required=True,
                     metavar='INVENTORY',
                     help='Inventory file to use')
-
-    # Default values for pytest.ini files (if absent)
-    parser.addini('log_level',
-                  default='WARNING',
-                  type=None,
-                  help='logging level used by the logging module')
-
-    parser.addini('log_format',
-                  default=DEFAULT_LOG_FORMAT,
-                  type=None,
-                  help='log format as used by the logging module.')
-
-    parser.addini('log_date_format',
-                  default=DEFAULT_LOG_DATE_FORMAT,
-                  type=None,
-                  help='log date format as used by the logging module.')
-
-    parser.addini('log_cli',
-                  default=True,
-                  type='bool',
-                  help='enable log display during test run (also known as "live logging").')
 
 
 def cleanup_files():
@@ -100,24 +77,3 @@ def pytest_configure(config):
 
     # Clean up temporary files at exit
     atexit.register(cleanup_files)
-
-
-def pytest_runtest_call(item):
-    """
-    Hook that runs before each test method and can iterate through
-    parametrized items adding a generic "param:<argname>":"<argvalue>"
-    to the user_properties dictionary.
-
-    When generating a junit xml, these params will be added as "<property>"
-    elements for each test case.
-
-    If test method takes no parameter, then nothing will be added.
-    :param item:
-    :return:
-    """
-
-    if not hasattr(item, 'callspec'):
-        return
-
-    for (argname, argvalue) in item.callspec.params.items():
-        item.user_properties.append(('param:%s' % argname, argvalue))

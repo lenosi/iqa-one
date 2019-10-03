@@ -1,4 +1,6 @@
 import pytest
+import logging
+logging.basicConfig(level=logging.DEBUG)
 
 from iqa.instance.instance import Instance
 from iqa.system.node.node_docker import NodeDocker
