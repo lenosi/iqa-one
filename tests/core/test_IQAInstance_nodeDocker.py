@@ -5,12 +5,12 @@ from iqa.system.node.node_docker import NodeDocker
 from iqa.system.executor.executor_container import ExecutorContainer
 
 
-class TestIQAInstanceNodeDocker:
+class TestInstanceNodeDocker:
     iqa_instance = Instance()
 
     @pytest.fixture
     def instance(self):
-        return TestIQAInstanceNodeDocker.iqa_instance
+        return TestInstanceNodeDocker.iqa_instance
 
     @pytest.fixture
     def node(self, instance):
