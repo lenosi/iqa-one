@@ -1,8 +1,10 @@
 """
-IQAInstance which is populated based on an ansible compatible inventory file.
+IQA instance which is populated based on an ansible compatible inventory file.
 """
 from typing import List
 
+from iqa.components.abstract.component import Component
+from iqa.components.clients.external.client_external import ClientExternal
 from iqa.components.brokers import BrokerFactory
 from iqa.components.clients import ClientFactory
 from iqa.components.routers import RouterFactory
@@ -107,6 +109,7 @@ class Instance:
         self.nodes = nodes
         self.components = components
 
+    # TODO: @dlenoch reimplement node logic
     def new_node(self, hostname, ip=None):
         """Create new node under iQA instance
 
@@ -122,7 +125,7 @@ class Instance:
         self.nodes.append(node)
         return node
 
-    def new_component(self, component):
+    def new_component(self, component: Component):
         """Create new component in IQA instance
 
         :param node:
@@ -137,7 +140,7 @@ class Instance:
         return component
 
     @property
-    def brokers(self):
+    def brokers(self) -> List[Broker]:
         """
         Get all broker instances on this node
         :return:
@@ -146,7 +149,7 @@ class Instance:
                 if isinstance(component, Broker)]
 
     @property
-    def clients(self):
+    def clients(self) -> List[Client, ClientExternal]:
         """
         Get all client instances on this node
         @TODO
@@ -173,9 +176,10 @@ class Instance:
         :return: the receiver implementation running on given host
                  or None otherwise.
         """
-        for receiver in self.get_clients(client_type=Receiver):
+        for receiver in self.get_clients(client_type=Receiver):  # type: ClientExternal
             if receiver.node.hostname == hostname:
                 return receiver
+
         return None
 
     def get_sender(self, hostname: str):
@@ -191,7 +195,7 @@ class Instance:
         return None
 
     @property
-    def routers(self):
+    def routers(self) -> List[Router]:
         """
         Get all router instances on this node
         :return:

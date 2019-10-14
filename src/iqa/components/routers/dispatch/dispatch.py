@@ -102,3 +102,6 @@ class Dispatch(Router, ServerComponent):
 
     def has_ssl_keys(self):
         return self.pem_file and self.key_file
+
+    def get_management_client(self):
+        return NotImplemented

@@ -1,18 +1,21 @@
 import pytest
 
 # from messaging_components import clients, routers, brokers
-from messaging_components.clients.external import nodejs, python
-from messaging_components.clients import core
-from messaging_components.brokers.artemis import Artemis
-from messaging_components.routers.dispatch import Dispatch
+from iqa.components.clients.external import nodejs, python
+from iqa.components.clients.core.receiver import ReceiverCore
+from iqa.components.clients.core.sender import SenderCore
+from iqa.components.brokers.artemis import Artemis
+from iqa.components.routers.dispatch import Dispatch
 
-from iqa_messaging.instance import IQAInstance
+from iqa.instance.instance import Instance
+
+from iqa.pytest.fixtures import iqa as pytest_iqa
 
 
 ############################
 # Global python namespace  #
 ############################
-iqa_instance = IQAInstance()
+iqa_instance = Instance()
 
 
 def pytest_namespace():
@@ -28,7 +31,8 @@ def iqa():
     IQA instance with accessible node, messaging_components
     :return:
     """
-    return pytest.iqa
+    # return pytest.iqa
+    return pytest_iqa
 
 
 ########################
@@ -58,7 +62,8 @@ def pytest_addoption(parser):
 
 def pytest_configure(config):
     """into iqa instance"""
-    pytest.iqa.inventory = config.option.inventory
+    pytest_iqa.inventory = config.option.inventory
+    # pytest.iqa.inventory = config.option.inventory
     # iqa_instance.inventory = config.option.inventory
 
 
@@ -100,14 +105,14 @@ broker_node = iqa_instance.new_node(hostname='ic01')
 router_node = iqa_instance.new_node(hostname='ic01')
 client_node = iqa_instance.new_node(hostname='ic01')
 
-core_sender = core.Sender()
-core_receiver = core.Receiver()
+core_sender = SenderCore()
+core_receiver = ReceiverCore()
 
 nodejs_sender = iqa_instance.new_component(node=client_node, component=nodejs.Sender)
 nodejs_receiver = iqa_instance.new_component(node=client_node, component=nodejs.Receiver)
 
-python_sender = iqa_instance.new_component(node=client_node, component=python.Sender)
-python_receiver = iqa_instance.new_component(node=client_node, component=python.Receiver)
+python_sender = iqa_instance.new_component(node=client_node, component=python.SenderPython)
+python_receiver = iqa_instance.new_component(node=client_node, component=python.ReceiverPython)
 
 amq6 = iqa_instance.new_component(node=broker_node, component=Artemis)
 amq7 = iqa_instance.new_component(node=broker_node, component=Artemis)

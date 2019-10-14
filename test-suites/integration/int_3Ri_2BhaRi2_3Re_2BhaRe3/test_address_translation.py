@@ -15,9 +15,9 @@ import time
 
 import pytest
 
-from iqa.components.brokers import Artemis
-from iqa.core.instance import IQAInstance
-from iqa.messaging.abstract.message import Message
+from iqa.components.brokers import Artemis, Broker
+from iqa.instance.instance import Instance
+from iqa.abstract.message import Message
 
 
 class TestAddressTranslation(object):
@@ -57,7 +57,7 @@ class TestAddressTranslation(object):
                 return queue
         return None
 
-    def test_address_translation_sending(self, address, translates_to, sender, broker, router, iqa: IQAInstance):
+    def test_address_translation_sending(self, address, translates_to, sender, broker, router, iqa: Instance):
         """
         Send messages to the given "address", through the provided "router" instance. It uses the given
         "sender" (ClientExternal) instance and expects the queue with name "translates_to" to exist in
@@ -76,7 +76,7 @@ class TestAddressTranslation(object):
         #     return
 
         # Get broker instance for given broker name
-        broker_instance: Artemis = iqa.get_brokers(broker)[0]
+        broker_instance: Broker = iqa.get_brokers(broker)[0]
         assert broker_instance
 
         # Retrieving current number of messages in the destination address (queue)
@@ -120,7 +120,7 @@ class TestAddressTranslation(object):
         logging.info("Message count at queue %s - after senders completed = %s" % (translates_to, queue.message_count))
         assert (self.SEND_COUNT + initial_message_count) == int(queue.message_count)
 
-    def test_address_translation_receiving(self, address, translates_to, receiver, broker, router, iqa: IQAInstance):
+    def test_address_translation_receiving(self, address, translates_to, receiver, broker, router, iqa: Instance):
         """
         Receive messages from the provided "address" connecting with the "router" instance.
         This test will execute an external client using the "receiver" instance and expect it to
@@ -142,7 +142,7 @@ class TestAddressTranslation(object):
         #     return
 
         # Get broker instance for given broker name
-        broker_instance: Artemis = iqa.get_brokers(broker)[0]
+        broker_instance: Broker = iqa.get_brokers(broker)[0]
         assert broker_instance
 
         # Retrieving current number of messages in the destination address (queue)

@@ -7,8 +7,10 @@ import time
 
 # Displaying all queues
 from iqa.system.service.service import ServiceStatus
+from iqa.abstract.server.broker import Broker
+from iqa.components.abstract.server import ServerComponent
 from iqa.utils.tcp_util import TcpUtil
-from iqa.core.instance import IQAInstance
+from iqa.instance.instance import Instance
 
 DELAY = 10
 MAX_ATTEMPTS = 3
@@ -44,10 +46,10 @@ print(intro_message)
 
 # Loading the instance
 print("Loading IQAInstance using inventory file: %s" % inventory)
-iqa = IQAInstance(inventory)
+iqa = Instance(inventory)
 
 # Iterating through brokers
-for broker in iqa.brokers:  # type: Broker
+for broker in iqa.brokers:  # type: (ServerComponent, Broker)
 
     # List broker node hostname and its status
     print("* Broker: %s - Status: %s" % (broker.node.hostname, broker.service.status().name))
