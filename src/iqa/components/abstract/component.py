@@ -9,7 +9,7 @@ class Component(object):
     """
 
     def __init__(self, name: str, node: Node):
-        self.name: str = name
+        self.instance_name: str = name
         self.node: Node = node
 
     @property

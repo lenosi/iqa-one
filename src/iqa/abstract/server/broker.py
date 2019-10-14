@@ -13,7 +13,7 @@ class Broker(MessagingServer):
     """
     supported_protocols = []
 
-    def __init__(self, name: str, **kwargs):
+    def __init__(self, **kwargs):
         super(Broker, self).__init__()
 
         # Log missing arguments
