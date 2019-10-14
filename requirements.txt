@@ -1,3 +1,6 @@
+proton
+requests
+PyYAML
 pytest
 ansible
 python-qpid-proton

@@ -59,9 +59,8 @@ class Artemis(Broker, ServerComponent):
         :param address:
         :return:
         """
-        client = self._get_management_client()
         routing_type = self._get_routing_type(address.routing_type)
-        return client.create_address(address.name, routing_type)
+        return self.management_client.create_address(address.name, routing_type)
 
     def create_queue(self, queue: Queue, address: Address, durable: bool = True):
         """
@@ -71,10 +70,9 @@ class Artemis(Broker, ServerComponent):
         :param durable:
         :return:
         """
-        client = self._get_management_client()
         if queue.routing_type == RoutingType.BOTH:
             raise ValueError('Queues can only use ANYCAST or MULTICAST routing type')
-        return client.create_queue(address.name, queue.name, durable, queue.routing_type.name)
+        return self.management_client.create_queue(address.name, queue.name, durable, queue.routing_type.name)
 
     def delete_address(self, name: str, force: bool = False):
         """
@@ -83,8 +81,7 @@ class Artemis(Broker, ServerComponent):
         :param force:
         :return:
         """
-        client = self._get_management_client()
-        return client.delete_address(name, force)
+        return self.management_client.delete_address(name, force)
 
     def delete_queue(self, name: str, remove_consumers: bool = False):
         """
@@ -93,8 +90,7 @@ class Artemis(Broker, ServerComponent):
         :param remove_consumers:
         :return:
         """
-        client = self._get_management_client()
-        return client.delete_queue(name, remove_consumers)
+        return self.management_client.delete_queue(name, remove_consumers)
 
     def _refresh_addresses_and_queues(self):
         """
@@ -107,9 +103,8 @@ class Artemis(Broker, ServerComponent):
         addresses = list()
 
         # Get a new client instance
-        client = self._get_management_client()
-        queues_result = client.list_queues()
-        addresses_result = client.list_addresses()
+        queues_result = self.management_client.list_queues()
+        addresses_result = self.management_client.list_addresses()
 
         # In case of errors, return empty list
         if not queues_result.success:
@@ -157,7 +152,7 @@ class Artemis(Broker, ServerComponent):
         self._addresses = addresses
         self._queues = queues
 
-    def _get_management_client(self):
+    def get_management_client(self):
         """
         Creates a new instance of the Jolokia Client.
         :return:

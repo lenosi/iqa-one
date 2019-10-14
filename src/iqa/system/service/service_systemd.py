@@ -45,16 +45,16 @@ class ServiceSystemD(Service):
         cmd_status = Command(['systemctl', '--no-pager', 'status', self.name], stdout=True, timeout=self.TIMEOUT)
         execution = self.executor.execute(cmd_status)
 
-        if not execution.read_stdout():
+        service_output = execution.read_stdout()
+
+        if not service_output:
             ServiceSystemD._logger.debug("Service: %s - Status: FAILED" % self.name)
             return ServiceStatus.FAILED
 
-        service_output = execution.read_stdout()
-
-        if re.search('(is running|\(running\)|Running)', service_output):
+        if re.search(r'(is running|\(running\)|Running)', service_output):
             ServiceSystemD._logger.debug("Service: %s - Status: RUNNING" % self.name)
             return ServiceStatus.RUNNING
-        elif re.search('(is stopped|\(dead\)|Stopped)', service_output):
+        elif re.search(r'(is stopped|\(dead\)|Stopped)', service_output):
             ServiceSystemD._logger.debug("Service: %s - Status: STOPPED" % self.name)
             return ServiceStatus.STOPPED
 

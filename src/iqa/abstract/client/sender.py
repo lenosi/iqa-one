@@ -7,8 +7,8 @@ from iqa.abstract.message import Message
 class Sender(MessagingClient):
     """Abstract class of sender client."""
 
-    def __init__(self, name: str, **kwargs):
-        super(Sender, self).__init__(name, **kwargs)
+    def __init__(self, **kwargs):
+        super(Sender, self).__init__(**kwargs)
         # Sender settings
 
     def send(self, message: Message, **kwargs):

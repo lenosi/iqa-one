@@ -41,6 +41,9 @@ class Configuration(object):
             LOGGER.info("No configuration file provided, using defaults")
 
         # ansible synchronize must have trailing "/" to sync dir-content
+        """
+        @TODO Component has no executor
+        """
         self.local_config_dir = posixpath.join(os.path.dirname(component.executor.inventory), component.name, "")
 
     def _data_getter(self, path, default=None):
@@ -56,7 +59,7 @@ class Configuration(object):
         try:
             output = dpath.get(self.yaml_data, path)
             # LOGGER.debug("Dpath_search=%s\n%s" % (path, output))
-        except (KeyError, ValueError) as exc:
+        except (KeyError, ValueError):
             LOGGER.debug('Unknown key or value %s', path)
             return default
         return output
@@ -72,7 +75,7 @@ class Configuration(object):
         with open(path, 'r') as f:
             try:
                 self.yaml_data = yaml.full_load(f)
-            except yaml.YAMLError as exc:
+            except yaml.YAMLError:
                 raise IQAConfigurationException("Unable to load file '%s' for '%s'" % (path, self.__class__.__name__))
 
             if "artemis" not in self.yaml_data['render']['template']:
