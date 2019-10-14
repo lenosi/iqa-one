@@ -1,9 +1,9 @@
 import pytest
 
-from messaging_components.brokers.artemis import Artemis
-from instance import IQAInstance
+from iqa.components.brokers.artemis import Artemis
+from iqa.instance import Instance
 
-iqa_instance = IQAInstance()
+iqa_instance = Instance()
 
 
 # def pytest_addoption(parser):
