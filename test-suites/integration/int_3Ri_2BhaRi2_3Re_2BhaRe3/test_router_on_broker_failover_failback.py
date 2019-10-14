@@ -1,10 +1,9 @@
 import time
 
-from iqa_common.utils.tcp_util import TcpUtil
-from iqa.components.abstract.component import ServiceStatus
-from messaging_components.brokers import Artemis
-from messaging_components.routers import Dispatch
-from messaging_components.routers.dispatch.management import RouterQuery
+from iqa.system.service.service import ServiceStatus
+from iqa.components.routers import Dispatch
+from iqa.components.brokers import Artemis
+from iqa.components.routers.dispatch.management import RouterQuery
 
 from .receiver import Receiver
 from .sender import Sender

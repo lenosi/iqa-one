@@ -1,8 +1,8 @@
 import time
-from messaging_components.routers import Dispatch
-from messaging_components.routers.dispatch.management import RouterQuery
-from iqa_common.executor import Command, Execution
-from iqa_common.utils.openshift_util import OpenShiftUtil
+from iqa.components.routers import Dispatch
+from iqa.components.routers.dispatch.management import RouterQuery
+from iqa.system.executor import Execution
+from iqa.utils.openshift_util import OpenShiftUtil
 
 MESH_SIZE = 3
 
@@ -19,7 +19,7 @@ def test_scale_down_router(router_cluster):
     token: str = router_cluster[2]
 
     # OCP Instance
-    ocp = OpenShiftUtil(router.executor, 'https://%s:8443' % cluster, token)
+    ocp = OpenShiftUtil(router.node.executor, 'https://%s:8443' % cluster, token)
     execution: Execution = ocp.scale(1, 'amq-interconnect')
     assert execution.completed_successfully()
 

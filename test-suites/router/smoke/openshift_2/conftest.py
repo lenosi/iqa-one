@@ -2,13 +2,13 @@ import pytest
 import itertools
 from typing import Union, Tuple
 
-from messaging_components.clients import \
+from iqa.components.clients import \
     ReceiverJava, SenderJava, \
     ReceiverPython, SenderPython, \
     ReceiverNodeJS, SenderNodeJS
-from messaging_components.routers.dispatch.dispatch import Dispatch
+from iqa.components.routers.dispatch.dispatch import Dispatch
 
-from iqa.components.abstract.component import Receiver, Sender
+from iqa.abstract.client import Receiver, Sender
 
 clients = [
     "java",

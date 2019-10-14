@@ -5,10 +5,11 @@ to handle clients abstract through a router or broker component.
 import sys
 
 from iqa.components.abstract.component import Component
-from iqa.messaging.abstract.client import Sender, Receiver
-from iqa.messaging.abstract import Broker, Router
-from iqa.messaging.abstract.message import Message
-from iqa.components.clients.external import ClientExternal, ReceiverJava
+from iqa.components.abstract.server import ServerComponent
+from iqa.abstract.client.sender import Sender
+from iqa.abstract.client.receiver import Receiver
+from iqa.abstract.message import Message
+from iqa.components.clients.external import ClientExternal
 from iqa.instance import Instance
 
 # Inventory file to use
@@ -47,7 +48,7 @@ for component in iqa.components:  # type: Component
 # Router instance to use on clients
 router_or_broker = None
 for component in iqa.components:
-    if isinstance(component, Server):
+    if isinstance(component, ServerComponent):
         router_or_broker = component
 assert router_or_broker or 'No Router or Broker component defined in inventory file.'
 

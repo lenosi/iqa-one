@@ -15,7 +15,7 @@ import time
 
 import pytest
 
-from iqa.components.brokers import Artemis, Broker
+from iqa.components.brokers import Broker
 from iqa.instance.instance import Instance
 from iqa.abstract.message import Message
 

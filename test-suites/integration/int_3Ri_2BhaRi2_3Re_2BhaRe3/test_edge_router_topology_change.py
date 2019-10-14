@@ -1,7 +1,7 @@
 import logging
 
-from iqa.components.abstract.component import ServiceStatus
-from messaging_components.routers.dispatch.management import RouterQuery
+from iqa.system.service.service import ServiceStatus
+from iqa.components.routers.dispatch.management import RouterQuery
 
 
 class TestEdgeRouterNotChangingTopology:

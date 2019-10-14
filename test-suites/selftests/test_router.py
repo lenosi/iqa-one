@@ -1,4 +1,4 @@
-from messaging_components.routers.dispatch.dispatch import Dispatch as Router
+from iqa.components.routers.dispatch.dispatch import Dispatch as Router
 
 
 def test_isinstance(router: Router):

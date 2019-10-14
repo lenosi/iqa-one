@@ -1,4 +1,4 @@
-from iqa.messaging_abstract.message import Message
+from iqa.abstract.message import Message
 from tests import get_func_name
 
 

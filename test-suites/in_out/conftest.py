@@ -2,7 +2,8 @@
 import pytest
 
 
-import iqa.components.clients.core as core
+from iqa.components.clients.core.receiver import ReceiverCore
+from iqa.components.clients.core.sender import SenderCore
 from iqa.system.node import Node
 from iqa.components.brokers.artemis import Artemis
 from iqa.components.routers.dispatch import Dispatch
@@ -80,13 +81,13 @@ def pytest_generate_tests(metafunc):
 @pytest.fixture()
 def sender(request):
     if 'native' in request.param:
-        return core.Sender()
+        return SenderCore()
 
 
 @pytest.fixture()
 def receiver(request):
     if 'native' in request.param:
-        return core.Receiver()
+        return ReceiverCore()
 
 
 @pytest.fixture()
@@ -106,16 +107,17 @@ def router(request):
     elif 'interconnect' in request.param:
         return Dispatch(node=router_node)
 
+
 @pytest.fixture()
 def tls(request):
     if 'tls10' in request.param:
-        return core.Sender()
+        return SenderCore()
     if 'tls11' in request.param:
-        return core.Sender()
+        return SenderCore()
     if 'tls12' in request.param:
-        return core.Sender()
+        return SenderCore()
     if 'tls13' in request.param:
-        return core.Sender()
+        return SenderCore()
 
 
 @pytest.fixture()

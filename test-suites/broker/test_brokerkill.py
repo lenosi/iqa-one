@@ -11,7 +11,8 @@ from iqa.components.brokers import Artemis
 class SendMessage(MessagingHandler):
     """Simply send and receive client"""
     def __init__(self, server, address):
-        SendMessage.__init__()
+        SendMessage.__init__(self, server, address)
+        super().__init__()
         self.server = server
         self.address = address
 
@@ -36,8 +37,8 @@ def test_node_ip(master1: Artemis, slave1: Artemis, slave2: Artemis):
     # Client01.start(master1.lister('test_listener'))
     # Client01.send(address=broker2.address('abcd') msg=message)
 
-    exec = master1.node.execute(['killall', 'java'])
-    assert True if exec.get_ecode() == 0 else False
+    execution = master1.node.execute(['killall', 'java'])
+    assert True if execution.get_ecode() == 0 else False
 
     time.sleep(15)
 
