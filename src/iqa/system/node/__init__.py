@@ -13,7 +13,7 @@ class NodeFactory(object):
     logger = logging.getLogger(__name__)
 
     @staticmethod
-    def create_node(hostname: str, executor: Executor, ip: str = None, **kwargs) -> Node:
+    def create_node(hostname: str, executor: Executor = 'ansible', ip: str = None, **kwargs) -> Node:
         """
         Creates a Node object based on provided arguments.
         :param hostname:
@@ -22,7 +22,6 @@ class NodeFactory(object):
         :param kwargs:
         :return:
         """
-
         if isinstance(executor, ExecutorAnsible):
             node = NodeAnsible(hostname, executor, ip)
         elif isinstance(executor, ExecutorContainer):

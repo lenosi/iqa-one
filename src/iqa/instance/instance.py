@@ -69,13 +69,15 @@ class Instance:
             # Now loading variables that are specific to each component
             if cmp_type == 'client':
                 # Add list of clients into component list
-                component = ClientFactory.create_clients(
+                components = ClientFactory.create_clients(
                     implementation=cmp_impl,
                     node=node,
                     executor=executor,
                     **cmp_vars
                 )
-                self.new_component(component)
+
+                for client in components:
+                    self.new_component(client)
 
             elif cmp_type in ['router', 'broker']:
                 # A service name is expected
@@ -110,9 +112,11 @@ class Instance:
         self.components = components
 
     # TODO: @dlenoch reimplement node logic
-    def new_node(self, hostname, ip=None):
+    def new_node(self, hostname, executor: str = 'ansible', ip=None):
         """Create new node under iQA instance
 
+        :param executor:
+        :type executor:
         :param hostname:
         :type hostname:
         :param ip:
@@ -121,7 +125,10 @@ class Instance:
         :return:
         :rtype:
         """
-        node = Node(hostname=hostname, ip=ip)
+        executor = ExecutorFactory.create_executor(exec_impl=executor)
+
+        # Create the Node for current client
+        node = NodeFactory.create_node(hostname=hostname, executor=executor, ip=ip)
         self.nodes.append(node)
         return node
 
