@@ -24,6 +24,7 @@ import logging
 import os
 
 import docker
+from docker.models.containers import Container
 
 
 class DockerUtil(object):
@@ -32,20 +33,20 @@ class DockerUtil(object):
     basic information on images and containers.
     """
 
-    CONTAINER_STATUS_RUNNING = "running"
-    CONTAINER_STATUS_EXITED = "exited"
+    CONTAINER_STATUS_RUNNING: str = "running"
+    CONTAINER_STATUS_EXITED: str = "exited"
 
-    def __init__(self, **kwargs):
-        self.docker_host = kwargs.get('docker_host', None)
-        self._env = os.environ.copy()
+    def __init__(self, **kwargs) -> None:
+        self.docker_host: str = kwargs.get('docker_host', None)
+        self._env: dict = os.environ.copy()
 
         if self.docker_host:
             self._env['DOCKER_HOST'] = self.docker_host
 
-        self._logger = logging.getLogger(__name__)
+        self._logger: logging.Logger = logging.getLogger(__name__)
         self.cli = docker.from_env(environment=self._env)
 
-    def get_container(self, name):
+    def get_container(self, name) -> Container:
         """
         Returns the container instance for the given name.
         A docker.errors.NotFound exception is raised in case the given
@@ -55,34 +56,34 @@ class DockerUtil(object):
         """
         return self.cli.containers.get(name)
 
-    def get_container_ip(self, name, network_name='bridge'):
+    def get_container_ip(self, name, network_name='bridge') -> str:
         """
         Returns the IPAddress assigned to the given container name (on the given network).
         :param name:
         :param network_name:
         :return:
         """
-        container = self.get_container(name)
-        ip_addr = container.attrs['NetworkSettings']['Networks'][network_name]['IPAddress']
+        container: Container = self.get_container(name)
+        ip_addr: str = container.attrs['NetworkSettings']['Networks'][network_name]['IPAddress']
         self._logger.debug("Container: %s - IP Address: %s" % (name, ip_addr))
         return container.attrs['NetworkSettings']['Networks'][network_name]['IPAddress']
 
-    def stop_container(self, name):
+    def stop_container(self, name) -> None:
         """
         Stops a given container based on its name or id.
         :param self:
         :param name:
         :return:
         """
-        container = self.get_container(name)
+        container: Container = self.get_container(name)
         container.stop()
 
-    def start_container(self, name):
+    def start_container(self, name) -> None:
         """
         Starts the given container based on its name or id.
         :param self:
         :param name:
         :return:
         """
-        container = self.get_container(name)
+        container: Container = self.get_container(name)
         container.start()

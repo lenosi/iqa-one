@@ -17,42 +17,42 @@ class Process(subprocess.Popen):
     closed when code finishes.
     """
 
-    MAX_ATTEMPTS = 3
-    ATTEMPT_DELAY = 1
+    MAX_ATTEMPTS: int = 3
+    ATTEMPT_DELAY: int = 1
 
-    def __init__(self, args, name=None, **kwargs):
-        self._logger = logging.getLogger(self.__class__.__module__)
-        self.name = name
+    def __init__(self, args: list, name=None, **kwargs) -> None:
+        self._logger: logging.Logger = logging.getLogger(self.__class__.__module__)
+        self.name: str = name
         atexit.register(self.teardown)
         kwargs.setdefault('bufsize', 1)
         kwargs.setdefault('universal_newlines', True)
         try:
             super(Process, self).__init__(args, **kwargs)
-        except Exception as ex:
-            self._logger.warning("Unable to execute command: %s" % args, exc_info=1)
+        except TypeError or ValueError or OSError or subprocess.SubprocessError:
+            self._logger.warning("Unable to execute command: %s" % args, exc_info=True)
             # traceback.print_tb(tb=ex)
 
-    def is_running(self):
+    def is_running(self) -> bool:
         """
         Returns true if process is still running.
         :return:
         """
         return self.poll() is None
 
-    def completed_successfully(self):
+    def completed_successfully(self) -> bool:
         """
         Returns true if process has ended and returncode was 0.
         :return:
         """
         return not self.is_running() and self.returncode == 0
 
-    def teardown(self):
+    def teardown(self) -> None:
         """
         Wait for process to exit or kill it after a MAX_ATTEMPTS.
         :return:
         """
         # Delay till max attempts reached
-        attempt = 0
+        attempt: int = 0
         while self.is_running() and attempt < self.MAX_ATTEMPTS:
             attempt += 1
             time.sleep(Process.ATTEMPT_DELAY)
