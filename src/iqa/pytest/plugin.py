@@ -5,26 +5,31 @@ Defines mandatory options and configuration that can be applied to all test suit
 import atexit
 import os
 
+from _pytest.config.argparsing import Parser, OptionGroup
+from logging import Logger
+
+from _pytest.python import Function
+
 from iqa.instance import Instance
 from .logger import get_logger
 
 # Default timeout settings
-CLIENTS_TIMEOUT = 60
-DEFAULT_LOG_FORMAT = '%(asctime)s [%(levelname)s] (%(pathname)s:%(lineno)s) - %(message)s'
-DEFAULT_LOG_DATE_FORMAT = '%Y-%m-%d %H:%M:%S'
-cleanup_file_list = []
+CLIENTS_TIMEOUT: int = 60
+DEFAULT_LOG_FORMAT: str = '%(asctime)s [%(levelname)s] (%(pathname)s:%(lineno)s) - %(message)s'
+DEFAULT_LOG_DATE_FORMAT: str = '%Y-%m-%d %H:%M:%S'
+cleanup_file_list: list = []
 
 # linting
 # (iqa)
 
-log = get_logger(__name__)
+log: Logger = get_logger(__name__)
 
 
-def pytest_addoption(parser):
+def pytest_addoption(parser: Parser) -> None:
     """Add options to control ansible."""
     log.debug("pytest_addoption() called")
 
-    group = parser.getgroup('pytest-iqa')
+    group: OptionGroup = parser.getgroup('pytest-iqa')
     group.addoption('--inventory',
                     action='store',
                     dest='inventory',
@@ -54,7 +59,7 @@ def pytest_addoption(parser):
                   help='enable log display during test run (also known as "live logging").')
 
 
-def cleanup_files():
+def cleanup_files() -> None:
     """
     Remove temporary files.
     :return:
@@ -63,7 +68,7 @@ def cleanup_files():
         os.unlink(f)
 
 
-def pytest_configure(config):
+def pytest_configure(config) -> None:
     """
     Loads IQA instance based on provided environment and extra command line args.
     All arguments will be available as variables that can be used inside the inventory.
@@ -74,11 +79,11 @@ def pytest_configure(config):
 
     # Adding all arguments as environment variables, so child executions of Ansible
     # will be able to use the same variables.
-    options = dict(config.option.__dict__)
+    options: dict = dict(config.option.__dict__)
 
     # Insert array elements with _0, _1, such as --router 1.1.1.1 and --router 2.2.2.2
     # would become: router_0: 1.1.1.1 and router_1: 2.2.2.2
-    new_options = dict()
+    new_options: dict = dict()
     for (key, value) in options.items():
         if type(value) != list:
             continue
@@ -90,7 +95,7 @@ def pytest_configure(config):
     os.environ.update(options)
 
     # Loading the inventory
-    iqa = Instance(inventory=config.getvalue('inventory'), cli_args=config.option.__dict__)
+    iqa: Instance = Instance(inventory=config.getvalue('inventory'), cli_args=config.option.__dict__)
 
     # Adjusting clients timeout
     for client in iqa.clients:
@@ -102,7 +107,7 @@ def pytest_configure(config):
     atexit.register(cleanup_files)
 
 
-def pytest_runtest_call(item):
+def pytest_runtest_call(item: Function) -> None:
     """
     Hook that runs before each test method and can iterate through
     parametrized items adding a generic "param:<argname>":"<argvalue>"
