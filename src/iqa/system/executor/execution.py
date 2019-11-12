@@ -3,9 +3,10 @@ import logging
 import subprocess
 import tempfile
 import threading
-from typing import IO
+from typing import IO, Optional, Union
 
 from iqa.system.command.command_base import Command
+from iqa.system.executor.executor_base import Executor
 from iqa.utils.process import Process
 from iqa.utils.timeout import TimeoutCallback
 
@@ -14,7 +15,7 @@ Defines the representation of a command Execution that is generated
 by the Executor implementations when a command is executed.  
 """
 # Logger
-logger = logging.getLogger(__name__)
+logger: logging.Logger = logging.getLogger(__name__)
 
 
 class ExecutionException(Exception):
@@ -31,7 +32,7 @@ class Execution(abc.ABC):
     who generated the Execution instance.
     """
 
-    def __init__(self, command: Command, executor, modified_args: list = None, env=None):
+    def __init__(self, command: Command, executor: Executor, modified_args: list = None, env=None) -> None:
         """
         Instance is initialized with the command that was effectively
         executed and the Executor instance that produced this new object.
@@ -40,22 +41,22 @@ class Execution(abc.ABC):
         :param modified_args:
         :param env:
         """
-        self.command = command
-        self.executor = executor
-        self.env = env
+        self.command: Command = command
+        self.executor: Executor = executor
+        self.env: dict = env
 
         # Flags to control whether execution timed out or was interrupted by user
-        self.timed_out = False
-        self.interrupted = False
-        self.failure = False
+        self.timed_out: bool = False
+        self.interrupted: bool = False
+        self.failure: bool = False
 
         # Adjust time out settings if provided
-        self._timeout = None
+        self._timeout: TimeoutCallback
         if command.timeout and command.timeout > 0:
             self._timeout = TimeoutCallback(command.timeout, self._on_timeout)
 
         # Avoids executors from modifying the command
-        self.args = self.command.args
+        self.args: list = self.command.args
         if modified_args:
             self.args = modified_args
 
@@ -63,7 +64,7 @@ class Execution(abc.ABC):
         self._run()
 
     @abc.abstractmethod
-    def _run(self):
+    def _run(self) -> None:
         """
         Executes the command with different execution strategies (subprocess or others).
         :return:
@@ -71,7 +72,7 @@ class Execution(abc.ABC):
         raise NotImplementedError()
 
     @abc.abstractmethod
-    def wait(self):
+    def wait(self) -> None:
         """
         Waits for command execution to complete.
         :return:
@@ -95,11 +96,11 @@ class Execution(abc.ABC):
         raise NotImplementedError()
 
     @abc.abstractmethod
-    def on_timeout(self):
+    def on_timeout(self) -> None:
         raise NotImplementedError()
 
     @abc.abstractmethod
-    def terminate(self):
+    def terminate(self) -> None:
         """
         Terminates the execution.
         :return:
@@ -107,7 +108,7 @@ class Execution(abc.ABC):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def read_stdout(self, lines: bool = False):
+    def read_stdout(self, lines: bool = False) -> Optional[Union[str, list]]:
         """
         Returns a string with the whole STDOUT content if the original
         command has stdout property defined as True. Otherwise
@@ -119,18 +120,18 @@ class Execution(abc.ABC):
         raise NotImplementedError()
 
     @abc.abstractmethod
-    def read_stderr(self, lines: bool = False):
+    def read_stderr(self, lines: bool = False) -> Optional[Union[str, list]]:
         """
         Returns a string with the whole STDERR content if the original
         command has stderr property defined as True. Otherwise
         None will be returned.
-        :param lines: whether to return stdout as a list of lines
+        :param lines: whether to return stderr as a list of lines
         :type lines: bool
-        :return: Stdout content as str if lines is False, or as a list
+        :return: Stderr content as str if lines is False, or as a list
        """
         raise NotImplementedError()
 
-    def _on_timeout(self):
+    def _on_timeout(self) -> None:
         """
         This method is called internally by the TimeoutCallback in case
         the execution times out. It will notify concrete Execution and the
@@ -142,7 +143,7 @@ class Execution(abc.ABC):
             self.on_timeout()
             self.command.on_timeout(self)
 
-    def interrupt(self):
+    def interrupt(self) -> None:
         """
         Interrupts a running process (if it is still running).
         Once interrupted, if a timer is active, it will be cancelled and
@@ -158,7 +159,7 @@ class Execution(abc.ABC):
         self.cancel_timer()
         self.command.on_interrupt(self)
 
-    def cancel_timer(self):
+    def cancel_timer(self) -> None:
         """
         Cancels the TimeoutCallback handler used internally.
         :return:
@@ -173,7 +174,7 @@ class ExecutionProcess(Execution):
     Executors that want to run a given command as a Process must use this Execution strategy.
     """
 
-    def __init__(self, command: Command, executor, modified_args: list = None, env=None):
+    def __init__(self, command: Command, executor: Executor, modified_args: list = None, env=None) -> None:
         """
         Instance is initialized with the command that was effectively
         executed and the Executor instance that produced this new object.
@@ -185,23 +186,24 @@ class ExecutionProcess(Execution):
 
         # Prepare stdout handler
         if command.stdout:
-            self.fh_stdout = tempfile.TemporaryFile(mode="w+t", encoding=command.encoding)
+            self.fh_stdout: Union[IO[str], int] = tempfile.TemporaryFile(mode="w+t", encoding=command.encoding)
         else:
             self.fh_stdout = subprocess.DEVNULL
 
         # Prepare stderr handler
         if command.stderr:
-            self.fh_stderr = tempfile.TemporaryFile(mode="w+t", encoding=command.encoding)
+            self.fh_stderr: Union[IO[str], int] = tempfile.TemporaryFile(mode="w+t", encoding=command.encoding)
         else:
             self.fh_stderr = subprocess.DEVNULL
 
         # Subprocess instance
-        self._process: Process = None
+        self._process: Process
+        self._timeout: TimeoutCallback
 
         # Initializes the super class which will invoke the run method
         super(ExecutionProcess, self).__init__(command=command, executor=executor, modified_args=modified_args, env=env)
 
-    def _run(self):
+    def _run(self) -> None:
         """
         Executes the given command in a separate Thread using a Process (child of subprocess.Popen)
         and monitoring it, till it's done running. When done (or failed), if a timeout was defined,
@@ -209,7 +211,7 @@ class ExecutionProcess(Execution):
         :return:
         """
 
-        def start_process():
+        def start_process() -> None:
             """
             Trigger method for separate thread that will effectively run the command.
             :return:
@@ -235,21 +237,21 @@ class ExecutionProcess(Execution):
         while not self._process and not self.failure:
             pass
 
-    def is_running(self):
+    def is_running(self) -> bool:
         """
         Returns true if process is still running.
         :return:
         """
         return self._process.is_running()
 
-    def completed_successfully(self):
+    def completed_successfully(self) -> bool:
         """
         Returns true if process has ended and return code was 0.
         :return:
         """
         return self._process.completed_successfully()
 
-    def terminate(self):
+    def terminate(self) -> None:
         """
         Forces a given Process to terminate.
         :return:
@@ -258,7 +260,7 @@ class ExecutionProcess(Execution):
                      (self._process.pid, self.args))
         self._process.terminate()
 
-    def wait(self):
+    def wait(self) -> None:
         """
         Wraps the Popen wait method till process exits or times out.
         :return:
@@ -266,7 +268,7 @@ class ExecutionProcess(Execution):
         # Wait till process completes or timeout (notified by TimeoutCallback
         self._process.wait()
 
-    def on_timeout(self):
+    def on_timeout(self) -> None:
         """
         This method is called internally by the TimeoutCallback in case
         the execution times out. It will notify the command instance
@@ -277,7 +279,7 @@ class ExecutionProcess(Execution):
                      % (self.command.timeout, self._process.pid, self.args))
         self.terminate()
 
-    def read_stdout(self, lines: bool = False):
+    def read_stdout(self, lines: bool = False) -> Optional[Union[str, list]]:
         """
         Returns a string with the whole STDOUT content if the original
         command has stdout property defined as True. Otherwise
@@ -289,8 +291,6 @@ class ExecutionProcess(Execution):
         if self.fh_stdout == subprocess.DEVNULL:
             return None
 
-        # Type hinting
-        self.fh_stdout: IO
         self.fh_stdout.seek(0)
 
         if lines:
@@ -298,7 +298,7 @@ class ExecutionProcess(Execution):
 
         return self.fh_stdout.read()
 
-    def read_stderr(self, lines: bool = False):
+    def read_stderr(self, lines: bool = False) -> Optional[Union[str, list]]:
         """
         Returns a string with the whole STDERR content if the original
         command has stderr property defined as True. Otherwise
@@ -310,8 +310,6 @@ class ExecutionProcess(Execution):
         if self.fh_stderr == subprocess.DEVNULL:
             return None
 
-        # Type hinting
-        self.fh_stderr: IO
         self.fh_stderr.seek(0)
 
         if lines:

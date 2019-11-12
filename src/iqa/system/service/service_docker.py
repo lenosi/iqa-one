@@ -1,9 +1,12 @@
 import logging
 from enum import Enum
-from typing import Union
+from typing import Union, Optional
+from docker.errors import APIError, NotFound
 
 from iqa.system.command.command_ansible import CommandAnsible
-from iqa.system.executor import ExecutorAnsible, ExecutorContainer, Execution, CommandContainer
+from iqa.system.executor import ExecutorAnsible, ExecutorContainer
+from iqa.system.executor.execution import Execution
+from iqa.system.command.command_container import CommandContainer
 from iqa.system.service.service import Service, ServiceStatus
 from iqa.utils.docker_util import DockerUtil
 
@@ -14,19 +17,19 @@ class ServiceDocker(Service):
     So startup and shutdown are done by managing current state of related
     docker container name.
     """
-    _logger = logging.getLogger(__name__)
+    _logger: logging.Logger = logging.getLogger(__name__)
 
-    def __init__(self, name: str, executor: Union[ExecutorAnsible, ExecutorContainer]):
+    def __init__(self, name: str, executor: Union[ExecutorAnsible, ExecutorContainer]) -> None:
         super().__init__(name, executor)
-        self.docker_host = executor.docker_host
-        self.docker_util = DockerUtil(docker_host=executor.docker_host)
+        self.docker_host: Optional[str] = executor.docker_host
+        self.docker_util: DockerUtil = DockerUtil(docker_host=executor.docker_host)
 
     class ServiceDockerState(Enum):
         STARTED = ('start', 'started')
         STOPPED = ('stop', 'stopped')
         RESTARTED = ('restart', 'started')
 
-        def __init__(self, system_state, ansible_state):
+        def __init__(self, system_state, ansible_state) -> None:
             self.system_state = system_state
             self.ansible_state = ansible_state
 
@@ -48,7 +51,7 @@ class ServiceDocker(Service):
             elif container.status == 'exited':
                 ServiceDocker._logger.debug("Service: %s - Status: STOPPED" % self.name)
                 return ServiceStatus.STOPPED
-        except Exception:
+        except APIError or NotFound:
             ServiceDocker._logger.exception('Error retrieving status of docker container')
             return ServiceStatus.FAILED
 
@@ -63,21 +66,21 @@ class ServiceDocker(Service):
     def restart(self) -> Execution:
         return self.executor.execute(self._create_command(self.ServiceDockerState.RESTARTED))
 
-    def enable(self) -> Execution:
+    def enable(self) -> None:
         """
         Simply ignore it (not applicable to containers)
         :return:
         """
         return None
 
-    def disable(self) -> Execution:
+    def disable(self) -> None:
         """
         Simply ignore it (not applicable to containers)
         :return:
         """
         return None
 
-    def _create_command(self, service_state: ServiceDockerState):
+    def _create_command(self, service_state: ServiceDockerState) -> Union[CommandAnsible, CommandContainer]:
         """
         Creates a Command instance based on executor type and state
         that is specific to each type of command.

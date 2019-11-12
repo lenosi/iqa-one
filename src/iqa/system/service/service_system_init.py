@@ -1,9 +1,15 @@
 import logging
 import re
 from enum import Enum
+from typing import Union, Optional
+from typing.re import Pattern
 
-from iqa.system.executor import Executor, Command, Execution, ExecutorAnsible, CommandAnsible
-from iqa.system.service import ServiceStatus, Service
+from iqa.system.command.command_ansible import CommandAnsible
+from iqa.system.command.command_base import Command
+from iqa.system.executor.execution import Execution
+from iqa.system.executor import Executor, ExecutorAnsible
+from iqa.system.service import Service
+from iqa.system.service.service import ServiceStatus
 
 
 class ServiceSystemInit(Service):
@@ -11,7 +17,7 @@ class ServiceSystemInit(Service):
     Implementation of a systemd or initd service used to manage a Server component.
     """
 
-    _logger = logging.getLogger(__name__)
+    _logger: logging.Logger = logging.getLogger(__name__)
 
     def __init__(self, name: str, executor: Executor):
         super().__init__(name, executor)
@@ -42,19 +48,21 @@ class ServiceSystemInit(Service):
         # (dead)
 
         # On RHEL7> service is automatically redirected to systemctl
-        cmd_status = Command(['service', self.name, 'status'], stdout=True, timeout=self.TIMEOUT)
-        execution = self.executor.execute(cmd_status)
+        cmd_status: Command = Command(['service', self.name, 'status'], stdout=True, timeout=self.TIMEOUT)
+        execution: Execution = self.executor.execute(cmd_status)
 
-        service_output = execution.read_stdout()
+        service_output: Optional[Union[str, list]] = execution.read_stdout()
 
         if not service_output:
             ServiceSystemInit._logger.debug("Service: %s - Status: FAILED" % self.name)
             return ServiceStatus.FAILED
 
-        if re.search(r'(is running|\(running\)|Running)', service_output):
+        running_pattern: Pattern = r'(is running|\(running\)|Running)'
+        stopped_pattern: Pattern = r'(is stopped|\(dead\)|Stopped)'
+        if re.search(running_pattern, service_output):
             ServiceSystemInit._logger.debug("Service: %s - Status: RUNNING" % self.name)
             return ServiceStatus.RUNNING
-        elif re.search(r'(is stopped|\(dead\)|Stopped)', service_output):
+        elif re.search(stopped_pattern, service_output):
             ServiceSystemInit._logger.debug("Service: %s - Status: STOPPED" % self.name)
             return ServiceStatus.STOPPED
 

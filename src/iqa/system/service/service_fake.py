@@ -1,15 +1,9 @@
 import abc
-from enum import Enum
+from typing import Optional
 
-from iqa.system.executor import Executor, Execution
-from .service import Service
-
-
-class ServiceStatus(Enum):
-    RUNNING = 'running'
-    STOPPED = 'stopped'
-    FAILED = 'failed'
-    UNKNOWN = 'unknown'
+from iqa.system.executor import Executor
+from iqa.system.executor.execution import Execution
+from .service import Service, ServiceStatus
 
 
 class ServiceFake(Service):
@@ -17,12 +11,12 @@ class ServiceFake(Service):
     Represents a service used to control a Server component (Router or Broker).
     """
 
-    TIMEOUT = 30
+    TIMEOUT: int = 30
 
-    def __init__(self, name: str, executor: Executor):
+    def __init__(self, name: Optional[str], executor: Executor):
         super().__init__(name, executor)
-        self.name = name
-        self.executor = executor
+        self.name: Optional[str] = name
+        self.executor: Executor = executor
 
     @abc.abstractmethod
     def status(self) -> ServiceStatus:
@@ -34,7 +28,7 @@ class ServiceFake(Service):
         return NotImplemented
 
     @abc.abstractmethod
-    def start(self, wait_for_messaging=False) -> Execution:
+    def start(self, wait_for_messaging: bool = False) -> Execution:
         return NotImplemented
 
     @abc.abstractmethod
@@ -42,7 +36,7 @@ class ServiceFake(Service):
         return NotImplemented
 
     @abc.abstractmethod
-    def restart(self, wait_for_messaging=False) -> Execution:
+    def restart(self, wait_for_messaging: bool = False) -> Execution:
         return NotImplemented
 
     @abc.abstractmethod

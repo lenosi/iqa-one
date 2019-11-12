@@ -1,7 +1,8 @@
 import os
 
 from iqa.system.command.command_base import Command
-from iqa.system.executor import Executor, Execution, ExecutionKubernetes
+from iqa.system.executor import Executor
+from iqa.system.executor.execution_kubernetes import ExecutionKubernetes
 
 
 class ExecutorKubernetes(Executor):
@@ -10,7 +11,7 @@ class ExecutorKubernetes(Executor):
     This Executor uses the ExecutionKubernetes to run commands through the Kubernetes Client API.
     """
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs) -> None:
         """
         :param kwargs:
             :keyword executors_kubernetes_config:
@@ -32,10 +33,10 @@ class ExecutorKubernetes(Executor):
         super(ExecutorKubernetes, self).__init__(**kwargs)
 
         # Kubernetes config file - defaults to $HOME/.kube/config
-        self.config = kwargs.get('executor_kubernetes_config', os.environ['HOME'] + os.sep + '.kube/config')
+        self.config: str = kwargs.get('executor_kubernetes_config', os.environ['HOME'] + os.sep + '.kube/config')
 
         # Namespace to use for querying PODs
-        self.namespace = kwargs.get('executor_kubernetes_namespace', 'default')
+        self.namespace: str = kwargs.get('executor_kubernetes_namespace', 'default')
 
         #
         # You can provide the context to use (stored in the config file) if you don't
@@ -43,25 +44,25 @@ class ExecutorKubernetes(Executor):
         #
 
         # Context to use from kubernetes config (if not using current context or a host/token)
-        self.context = kwargs.get('executor_kubernetes_context', None)
+        self.context: str = kwargs.get('executor_kubernetes_context', None)
 
         #
         # When you do not want to use a context, you can also use a host/token pair
         #
 
         # Host (if not using context)
-        self.host = kwargs.get('executor_kubernetes_host', None)
+        self.host: str = kwargs.get('executor_kubernetes_host', None)
 
         # Token (if not using context)
-        self.token = kwargs.get('executor_kubernetes_token', None)
+        self.token: str = kwargs.get('executor_kubernetes_token', None)
 
         # Selector to match deployment pod that will be used for execution.
         # If your selector returns multiple pods, only the first matching one will be used.
-        self.selector = kwargs.get('executor_kubernetes_selector', None)
+        self.selector: str = kwargs.get('executor_kubernetes_selector', None)
 
     @property
-    def implementation(self):
+    def implementation(self) -> str:
         return 'kubernetes'
 
-    def _execute(self, command: Command) -> Execution:
+    def _execute(self, command: Command) -> ExecutionKubernetes:
         return ExecutionKubernetes(command, self)

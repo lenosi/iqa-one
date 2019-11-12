@@ -5,15 +5,20 @@ import threading
 
 import urllib3
 from kubernetes import config, client
+from kubernetes.client import Configuration, CoreV1Api
 from kubernetes.client.apis import core_v1_api
 from kubernetes.stream import stream
 from kubernetes.stream.ws_client import WSClient
 
+from typing import IO
+
 # Logger for ExecutionKubernetes
 from iqa.system.command.command_base import Command
-from iqa.system.executor import Execution, ExecutionException
+from iqa.system.executor.executor_base import Execution
+from iqa.system.executor.execution import ExecutionException
+from iqa.system.executor.executor_kubernetes import ExecutorKubernetes
 
-logger = logging.getLogger(__name__)
+logger: logging.Logger = logging.getLogger(__name__)
 urllib3.disable_warnings()
 
 
@@ -23,7 +28,7 @@ class ExecutionKubernetes(Execution):
     Executors that want to run a given command through the Kubernetes Client API must use this Execution strategy.
     """
 
-    def __init__(self, command: Command, executor, modified_args: list = None, env=None):
+    def __init__(self, command: Command, executor: ExecutorKubernetes, modified_args: list = None, env=None) -> None:
         """
         Instance is initialized with the command that was effectively
         executed and the Executor instance that produced this new object.
@@ -33,8 +38,10 @@ class ExecutionKubernetes(Execution):
         :param modified_args:
         :param env:
         """
-        self.fh_stdout = None
-        self.fh_stderr = None
+        self.fh_stdout: IO
+        self.fh_stderr: IO
+
+        self.executor: ExecutorKubernetes = executor
 
         if command.stdout:
             self.fh_stdout = tempfile.TemporaryFile(mode="w+t", encoding=command.encoding)
@@ -42,7 +49,7 @@ class ExecutionKubernetes(Execution):
             self.fh_stderr = tempfile.TemporaryFile(mode="w+t", encoding=command.encoding)
 
         # Set the config and get Api instance
-        client_config = client.Configuration()
+        client_config: Configuration = client.Configuration()
         client_config.verify_ssl = False
         client_config.assert_hostname = False
         client_config.host = executor.host
@@ -58,16 +65,16 @@ class ExecutionKubernetes(Execution):
                                     context=executor.context)
 
         # Kubernetes API instance
-        self.api = core_v1_api.CoreV1Api(client.ApiClient(client_config))
+        self.api: CoreV1Api = core_v1_api.CoreV1Api(client.ApiClient(client_config))
 
         # Kubernetes response (internal execution)
-        self.response: WSClient = None
+        self.response: WSClient
 
         # Initializes the super class which will invoke the run method
         super(ExecutionKubernetes, self).__init__(command=command, executor=executor,
                                                   modified_args=modified_args, env=env)
 
-    def _run(self):
+    def _run(self) -> None:
         """
         Run a separate thread to perform the command, so the thread can monitor
         for command completion in a non-blocking way.
@@ -77,7 +84,7 @@ class ExecutionKubernetes(Execution):
         while not self.response and not self.failure:
             pass
 
-    def _run_as_thread(self):
+    def _run_as_thread(self) -> None:
         """
         Method triggered by Thread that is meant to effectively execute the command using Kubernetes
         Client API.
@@ -110,7 +117,7 @@ class ExecutionKubernetes(Execution):
         except Exception as ex:
             logger.error("Error executing kubernetes command", ex)
             self.cancel_timer()
-            self.failure = True
+            self.failure: bool = True
             raise ExecutionException("Error invoking Kubernetes API") from ex
 
         # Thread must wait till process is complete
@@ -120,12 +127,12 @@ class ExecutionKubernetes(Execution):
         logging.debug("Process has terminated")
         self.cancel_timer()
 
-    def wait(self):
+    def wait(self) -> None:
         """
         Waits till execution of Command is considered as done, or timed out.
         :return:
         """
-        timeout_secs = None
+        timeout_secs: int = 0
         if self.command.timeout:
             timeout_secs = self.command.timeout
 
@@ -152,14 +159,14 @@ class ExecutionKubernetes(Execution):
         """
         return not any([self.is_running(), self.timed_out, self.interrupted, self.failure])
 
-    def on_timeout(self):
+    def on_timeout(self) -> None:
         """
         If timed out then this method will close the self.response (WSClient).
         :return:
         """
         self.terminate()
 
-    def terminate(self):
+    def terminate(self) -> None:
         """
         Closes the WSClient (self.response) if it is still running.
         :return:

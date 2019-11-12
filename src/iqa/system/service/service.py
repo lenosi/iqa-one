@@ -1,7 +1,9 @@
 from abc import ABC, abstractmethod
 from enum import Enum
+from typing import Optional
 
-from iqa.system.executor import Executor, Execution
+from iqa.system.executor import Executor
+from iqa.system.executor.execution import Execution
 
 
 class ServiceStatus(Enum):
@@ -16,11 +18,11 @@ class Service(ABC):
     Represents a service used to control a Server component (Router or Broker).
     """
 
-    TIMEOUT = 30
+    TIMEOUT: int = 30
 
-    def __init__(self, name: str, executor: Executor):
-        self.name = name
-        self.executor = executor
+    def __init__(self, name: Optional[str], executor: Executor) -> None:
+        self.name: Optional[str] = name
+        self.executor: Executor = executor
 
     @abstractmethod
     def status(self) -> ServiceStatus:
@@ -32,7 +34,7 @@ class Service(ABC):
         return NotImplemented
 
     @abstractmethod
-    def start(self, wait_for_messaging=False) -> Execution:
+    def start(self, wait_for_messaging: bool = False) -> Execution:
         return NotImplemented
 
     @abstractmethod
@@ -40,13 +42,13 @@ class Service(ABC):
         return NotImplemented
 
     @abstractmethod
-    def restart(self, wait_for_messaging=False) -> Execution:
+    def restart(self, wait_for_messaging: bool = False) -> Execution:
         return NotImplemented
 
     @abstractmethod
-    def enable(self) -> Execution:
+    def enable(self) -> Optional[Execution]:
         return NotImplemented
 
     @abstractmethod
-    def disable(self) -> Execution:
+    def disable(self) -> Optional[Execution]:
         return NotImplemented
