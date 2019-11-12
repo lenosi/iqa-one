@@ -4,9 +4,9 @@ class Property:
     and the values are restricted to be of simple types only, that is, excluding map, list, and array types.
     """
 
-    def __init__(self, name, value=None):
-        self.name = name
-        self.value = value
+    def __init__(self, name: str, value: str = None) -> None:
+        self.name: str = name
+        self.value: str = value
 
 
 class ApplicationProperties(list):
@@ -16,7 +16,7 @@ class ApplicationProperties(list):
 
     """
 
-    def add_property(self, name, value):
+    def add_property(self, name: str, value: str) -> None:
         """
         Add property to message Application properties
         :param name:

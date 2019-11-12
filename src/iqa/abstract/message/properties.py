@@ -38,7 +38,7 @@ class Properties:
                  creation_time=None,
                  group_id=None,
                  group_sequence=None,
-                 reply_to_group_id=None):
+                 reply_to_group_id=None) -> None:
         self.message_id = message_id
         self.user_id = user_id
         self.to = to

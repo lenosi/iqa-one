@@ -27,23 +27,16 @@ class Message:
     #              'properties', 'application_properties', 'application_data',
     #              'footer']
 
-    header: Header = \
-        field(default_factory=Header)
+    header: Header = field(default_factory=Header)
 
-    delivery_annotations: DeliveryAnnotations = \
-        field(default_factory=DeliveryAnnotations)
+    delivery_annotations: DeliveryAnnotations = field(default_factory=DeliveryAnnotations)
 
-    message_annotations: MessageAnnotations = \
-        field(default_factory=MessageAnnotations)
+    message_annotations: MessageAnnotations = field(default_factory=MessageAnnotations)
 
-    properties: Properties = \
-        field(default_factory=Properties)
+    properties: Properties = field(default_factory=Properties)
 
-    application_properties: ApplicationProperties = \
-        field(default_factory=ApplicationProperties)
+    application_properties: ApplicationProperties = field(default_factory=ApplicationProperties)
 
-    application_data: ApplicationData = \
-        field(default_factory=ApplicationData)
+    application_data: ApplicationData = field(default_factory=ApplicationData)
 
-    footer: Footer = \
-        field(default_factory=Footer)
+    footer: Footer = field(default_factory=Footer)

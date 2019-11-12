@@ -7,12 +7,12 @@ from iqa.abstract.message import Message
 class Sender(MessagingClient):
     """Abstract class of sender client."""
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs) -> None:
         super(Sender, self).__init__(**kwargs)
         # Sender settings
 
-    def send(self, message: Message, **kwargs):
-        """Method for send message.
+    def send(self, message: Message, **kwargs) -> None:
+        """Method for sending a message.
         :param message: Message to be sent
         :type: iqa.iqa.abstract.message.Message
         """
@@ -23,5 +23,5 @@ class Sender(MessagingClient):
         self._send(message, **kwargs)
 
     @abstractmethod
-    def _send(self, message: Message, **kwargs):
+    def _send(self, message: Message, **kwargs) -> None:
         raise NotImplementedError

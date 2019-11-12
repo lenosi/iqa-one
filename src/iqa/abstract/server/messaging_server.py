@@ -7,8 +7,8 @@ class MessagingServer(ABC):
     implementation = NotImplemented
 
     def __init__(self) -> None:
-        self.listeners = []
-        self.connectors = []
+        self.listeners: list = []
+        self.connectors: list = []
 
     @abstractmethod
     def get_url(self, port: int = None, listener: Listener = None) -> str:

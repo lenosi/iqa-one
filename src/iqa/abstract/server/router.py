@@ -10,5 +10,5 @@ class Router(MessagingServer):
     def get_url(self, port: int = None, listener: Listener = None) -> str:
         return NotImplemented
 
-    def __init__(self, name: str, **kwargs):
+    def __init__(self, **kwargs) -> None:
         super(Router, self).__init__()
