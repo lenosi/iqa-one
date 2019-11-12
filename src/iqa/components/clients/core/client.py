@@ -7,11 +7,11 @@ from iqa.system.node.node import Node
 class CoreMessagingClient(MessagingClient, Component):
     """Internal core Proton mapping client."""
 
-    supported_protocols = [protocols.Amqp10()]
-    implementation = 'core'
-    version = '0.1'
+    supported_protocols: list = [protocols.Amqp10()]
+    implementation: str = 'core'
+    version: str = '0.1'
 
-    def __init__(self, name: str, node: Node):
+    def __init__(self, name: str, node: Node) -> None:
         super().__init__(name, node)
 
 #

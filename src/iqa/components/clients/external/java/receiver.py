@@ -1,7 +1,7 @@
 from iqa.components.clients.external.java.client import ClientJava
 from iqa.components.clients.external.java.command.java_commands import JavaReceiverClientCommand
 from iqa.abstract.client import Receiver
-from iqa.system.node import Node, Executor
+from iqa.system.node import Node
 
 try:
     from urlparse import urlparse, urlunparse
@@ -15,7 +15,10 @@ class ReceiverJava(Receiver, ClientJava):
 
     _command: JavaReceiverClientCommand
 
-    def _set_url(self, url: str):
+    def __init__(self, name: str, node: Node, **kwargs) -> None:
+        super(ReceiverJava, self).__init__(name, node, **kwargs)
+
+    def _set_url(self, url: str) -> None:
         p_url = urlparse(url)
         self._command.control.broker = '{}://{}:{}'. \
             format(p_url.scheme, p_url.hostname, p_url.port)
@@ -28,11 +31,11 @@ class ReceiverJava(Receiver, ClientJava):
         if p_url.password:
             self._command.connection.conn_password = unquote(p_url.password)
 
-    def set_auth_mechs(self, mechs: str):
+    def set_auth_mechs(self, mechs: str) -> None:
         self._command.connection.conn_auth_mechanisms = mechs
 
     def set_ssl_auth(self, pem_file: str = None, key_file: str = None, keystore: str = None, keystore_pass: str = None,
-                     keystore_alias: str = None):
+                     keystore_alias: str = None) -> None:
         self._command.connection.conn_ssl_keystore_location = keystore
         self._command.connection.conn_ssl_keystore_password = keystore_pass
         self._command.connection.conn_ssl_key_alias = keystore_alias
@@ -44,8 +47,5 @@ class ReceiverJava(Receiver, ClientJava):
         return JavaReceiverClientCommand(stdout=stdout, stderr=stderr, daemon=daemon,
                                          timeout=timeout, encoding=encoding)
 
-    def receive(self):
-        self.execution = self.execute(self.command)
-
-    def __init__(self, name: str, node: Node, executor: Executor, **kwargs):
-        super(ReceiverJava, self).__init__(name, node, executor, **kwargs)
+    def receive(self) -> None:
+        self.execution = self.node.execute(self.command)

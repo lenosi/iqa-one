@@ -6,7 +6,10 @@ Options are also common to implementation language (java, python, etc).
 In case an implementation has a different set of options, specialize it
 in a separate module inside abstract.client.command.impl.
 """
-from iqa.components.clients.external.command.options.client_options import *
+from iqa.components.clients.external.command.options.client_options import ClientOptionsBase, ControlOptionsCommon,\
+    LoggingOptionsCommon, ConnectionOptionsCommon, ConnectorOptions, ControlOptionsReceiver, \
+    LoggingOptionsSenderReceiver, TransactionOptionsSenderReceiver, ReceiverOptions, ControlOptionsSenderReceiver, \
+    MessageOptionsSender
 from iqa.system.command.command_base import Command
 
 
@@ -18,11 +21,11 @@ class ClientCommand(Command):
     properties).
     """
 
-    def __init__(self, args):
+    def __init__(self, args) -> None:
         super().__init__(args)
 
     @property
-    def args(self):
+    def args(self) -> list:
         return self._build_command()
 
     def main_command(self) -> list:
@@ -39,8 +42,8 @@ class ClientCommand(Command):
         using optconstruct to produce the arguments list.
         :return:
         """
-        all_options = {}
-        valid_options = []
+        all_options: dict = {}
+        valid_options: list = []
 
         for opt_name, opt_value in self.__dict__.items():
             # Skip members that are not an instance of ClientOptionsBase
@@ -53,12 +56,12 @@ class ClientCommand(Command):
             valid_options += opt_value.valid_options()
 
         # Generates parameters list (only allowed will be added)
-        params = [
+        params: list = [
                 opt.generate(all_options).split(' ', 1)
                 for opt in valid_options
                 if opt.satisfied(all_options)
         ]
-        params_flat = [item for param in params for item in param]
+        params_flat: list = [item for param in params for item in param]
 
         return self.main_command() + params_flat
 
@@ -73,13 +76,13 @@ class ConnectorClientCommand(ClientCommand):
 
     def __init__(self, stdout: bool = False, stderr: bool = False,
                  daemon: bool = False, timeout: int = 0,
-                 encoding: str = "utf-8"):
+                 encoding: str = "utf-8") -> None:
         super(ClientCommand, self).__init__([], stdout, stderr, daemon,
                                             timeout, encoding)
-        self.control = ControlOptionsCommon()
-        self.logging = LoggingOptionsCommon()
-        self.connection = ConnectionOptionsCommon()
-        self.connector = ConnectorOptions()
+        self.control: ControlOptionsCommon = ControlOptionsCommon()
+        self.logging: LoggingOptionsCommon = LoggingOptionsCommon()
+        self.connection: ConnectionOptionsCommon = ConnectionOptionsCommon()
+        self.connector: ConnectorOptions = ConnectorOptions()
 
 
 class ReceiverClientCommand(ClientCommand):
@@ -95,11 +98,11 @@ class ReceiverClientCommand(ClientCommand):
                  encoding: str = "utf-8"):
         super(ClientCommand, self).__init__([], stdout, stderr, daemon,
                                             timeout, encoding)
-        self.control = ControlOptionsReceiver()
-        self.logging = LoggingOptionsSenderReceiver()
-        self.transaction = TransactionOptionsSenderReceiver()
-        self.connection = ConnectionOptionsCommon()
-        self.receiver = ReceiverOptions()
+        self.control: ControlOptionsReceiver = ControlOptionsReceiver()
+        self.logging: LoggingOptionsSenderReceiver = LoggingOptionsSenderReceiver()
+        self.transaction: TransactionOptionsSenderReceiver = TransactionOptionsSenderReceiver()
+        self.connection: ConnectionOptionsCommon = ConnectionOptionsCommon()
+        self.receiver: ReceiverOptions = ReceiverOptions()
 
 
 class SenderClientCommand(ClientCommand):
@@ -112,11 +115,11 @@ class SenderClientCommand(ClientCommand):
 
     def __init__(self, stdout: bool = False, stderr: bool = False,
                  daemon: bool = False, timeout: int = 0,
-                 encoding: str = "utf-8"):
+                 encoding: str = "utf-8") -> None:
         super(ClientCommand, self).__init__([], stdout, stderr, daemon,
                                             timeout, encoding)
-        self.control = ControlOptionsSenderReceiver()
-        self.logging = LoggingOptionsSenderReceiver()
-        self.transaction = TransactionOptionsSenderReceiver()
-        self.connection = ConnectionOptionsCommon()
-        self.message = MessageOptionsSender()
+        self.control: ControlOptionsSenderReceiver = ControlOptionsSenderReceiver()
+        self.logging: LoggingOptionsSenderReceiver = LoggingOptionsSenderReceiver()
+        self.transaction: TransactionOptionsSenderReceiver = TransactionOptionsSenderReceiver()
+        self.connection: ConnectionOptionsCommon = ConnectionOptionsCommon()
+        self.message: MessageOptionsSender = MessageOptionsSender()

@@ -1,12 +1,14 @@
 import logging
 from collections import namedtuple
-from typing import NamedTuple
+from typing import NamedTuple, TypeVar
 
 import proton
 from proton import Url, SSLDomain
 from proton.utils import BlockingConnection, SyncRequestResponse
 
 from iqa.abstract.server.router import Router
+
+RouterType = TypeVar('RouterType', bound=Router)
 
 
 class RouterQuery(object):
@@ -15,13 +17,13 @@ class RouterQuery(object):
     Connections are closed after each query.
     """
 
-    def __init__(self, host="0.0.0.0", port=5672, router: Router = None):
+    def __init__(self, host: str = "0.0.0.0", port: str = 5672, router: RouterType = None) -> None:
 
-        self._logger = logging.getLogger(self.__module__)
-        self.port = port
-        self.host = host
-        self._router = router
-        self._connection_options = {
+        self._logger: logging.getLogger = logging.getLogger(self.__module__)
+        self.port: str = port
+        self.host: str = host
+        self._router: RouterType = router
+        self._connection_options: dict = {
                 'sasl_enabled': False,
                 'ssl_domain': None,
                 'allow_insecure_mechs': True,
@@ -36,7 +38,7 @@ class RouterQuery(object):
 
             # If SSL certificates provided, use them
             if self._router.has_ssl_keys():
-                ssl_domain = SSLDomain(SSLDomain.MODE_CLIENT)
+                ssl_domain: SSLDomain = SSLDomain(SSLDomain.MODE_CLIENT)
                 ssl_domain.set_credentials(self._router.pem_file,
                                            self._router.key_file,
                                            self._router.key_password)
@@ -48,7 +50,7 @@ class RouterQuery(object):
                 self._connection_options['password'] = self._router.password
 
     def query(self, entity_type: str = 'org.apache.qpid.dispatch.router.node') \
-            -> NamedTuple:
+            -> list:
         """
         Queries the related router instance, retrieving information for
         the provided Entity Type. The result is an array of a named tuple,
@@ -60,30 +62,30 @@ class RouterQuery(object):
         :return:
         """
         # Scheme to use
-        scheme = 'amqp'
+        scheme: str = 'amqp'
         if self._connection_options['ssl_domain']:
             scheme = 'amqps'
 
         # URL to test
-        url = Url("%s://%s:%s/$management" % (scheme, self.host, self.port))
+        url: Url = Url("%s://%s:%s/$management" % (scheme, self.host, self.port))
         self._logger.info("Querying router at: %s://%s:%s/$management" %
                           (scheme, self.host, self.port))
 
         # Proton connection
         self._logger.debug("Connection options: %s" % self._connection_options)
-        connection = BlockingConnection(url, **self._connection_options)
+        connection: BlockingConnection = BlockingConnection(url, **self._connection_options)
 
         # Proton sync client
-        client = SyncRequestResponse(connection, url.path)
+        client: SyncRequestResponse = SyncRequestResponse(connection, url.path)
 
         # Request message object
-        request = proton.Message()
+        request: proton.Message = proton.Message()
         request.properties = {u'operation': u'QUERY',
                               u'entityType': u'%s' % entity_type}
         request.body = {u'attributeNames': []}
 
         # Sending the request
-        response = client.call(request)
+        response: client.call = client.call(request)
 
         # Closing connection
         client.connection.close()
@@ -92,7 +94,7 @@ class RouterQuery(object):
         # so fields can be read based on their attribute names.
         RouterQueryResults = namedtuple('RouterQueryResults',
                                         response.body["attributeNames"])
-        records = []
+        records: list = []
 
         for record in response.body["results"]:
             records.append(RouterQueryResults(*record))
@@ -100,74 +102,74 @@ class RouterQuery(object):
         return records
 
     # Entities that can be queried
-    def listener(self):
+    def listener(self) -> list:
         return self.query(entity_type='org.apache.qpid.dispatch.listener')
 
-    def connector(self):
+    def connector(self) -> list:
         return self.query(entity_type='org.apache.qpid.dispatch.connector')
 
-    def router(self):
+    def router(self) -> list:
         return self.query(entity_type='org.apache.qpid.dispatch.router')
 
-    def address(self):
+    def address(self) -> list:
         return self.query(entity_type='org.apache.qpid.dispatch.router.address')
 
-    def config_address(self):
+    def config_address(self) -> list:
         return self.query(entity_type='org.apache.qpid.dispatch.router.config.address')
 
-    def config_autolink(self):
+    def config_autolink(self) -> list:
         return self.query(entity_type='org.apache.qpid.dispatch.router.config.autoLink')
 
-    def config_linkroute(self):
+    def config_linkroute(self) -> list:
         return self.query(entity_type='org.apache.qpid.dispatch.router.config.linkRoute')
 
-    def config_exchange(self):
+    def config_exchange(self) -> list:
         return self.query(entity_type='org.apache.qpid.dispatch.router.config.exchange')
 
-    def config_binding(self):
+    def config_binding(self) -> list:
         return self.query(entity_type='org.apache.qpid.dispatch.router.config.binding')
 
-    def node(self):
+    def node(self) -> list:
         return self.query(entity_type='org.apache.qpid.dispatch.router.node')
 
-    def ssl_profile(self):
+    def ssl_profile(self) -> list:
         return self.query(entity_type='org.apache.qpid.dispatch.sslProfile')
 
-    def connection(self):
+    def connection(self) -> list:
         return self.query(entity_type='org.apache.qpid.dispatch.connection')
 
-    def allocator(self):
+    def allocator(self) -> list:
         return self.query(entity_type='org.apache.qpid.dispatch.allocator')
 
-    def log_stats(self):
+    def log_stats(self) -> list:
         return self.query(entity_type='org.apache.qpid.dispatch.logStats')
 
-    def router_link(self):
+    def router_link(self) -> list:
         return self.query(entity_type='org.apache.qpid.dispatch.router.link')
 
-    def policy(self):
+    def policy(self) -> list:
         return self.query(entity_type='org.apache.qpid.dispatch.policy')
 
-    def vhost(self):
+    def vhost(self) -> list:
         return self.query(entity_type='org.apache.qpid.dispatch.vhost')
 
-    def vhost_user_group_settings(self):
+    def vhost_user_group_settings(self) -> list:
         return self.query(entity_type='org.apache.qpid.dispatch.vhostUserGroupSettings')
 
-    def vhost_stats(self):
+    def vhost_stats(self) -> list:
         return self.query(entity_type='org.apache.qpid.dispatch.vhostStats')
 
-    def auth_service_plugin(self):
+    def auth_service_plugin(self) -> list:
         return self.query(entity_type='org.apache.qpid.dispatch.authServicePlugin')
 
-    def configuration_entity(self):
+    def configuration_entity(self) -> list:
         return self.query(entity_type='org.apache.qpid.dispatch.configurationEntity')
 
-    def log(self):
+    def log(self) -> list:
         return self.query(entity_type='org.apache.qpid.dispatch.log')
 
-    def console(self):
+    def console(self) -> list:
         return self.query(entity_type='org.apache.qpid.dispatch.console')
 
-    def management(self):
+    def management(self) -> list:
         return self.query(entity_type='org.apache.qpid.dispatch.management')

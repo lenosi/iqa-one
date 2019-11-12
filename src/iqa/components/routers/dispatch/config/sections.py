@@ -10,10 +10,10 @@ class addrPort(_Section):
     Attributes for internet address and port.
     Used by: listener, connector.
     """
-    section_name = 'addrPort'
-    used_by = ['listener', 'connector']
+    section_name: str = 'addrPort'
+    used_by: list = ['listener', 'connector']
 
-    def __init__(self, host=None, port=None, protocolFamily=None, name=None):
+    def __init__(self, host: str = None, port: str = None, protocolFamily: str = None, name: str = None):
         """
         :param host: IP address: ipv4 or ipv6 literal or a host name
         :type host: string
@@ -41,10 +41,10 @@ class connectionRole(_Section):
     Attribute for the role of a connection.
     Used by: listener, connector.
     """
-    section_name = 'connectionRole'
-    used_by = ['listener', 'connector']
+    section_name: str = 'connectionRole'
+    used_by: list = ['listener', 'connector']
 
-    def __init__(self, role=None, cost=None, name=None):
+    def __init__(self, role: str = None, cost: str = None, name: str = None) -> None:
         """
         :param role: The role of an established connection. In the normal role, the connection is assumed to be used
         for AMQP clients that are doing normal message delivery over the connection. In the inter-router role,
@@ -79,11 +79,11 @@ class sslProfile(_Section):
     Used by: listener, connector.
     """
 
-    section_name = 'sslProfile'
-    used_by = ['listener', 'connector']
+    section_name: str = 'sslProfile'
+    used_by: list = ['listener', 'connector']
 
-    def __init__(self, certDb=None, certFile=None, keyFile=None, passwordFile=None, password=None, uidFormat=None,
-                 displayNameFile=None, name=None):
+    def __init__(self, certDb: str = None, certFile: str = None, keyFile: str = None, passwordFile: str = None,
+                 password: str = None, uidFormat: str = None, displayNameFile: str = None, name: str = None) -> None:
         """
         :param certDb: The path to the database that contains the public certificates of trusted
         certificate authorities (CA). (path)
@@ -147,10 +147,12 @@ class router(_Section):
     Tracks peer routers and computes routes to destinations.
     """
 
-    section_name = 'router'
+    section_name: str = 'router'
 
-    def __init__(self, id=None, mode=None, helloInterval=None, helloMaxAge=None, raInterval=None, raIntervalFlux=None,
-                 remoteLsMaxAge=None, workerThreads=None, debugDump=None, saslConfigPath=None, saslConfigName=None):
+    def __init__(self, id: str = None, mode: str = None, helloInterval: str = None, helloMaxAge: str = None,
+                 raInterval: str = None, raIntervalFlux: str = None, remoteLsMaxAge: str = None,
+                 workerThreads: str = None, debugDump: str = None, saslConfigPath: str = None,
+                 saslConfigName: str = None) -> None:
         """
         :param id: Router's unique identity.
         :type id: string
@@ -162,7 +164,7 @@ class router(_Section):
         :type mode: string
 
         :param helloInterval: Interval in seconds between HELLO messages sent to neighbor routers. (default=1)
-        :type helloInterval:
+        :type helloInterval: string
 
         :param helloMaxAge: Time in seconds after which a neighbor is declared lost if no HELLO is received. (default=3)
         :type helloMaxAge: string
@@ -179,8 +181,8 @@ class router(_Section):
         (default=60)
         :type remoteLsMaxAge: string
 
-        :param workerThreads: The number of threads that will be created to process message traffic and other application
-        work (timers, non-amqp file descriptors, etc.) (default=4)
+        :param workerThreads: The number of threads that will be created to process message traffic and other
+        application work (timers, non-amqp file descriptors, etc.) (default=4)
         :type workerThreads: string
 
         :param debugDump: A file to dump debugging information that can’t be logged normally. (path)
@@ -217,11 +219,13 @@ class listener(_Section):
 
     section_name = 'listener'
 
-    def __init__(self, host=None, port=None, protocolFamily=None, role=None, cost=None, certDb=None, certFile=None,
-                 keyFile=None, passwordFile=None, password=None, uidFormat=None, displayNameFile=None,
-                 saslMechanism=None, authenticatePeer=None, requireEncryption=None, requireSsl=None,
-                 trustedCerts=None, maxFrameSize=None, idleTimeoutSeconds=None, stripAnnotations=None,
-                 linkCapacity=None, addrPort=None, connectionRole=None, sslProfile=None, name=None):
+    def __init__(self, host: str = None, port: str = None, protocolFamily: str = None, role: str = None,
+                 cost: str = None, certDb: str = None, certFile: str = None, keyFile: str = None,
+                 passwordFile: str = None, password: str = None, uidFormat: str = None, displayNameFile: str = None,
+                 saslMechanism: str = None, authenticatePeer: str = None, requireEncryption: str = None,
+                 requireSsl: str = None, trustedCerts: str = None, maxFrameSize: str = None,
+                 idleTimeoutSeconds: str = None, stripAnnotations: str = None, linkCapacity: str = None,
+                 addrPort: str = None, connectionRole: str = None, sslProfile: str = None, name: str = None) -> None:
         """
         :param host: IP address: ipv4 or ipv6 literal or a host name (default=‘127.0.0.1’)
         :type host: string
@@ -230,14 +234,15 @@ class listener(_Section):
         :type port: string
 
         :param protocolFamily: [‘IPv4’, ‘IPv6’] IPv4: Internet Protocol version 4; IPv6: Internet Protocol version 6.
-        If not specified, the protocol family will be automatically determined from the address. (One of [‘IPv4’, ‘IPv6’])
+        If not specified, the protocol family will be automatically determined from the address.
+         (One of [‘IPv4’, ‘IPv6’])
         :type protocolFamily: string
 
         :param role: The role of an established connection. In the normal role, the connection is assumed to be used for
-        AMQP clients that are doing normal message delivery over the connection. In the inter-router role, the connection
-        is assumed to be to another router in the network. Inter-router discovery and routing protocols can only be used
-        over inter-router connections. route-container role can be used for router-container connections, for example,
-        a router-broker connection. on-demand role has been deprecated.
+        AMQP clients that are doing normal message delivery over the connection. In the inter-router role, the
+        connection is assumed to be to another router in the network. Inter-router discovery and routing protocols can
+        only be used over inter-router connections. route-container role can be used for router-container connections,
+        for example, a router-broker connection. on-demand role has been deprecated.
         (One of [‘normal’, ‘inter-router’, ‘route-container’, ‘on-demand’], default=’normal’)
         :type role: string
 
@@ -267,8 +272,8 @@ class listener(_Section):
         the ‘password’ option. Don’t use both password and passwordFile in the same profile.
         :type password: string
 
-        :param uidFormat: A list of x509 client certificate fields that will be used to build a string that will uniquely
-        identify the client certificate owner. For e.g. a value of ‘cou’ indicates that the uid will consist
+        :param uidFormat: A list of x509 client certificate fields that will be used to build a string that will
+        uniquely identify the client certificate owner. For e.g. a value of ‘cou’ indicates that the uid will consist
         of c - common name concatenated with o - organization-company name concatenated with u - organization unit;
         or a value of ‘o2’ indicates that the uid will consist of o (organization name) concatenated with
         2 (the sha256 fingerprint of the entire certificate) . Allowed values can be any combination of comma separated
@@ -375,13 +380,15 @@ class connector(_Section):
     Establishes an outgoing connection from the router.
     """
 
-    section_name = 'connector'
+    section_name: str = 'connector'
 
-    def __init__(self, host=None, port=None, protocolFamily=None, role=None, cost=None, certDb=None, certFile=None,
-                 keyFile=None, passwordFile=None, password=None, uidFormat=None, displayNameFile=None,
-                 saslMechanisms=None, allowRedirect=None, maxFrameSize=None, idleTimeoutSeconds=None,
-                 stripAnnotations=None, linkCapacity=None, verifyHostName=None, saslUsername=None, saslPassword=None,
-                 addrPort=None, connectionRole=None, sslProfile=None, name=None):
+    def __init__(self, host: str = None, port: str = None, protocolFamily: str = None, role: str = None,
+                 cost: str = None, certDb: str = None, certFile: str = None, keyFile: str = None,
+                 passwordFile: str = None, password: str = None, uidFormat: str = None, displayNameFile: str = None,
+                 saslMechanisms: str = None, allowRedirect: str = None, maxFrameSize: str = None,
+                 idleTimeoutSeconds: str = None, stripAnnotations: str = None, linkCapacity: str = None,
+                 verifyHostName: str = None, saslUsername: str = None, saslPassword: str = None, addrPort: str = None,
+                 connectionRole: str = None, sslProfile: str = None, name: str = None) -> None:
         """
         :param host: IP address: ipv4 or ipv6 literal or a host name
         :type host: string
@@ -535,9 +542,10 @@ class log(_Section):
     log settings while the router is running.
     """
 
-    section_name = 'log'
+    section_name: str = 'log'
 
-    def __init__(self, module=None, enable=None, timestamp=None, source=None, output=None):
+    def __init__(self, module: str = None, enable: str = None, timestamp: str = None, source: str = None,
+                 output: str = None) -> None:
         """
         :param module: (One of [‘ROUTER’, ‘ROUTER_CORE’, ‘ROUTER_HELLO’, ‘ROUTER_LS’, ‘ROUTER_MA’, ‘MESSAGE’, ‘SERVER’,
         ‘AGENT’, ‘CONTAINER’, ‘CONFIG’, ‘ERROR’, ‘DISPATCH’, ‘POLICY’, ‘DEFAULT’], required)
@@ -580,7 +588,8 @@ class address(_Section):
 
     section_name = 'address'
 
-    def __init__(self, prefix=None, distribution=None, waypoint=None, ingressPhase=None, egressPhase=None):
+    def __init__(self, prefix: str = None, distribution: str = None, waypoint: str = None, ingressPhase: str = None,
+                 egressPhase: str = None) -> None:
         """
         :param prefix: The address prefix for the configured settings  (required)
         :type prefix: string
@@ -615,9 +624,10 @@ class linkRoute(_Section):
     for routed link-attaches. The link-routing configuration applies to an addressing space defined by a prefix.
     """
 
-    section_name = 'linkRoute'
+    section_name: str = 'linkRoute'
 
-    def __init__(self, prefix=None, containerId=None, connection=None, distribution=None, dir=None):
+    def __init__(self, prefix: str = None, containerId: str = None, connection: str = None, distribution: str = None,
+                 dir: str = None) -> None:
         """
         :param prefix: The address prefix for the configured settings
         :param containerId: ContainerID for the target container
@@ -643,9 +653,10 @@ class autoLink(_Section):
     These are typically used to attach to waypoints on remote containers (clients, etc.).
     """
 
-    section_name = 'autoLink'
+    section_name: str = 'autoLink'
 
-    def __init__(self, addr=None, dir=None, phase=None, containerId=None, connection=None):
+    def __init__(self, addr: str = None, dir: str = None, phase: str = None, containerId: str = None,
+                 connection: str = None) -> None:
         """
         :param addr: The address of the provisioned object
         :type addr: string
@@ -678,10 +689,10 @@ class policy(_Section):
     Defines global connection limit
     """
 
-    section_name = 'policy'
+    section_name: str = 'policy'
 
-    def __init__(self, maximumConnections=None, enableAccessRules=None, policyFolder=None, defaultApplication=None,
-                 defaultApplicationEnabled=None):
+    def __init__(self, maximumConnections: str = None, enableAccessRules: str = None, policyFolder: str = None,
+                 defaultApplication: str = None, defaultApplicationEnabled: str = None) -> None:
         """
         :param maximumConnections:  Global maximum number of concurrent client connections allowed. Zero implies no
         limit.
@@ -722,10 +733,11 @@ class policyRuleset(_Section):
     Per application definition of the locations from which users may connect and the groups to which users belong.
     """
 
-    section_name = 'policyRuleset'
+    section_name: str = 'policyRuleset'
 
-    def __init__(self, maxConnections=None, maxConnPerUser=None, maxConnPerHost=None, userGroups=None,
-                 ingressHostGroups=None, ingressPolicies=None, connectionAllowDefault=None, settings=None):
+    def __init__(self, maxConnections: str = None, maxConnPerUser: str = None, maxConnPerHost: str = None,
+                 userGroups: str = None, ingressHostGroups: str = None, ingressPolicies: str = None,
+                 connectionAllowDefault: str = None, settings: str = None) -> None:
         """
         :param maxConnections: Maximum number of concurrent client connections allowed. Zero implies no limit.
         :param maxConnPerUser: Maximum number of concurrent client connections allowed for any single user.

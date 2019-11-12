@@ -6,11 +6,11 @@ from iqa.abstract.destination.destination import Destination
 
 class ManagementClient(ABC):
 
-    def __init__(self):
+    def __init__(self) -> None:
         pass
 
     @abc.abstractmethod
-    def create_destination(self, destination: Destination):
+    def create_destination(self, destination: Destination) -> Destination:
         """
         Creates an address using its name and specialized type (ANYCAST, MULTICAST).
         :param destination:
@@ -19,7 +19,7 @@ class ManagementClient(ABC):
         pass
 
     @abc.abstractmethod
-    def delete_destination(self, name: str, remove_consumers: bool = False):
+    def delete_destination(self, name: str, remove_consumers: bool = False) -> None:
         """
         Deletes a given destination.
         :param name:

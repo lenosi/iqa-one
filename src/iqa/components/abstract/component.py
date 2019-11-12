@@ -1,4 +1,5 @@
 from inspect import signature
+from typing import Callable
 
 from iqa.system.node.node import Node
 
@@ -8,7 +9,7 @@ class Component(object):
     Main class that represents a abstract component.
     """
 
-    def __init__(self, name: str, node: Node):
+    def __init__(self, name: str, node: Node) -> None:
         self.instance_name: str = name
         self.node: Node = node
 
@@ -17,7 +18,7 @@ class Component(object):
         raise NotImplementedError
 
     @staticmethod
-    def call_if_all_arguments_in_kwargs(func, **kwargs):
+    def call_if_all_arguments_in_kwargs(func: Callable, **kwargs) -> None:
         """
         Call the given function if all declared arguments exist in
         the kwargs dictionary. In example, if passed function is set_ssl_auth,
@@ -35,5 +36,5 @@ class Component(object):
             return
 
         # Calling function if all args present in kwargs
-        arg_dict = {k: v for k, v in kwargs.items() if k in list(signature(func).parameters.keys())}
+        arg_dict: dict = {k: v for k, v in kwargs.items() if k in list(signature(func).parameters.keys())}
         func(**arg_dict)

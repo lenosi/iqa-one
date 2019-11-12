@@ -1,5 +1,5 @@
 from iqa.components.clients.external.python.command.python_commands import PythonConnectorClientCommand
-from iqa.system.node import Node, Executor
+from iqa.system.node import Node
 from .client import ClientPython
 
 
@@ -8,14 +8,17 @@ class ConnectorPython(ClientPython):
 
     _command: PythonConnectorClientCommand
 
-    def _set_url(self, url: str):
+    def __init__(self, name: str, node: Node, **kwargs) -> None:
+        super(ConnectorPython, self).__init__(name, node, **kwargs)
+
+    def _set_url(self, url: str) -> None:
         self._command.control.broker_url = url
 
-    def set_auth_mechs(self, mechs: str):
+    def set_auth_mechs(self, mechs: str) -> None:
         self._command.connection.conn_allowed_mechs = mechs
 
     def set_ssl_auth(self, pem_file: str = None, key_file: str = None, keystore: str = None, keystore_pass: str = None,
-                     keystore_alias: str = None):
+                     keystore_alias: str = None) -> None:
         self._command.connection.conn_ssl_certificate = pem_file
         self._command.connection.conn_ssl_private_key = key_file
 
@@ -25,10 +28,7 @@ class ConnectorPython(ClientPython):
                                             timeout=timeout, encoding=encoding)
 
     def connect(self) -> bool:
-        self.execution = self.execute(self.command)
+        self.execution = self.node.execute(self.command)
         if self.execution.completed_successfully():
             return True
         return False
-
-    def __init__(self, name: str, node: Node, executor: Executor, **kwargs):
-        super(ConnectorPython, self).__init__(name, node, executor, **kwargs)

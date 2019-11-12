@@ -2,33 +2,32 @@ import logging
 from typing import List
 
 from iqa.components import protocols
-from iqa.components.abstract.server import ServerComponent
 from iqa.components.brokers.activemq import ActiveMQConfig
 from iqa.components.brokers.artemis.management import ArtemisJolokiaClient
 from iqa.abstract.destination import Address
 from iqa.abstract.destination import Queue
 from iqa.abstract.destination import RoutingType
 from iqa.abstract import Listener
-from iqa.abstract.server import Broker
+from iqa.components.brokers.broker_component import BrokerComponent
 
 
-class Activemq(Broker, ServerComponent):
+class Activemq(BrokerComponent):
     """
     Apache ActiveMQ has a proven non blocking architecture. It delivers outstanding performance.
     """
 
-    supported_protocols = [protocols.Amqp10(), protocols.Mqtt(), protocols.Stomp(), protocols.Openwire()]
-    name = 'Activemq'
-    implementation = 'activemq'
+    supported_protocols: list = [protocols.Amqp10(), protocols.Mqtt(), protocols.Stomp(), protocols.Openwire()]
+    name: str = 'Activemq'
+    implementation: str = 'activemq'
 
-    def __init__(self, name: str, **kwargs):
-        super(Activemq, self).__init__(name, **kwargs)
+    def __init__(self, name: str, **kwargs) -> None:
+        super(Activemq, self).__init__(**kwargs)
         self._queues: List[Queue] = list()
         self._addresses: List[Address] = list()
-        self._addresses_dict = {}
+        self._addresses_dict: dict = {}
 
-        self.config = ActiveMQConfig(**kwargs)
-        self.users = self.config.users
+        self.config: ActiveMQConfig = ActiveMQConfig(**kwargs)
+        self.users: dict = self.config.users
 
     def queues(self, refresh: bool = True) -> List[Queue]:
         """
@@ -75,15 +74,15 @@ class Activemq(Broker, ServerComponent):
         """
         return self.management_client.delete_queue(name, remove_consumers)
 
-    def _refresh_addresses_and_queues(self):
+    def _refresh_addresses_and_queues(self) -> None:
         """
         Need to combine both calls, in order to map queues to addresses
         and vice-versa.
         :return:
         """
         # Retrieving queues
-        queues = list()
-        addresses = list()
+        queues: list = list()
+        addresses: list = list()
 
         # Save client queues and addresses
         queues_result = self.management_client.list_queues()
@@ -100,7 +99,7 @@ class Activemq(Broker, ServerComponent):
             return
 
         # Dictionary containing retrieved addresses
-        addresses_dict = {}
+        addresses_dict: dict = {}
 
         # If no address found, skip it
         if not addresses_result.data:
@@ -109,8 +108,8 @@ class Activemq(Broker, ServerComponent):
             # Parsing returned addresses
             for addr_info in addresses_result.data:
                 logging.debug("Address found: %s - routingType: %s" % (addr_info['name'], addr_info['routingTypes']))
-                address = Address(name=addr_info['name'],
-                                  routing_type=RoutingType.from_value(addr_info['routingTypes']))
+                address: Address = Address(name=addr_info['name'],
+                                           routing_type=RoutingType.from_value(addr_info['routingTypes']))
                 addresses_dict[address.name] = address
                 addresses.append(address)
 
@@ -121,11 +120,11 @@ class Activemq(Broker, ServerComponent):
             # Parsing returned queues
             for queue_info in queues_result.data:
                 logging.debug("Queue found: %s - routingType: %s" % (queue_info['name'], queue_info['routingType']))
-                routing_type = RoutingType.from_value(queue_info['routingType'])
+                routing_type: RoutingType = RoutingType.from_value(queue_info['routingType'])
                 address = addresses_dict[queue_info['address']]
-                queue = Queue(name=queue_info['name'],
-                              routing_type=routing_type,
-                              address=address)
+                queue: Queue = Queue(name=queue_info['name'],
+                                     routing_type=routing_type,
+                                     address=address)
                 queue.message_count = queue_info['messageCount']
                 address.queues.append(queue)
                 queues.append(queue)
@@ -135,13 +134,16 @@ class Activemq(Broker, ServerComponent):
         self._addresses = addresses
         self._queues = queues
 
-    def get_management_client(self):
+    def get_management_client(self) -> ArtemisJolokiaClient:
         """
         Creates a new instance of the Jolokia Client.
         :return:
         """
-        client = ArtemisJolokiaClient(self.config.instance_name, self.node.get_ip(), self.config.ports['web'],
-                                      self.config.get_username('admin'), self.config.get_user_password('admin'))
+        client: ArtemisJolokiaClient = ArtemisJolokiaClient(self.config.instance_name,
+                                                            self.node.get_ip(),
+                                                            self.config.ports['web'],
+                                                            self.config.get_username('admin'),
+                                                            self.config.get_user_password('admin'))
         return client
 
     def _get_routing_type(self, routing_type: RoutingType) -> str:
@@ -157,5 +159,5 @@ class Activemq(Broker, ServerComponent):
     def get_url(self, port: int = None, listener: Listener = None) -> str:
         pass
 
-    def get_urls(self, schema: str) -> [Listener]:
+    def get_urls(self, schema: str) -> List[Listener]:
         pass

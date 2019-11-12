@@ -5,10 +5,10 @@ from iqa.components.abstract.configuration import Configuration
 
 
 class BrokerConfiguration(Configuration):
-    users = {}
-    ports = {}
+    users: dict = {}
+    ports: dict = {}
 
-    def __init__(self, component: Component, **kwargs):
+    def __init__(self, component: Component, **kwargs) -> None:
         super(BrokerConfiguration, self).__init__(component, **kwargs)
 
     @abc.abstractmethod
@@ -30,5 +30,5 @@ class BrokerConfiguration(Configuration):
     get_listeners = get_acceptors
 
     @abc.abstractmethod
-    def apply_config(self, yaml_configuration):
+    def apply_config(self, yaml_configuration: str) -> None:
         pass

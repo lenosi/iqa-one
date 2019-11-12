@@ -1,24 +1,27 @@
+from typing import Optional
+
 from iqa.components.abstract.component import Component
 from iqa.components.clients.external.command.client_command import ClientCommand
 from iqa.abstract.client import MessagingClient
 from iqa.abstract.listener import Listener
-from iqa.system.executor import Execution
+from iqa.system.executor.execution import Execution
+from iqa.system.node import Node
 
 
-class ClientExternal(MessagingClient, Component):
+class ClientExternal(Component, MessagingClient):
     """
     Represents abstract clients that are executed externally as command line applications.
     """
 
     # Default is run forever
     # As mixing --timeout with --count is causing issues
-    TIMEOUT = 90
+    TIMEOUT: int = 90
 
-    def __init__(self, name: str, **kwargs):
-        super(ClientExternal, self).__init__(name, **kwargs)
-        self.execution: Execution = None
-        self._command: ClientCommand = None
-        self._url: str = None
+    def __init__(self, name: str, node: Node, **kwargs) -> None:
+        super(ClientExternal, self).__init__(name, node)
+        self.execution: Optional[Execution] = None
+        self._command: Optional[ClientCommand] = None
+        self._url: Optional[str] = None
         self.reset_command()
 
         # initializing client from kwargs
@@ -29,18 +32,17 @@ class ClientExternal(MessagingClient, Component):
     def command(self) -> ClientCommand:
         return self._command
 
-    def reset_command(self):
+    def reset_command(self) -> None:
         """
         Creates a new command instance based on concrete implementation.
         :return:
         """
-        self._command = self._new_command(stdout=True, timeout=ClientExternal.TIMEOUT,
-                                          daemon=True)  # type: ClientCommand
+        self._command = self._new_command(stdout=True, timeout=ClientExternal.TIMEOUT, daemon=True)
 
-    def get_url(self):
+    def get_url(self) -> Optional[str]:
         return self._url
 
-    def set_url(self, url: str):
+    def set_url(self, url: str) -> None:
         """
         Saves url property internally and invoke concrete _set_url implementation
         which is responsible for properly using it according to each external client needs.
@@ -64,7 +66,7 @@ class ClientExternal(MessagingClient, Component):
         """
         raise NotImplementedError
 
-    def _set_url(self, url: str):
+    def _set_url(self, url: str) -> None:
         """
         This method must be implemented by each concrete client by adjusting url parts
         into appropriate command elements, in order to execute it correctly.
@@ -94,12 +96,12 @@ class ClientExternal(MessagingClient, Component):
         """
         raise NotImplementedError
 
-    def set_endpoint(self, listener: Listener):
+    def set_endpoint(self, listener: Listener) -> None:
         raise NotImplementedError
 
-    def connect(self):
+    def connect(self) -> None:
         raise NotImplementedError
 
     @property
-    def implementation(self):
+    def implementation(self) -> str:
         return 'External client'

@@ -1,1 +1,1 @@
-from .jolokia_client import *
+from .jolokia_client import ArtemisJolokiaClient

@@ -16,7 +16,7 @@ class BrokerFactory(object):
             if broker.implementation != implementation:
                 continue
 
-            name = '%s-%s-%s' % ('broker', broker.__name__, node.hostname)
+            name: str = '%s-%s-%s' % ('broker', broker.__name__, node.hostname)
             return broker(name=name, node=node, executor=executor, service=service_impl, **kwargs)
 
         raise ValueError('Invalid broker implementation: %s' % implementation)

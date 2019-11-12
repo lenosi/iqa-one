@@ -16,10 +16,10 @@ class NodeJSConnectorClientCommand(ConnectorClientCommand):
 
     def __init__(self, stdout: bool = False, stderr: bool = False,
                  daemon: bool = False, timeout: int = 0,
-                 encoding: str = "utf-8"):
+                 encoding: str = "utf-8") -> None:
         super(NodeJSConnectorClientCommand, self).__init__(stdout, stderr, daemon, timeout, encoding)
-        self.control = NodeJSControlOptionsCommon()
-        self.connection = NodeJSConnectionOptionsCommon()
+        self.control: NodeJSControlOptionsCommon = NodeJSControlOptionsCommon()
+        self.connection: NodeJSConnectionOptionsCommon = NodeJSConnectionOptionsCommon()
 
     def main_command(self) -> list:
         return ['cli-rhea-connector']
@@ -34,12 +34,12 @@ class NodeJSReceiverClientCommand(ReceiverClientCommand):
 
     def __init__(self, stdout: bool = False, stderr: bool = False,
                  daemon: bool = False, timeout: int = 0,
-                 encoding: str = "utf-8"):
+                 encoding: str = "utf-8") -> None:
         super(NodeJSReceiverClientCommand, self).__init__(stdout, stderr, daemon, timeout, encoding)
-        self.control = NodeJSControlOptionsReceiver()
-        self.connection = NodeJSConnectionOptionsCommon()
-        self.link = LinkOptionsSenderReceiver()
-        self.reactor = ReactorOptionsSenderReceiver()
+        self.control: NodeJSControlOptionsReceiver = NodeJSControlOptionsReceiver()
+        self.connection: NodeJSConnectionOptionsCommon = NodeJSConnectionOptionsCommon()
+        self.link: LinkOptionsSenderReceiver = LinkOptionsSenderReceiver()
+        self.reactor: ReactorOptionsSenderReceiver = ReactorOptionsSenderReceiver()
 
     def main_command(self) -> list:
         return ['cli-rhea-receiver']
@@ -54,12 +54,12 @@ class NodeJSSenderClientCommand(SenderClientCommand):
 
     def __init__(self, stdout: bool = False, stderr: bool = False,
                  daemon: bool = False, timeout: int = 0,
-                 encoding: str = "utf-8"):
+                 encoding: str = "utf-8") -> None:
         super(NodeJSSenderClientCommand, self).__init__(stdout, stderr, daemon, timeout, encoding)
-        self.control = NodeJSControlOptionsSender()
-        self.connection = NodeJSConnectionOptionsCommon()
-        self.link = LinkOptionsSenderReceiver()
-        self.reactor = ReactorOptionsSenderReceiver()
+        self.control: NodeJSControlOptionsSender = NodeJSControlOptionsSender()
+        self.connection: NodeJSConnectionOptionsCommon = NodeJSConnectionOptionsCommon()
+        self.link: LinkOptionsSenderReceiver = LinkOptionsSenderReceiver()
+        self.reactor: ReactorOptionsSenderReceiver = ReactorOptionsSenderReceiver()
 
     def main_command(self) -> list:
         return ['cli-rhea-sender']

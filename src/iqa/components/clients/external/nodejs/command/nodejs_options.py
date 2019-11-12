@@ -13,9 +13,9 @@ class NodeJSControlOptionsCommon(ControlOptionsCommon):
     """
 
     def __init__(self, broker: str = 'localhost:5672', count: int = 1,
-                 timeout: int = None, sync_mode: str = None, close_sleep: int = None):
+                 timeout: int = None, sync_mode: str = None, close_sleep: int = None) -> None:
         super(NodeJSControlOptionsCommon, self).__init__(count, timeout, sync_mode, close_sleep)
-        self.broker = broker  # type: str
+        self.broker: str = broker
 
     def valid_options(self) -> list:
         return super(NodeJSControlOptionsCommon, self).valid_options() + [
@@ -30,12 +30,12 @@ class NodeJSControlOptionsSenderReceiver(ControlOptionsSenderReceiver, NodeJSCon
 
     def __init__(self, broker: str = 'localhost:5672', address: str = 'examples', count: int = 1,
                  timeout: int = None, sync_mode: str = None, close_sleep: int = None,
-                 duration: int = None, duration_mode: str = None, capacity: int = None):
+                 duration: int = None, duration_mode: str = None, capacity: int = None) -> None:
         ControlOptionsSenderReceiver.__init__(self, duration=duration, duration_mode=duration_mode,
                                               capacity=capacity)
         NodeJSControlOptionsCommon.__init__(self, broker=broker, count=count, timeout=timeout,
                                             sync_mode=sync_mode, close_sleep=close_sleep)
-        self.address = address  # type: str
+        self.address: str = address
 
     def valid_options(self) -> list:
         return NodeJSControlOptionsCommon.valid_options(self) + [
@@ -51,11 +51,11 @@ class NodeJSControlOptionsSender(NodeJSControlOptionsSenderReceiver):
     def __init__(self, broker: str = 'localhost:5672', address: str = 'examples', count: int = 1,
                  timeout: int = None, sync_mode: str = None, close_sleep: int = None,
                  duration: int = None, duration_mode: str = None, capacity: int = None,
-                 on_release: str = 'retry'):
+                 on_release: str = 'retry') -> None:
         NodeJSControlOptionsSenderReceiver.__init__(self, broker=broker, count=count, timeout=timeout,
                                                     sync_mode=sync_mode, duration=duration,
                                                     duration_mode=duration_mode, capacity=capacity)
-        self.on_release = on_release  # type: str
+        self.on_release: str = on_release
 
     def valid_options(self) -> list:
         return NodeJSControlOptionsSenderReceiver.valid_options(self) + [
@@ -71,7 +71,7 @@ class NodeJSControlOptionsReceiver(ControlOptionsReceiver, NodeJSControlOptionsS
     def __init__(self, broker: str = 'localhost:5672/examples', count: int = 1,
                  timeout: int = None, sync_mode: str = None,
                  duration: int = None, duration_mode: str = None, capacity: int = None,
-                 dynamic: bool = False):
+                 dynamic: bool = False) -> None:
         ControlOptionsReceiver.__init__(self, dynamic=dynamic)
         NodeJSControlOptionsSenderReceiver.__init__(self, broker=broker, count=count, timeout=timeout,
                                                     sync_mode=sync_mode, duration=duration,
@@ -83,15 +83,15 @@ class NodeJSConnectionOptionsCommon(ConnectionOptionsCommon):
                  conn_ws: bool = None, conn_ws_protocols: str = None,
                  urls: str = None, reconnect: bool = None, reconnect_interval: int = None,
                  reconnect_limit: int = None, reconnect_timeout: int = None, heartbeat: int = None,
-                 max_frame_size: int = None):
+                 max_frame_size: int = None) -> None:
         ConnectionOptionsCommon.__init__(self, urls=urls, reconnect=reconnect, reconnect_interval=reconnect_interval,
                                          reconnect_limit=reconnect_limit, reconnect_timeout=reconnect_timeout,
                                          heartbeat=heartbeat, max_frame_size=max_frame_size)
-        self.conn_ssl = conn_ssl
-        self.conn_ssl_certificate = conn_ssl_certificate
-        self.conn_ssl_private_key = conn_ssl_private_key
-        self.conn_ws = conn_ws
-        self.conn_ws_protocols = conn_ws_protocols
+        self.conn_ssl: bool = conn_ssl
+        self.conn_ssl_certificate: str = conn_ssl_certificate
+        self.conn_ssl_private_key: str = conn_ssl_private_key
+        self.conn_ws: bool = conn_ws
+        self.conn_ws_protocols: str = conn_ws_protocols
 
     def valid_options(self) -> list:
         return ConnectionOptionsCommon.valid_options(self) + [

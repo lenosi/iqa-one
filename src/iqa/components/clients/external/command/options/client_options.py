@@ -31,7 +31,7 @@ class ClientOptionsBase(object):
         """
         return {}
 
-    def to_dict(self):
+    def to_dict(self) -> dict:
         """
         Generate a dict with all internal items, replacing
         underscores with dashes, example: a broker_url property
@@ -40,7 +40,7 @@ class ClientOptionsBase(object):
         like: { 'property_xyz': 'property_abc' } (see: option_mapper()).
         :return:
         """
-        nd = {}
+        nd: dict = {}
         for (k, v) in self.__dict__.items():
             rk = k
             if k in self.option_mapper():
@@ -54,11 +54,11 @@ class ControlOptionsCommon(ClientOptionsBase):
     Common control options for all clients.
     """
 
-    def __init__(self, count: int = 1, timeout: int = None, sync_mode: str = None, close_sleep: int = None):
-        self.count = count  # type: int
-        self.timeout = timeout  # type: int
-        self.sync_mode = sync_mode  # type: str
-        self.close_sleep = close_sleep  # type: int
+    def __init__(self, count: int = 1, timeout: int = None, sync_mode: str = None, close_sleep: int = None) -> None:
+        self.count: int = count
+        self.timeout: int = timeout
+        self.sync_mode: str = sync_mode
+        self.close_sleep: int = close_sleep
 
     def valid_options(self) -> list:
         return [
@@ -75,11 +75,11 @@ class ControlOptionsSenderReceiver(ControlOptionsCommon):
     """
 
     def __init__(self, count: int = 1, timeout: int = None, sync_mode: str = None, close_sleep: int = None,
-                 duration: int = None, duration_mode: str = None, capacity: int = None):
+                 duration: int = None, duration_mode: str = None, capacity: int = None) -> None:
         super(ControlOptionsSenderReceiver, self).__init__(count, timeout, sync_mode, close_sleep)
-        self.duration = duration  # type: int
-        self.duration_mode = duration_mode  # type: str
-        self.capacity = capacity  # type: int
+        self.duration: int = duration
+        self.duration_mode: str = duration_mode
+        self.capacity: int = capacity
 
     def valid_options(self) -> list:
         return super(ControlOptionsSenderReceiver, self).valid_options() + [
@@ -96,10 +96,10 @@ class ControlOptionsReceiver(ControlOptionsSenderReceiver):
 
     def __init__(self, count: int = 1, timeout: int = None, sync_mode: str = None, close_sleep: int = None,
                  duration: int = None, duration_mode: str = None, capacity: int = None,
-                 dynamic: bool = False):
+                 dynamic: bool = False) -> None:
         super(ControlOptionsReceiver, self).__init__(count, timeout, sync_mode, close_sleep, duration,
                                                      duration_mode, capacity)
-        self.dynamic = dynamic  # type: bool
+        self.dynamic: bool = dynamic
 
     def valid_options(self) -> list:
         return super(ControlOptionsReceiver, self).valid_options()
@@ -110,9 +110,9 @@ class LoggingOptionsCommon(ClientOptionsBase):
     Common logging options for all external client commands
     """
 
-    def __init__(self, log_lib: str = None, log_stats: str = None):
-        self.log_lib = log_lib  # type: str
-        self.log_stats = log_stats  # type: str
+    def __init__(self, log_lib: str = None, log_stats: str = None) -> None:
+        self.log_lib: str = log_lib
+        self.log_stats: str = log_stats
 
     def valid_options(self) -> list:
         return [
@@ -126,9 +126,9 @@ class LoggingOptionsSenderReceiver(LoggingOptionsCommon):
     Common logging options for all Sender and Receiver client commands
     """
 
-    def __init__(self, log_lib: str = None, log_stats: str = None, logs_msgs: str = None):
+    def __init__(self, log_lib: str = None, log_stats: str = None, logs_msgs: str = None) -> None:
         super(LoggingOptionsSenderReceiver, self).__init__(log_lib, log_stats)
-        self.log_msgs = logs_msgs  # type: str
+        self.log_msgs: str = logs_msgs
 
     def valid_options(self) -> list:
         return super(LoggingOptionsSenderReceiver, self).valid_options() + [
@@ -141,10 +141,10 @@ class TransactionOptionsSenderReceiver(ClientOptionsBase):
     Common transaction options for all Sender and Receiver client commands
     """
 
-    def __init__(self, tx_size: int = None, tx_action: str = None, tx_endloop_action: str = None):
-        self.tx_size = tx_size  # type: int
-        self.tx_action = tx_action  # type: str
-        self.tx_endloop_action = tx_endloop_action  # type: str
+    def __init__(self, tx_size: int = None, tx_action: str = None, tx_endloop_action: str = None) -> None:
+        self.tx_size: int = tx_size
+        self.tx_action: str = tx_action
+        self.tx_endloop_action: str = tx_endloop_action
 
     def valid_options(self) -> list:
         return [
@@ -161,14 +161,14 @@ class ConnectionOptionsCommon(ClientOptionsBase):
 
     def __init__(self, urls: str = None, reconnect: bool = None, reconnect_interval: int = None,
                  reconnect_limit: int = None, reconnect_timeout: int = None, heartbeat: int = None,
-                 max_frame_size: int = None):
-        self.conn_urls = urls  # type: str
-        self.conn_reconnect = reconnect  # type: bool
-        self.conn_reconnect_interval = reconnect_interval  # type: int
-        self.conn_reconnect_limit = reconnect_limit  # type: int
-        self.conn_reconnect_timeout = reconnect_timeout  # type: int
-        self.conn_heartbeat = heartbeat  # type: int
-        self.conn_max_frame_size = max_frame_size  # type: int
+                 max_frame_size: int = None) -> None:
+        self.conn_urls: str = urls
+        self.conn_reconnect: bool = reconnect
+        self.conn_reconnect_interval: int = reconnect_interval
+        self.conn_reconnect_limit: int = reconnect_limit
+        self.conn_reconnect_timeout: int = reconnect_timeout
+        self.conn_heartbeat: int = heartbeat
+        self.conn_max_frame_size: int = max_frame_size
 
     def valid_options(self) -> list:
         return [
@@ -187,8 +187,8 @@ class ConnectorOptions(ClientOptionsBase):
     Common options for connector client commands
     """
 
-    def __init__(self, obj_ctrl: str = None):
-        self.obj_ctrl = obj_ctrl  # type: str # CESR
+    def __init__(self, obj_ctrl: str = None) -> None:
+        self.obj_ctrl: str = obj_ctrl
 
     def valid_options(self) -> list:
         return [
@@ -202,10 +202,10 @@ class LinkOptionsSenderReceiver(ClientOptionsBase):
     """
 
     def __init__(self, link_durable: bool = False, link_at_least_once: bool = False,
-                 link_at_most_once: bool = False):
-        self.link_durable = link_durable  # type: bool
-        self.link_at_least_once = link_at_least_once  # type: bool
-        self.link_at_most_once = link_at_most_once  # type: bool
+                 link_at_most_once: bool = False) -> None:
+        self.link_durable: bool = link_durable
+        self.link_at_least_once: bool = link_at_least_once
+        self.link_at_most_once: bool = link_at_most_once
 
     def valid_options(self) -> list:
         return [
@@ -221,7 +221,7 @@ class LinkOptionsReceiver(LinkOptionsSenderReceiver):
     """
 
     def __init__(self, link_durable: bool = False, link_at_least_once: bool = False,
-                 link_at_most_once: bool = False, link_dynamic_node_properties: str = None):
+                 link_at_most_once: bool = False, link_dynamic_node_properties: str = None) -> None:
         super(LinkOptionsReceiver, self).__init__(link_durable, link_at_least_once, link_at_most_once)
         self.link_dynamic_node_properties = link_dynamic_node_properties
 
@@ -243,25 +243,25 @@ class MessageOptionsSender(ClientOptionsBase):
                  msg_property: str = None, msg_content_map_item: str = None,
                  msg_content_list_item: str = None, msg_content_from_file: str = None,
                  msg_content: str = None, msg_content_type: str = None,
-                 content_type: str = None):
-        self.msg_id = msg_id  # type: str
-        self.msg_subject = msg_subject  # type: str
-        self.msg_address = msg_address  # type: str
-        self.msg_reply_to = msg_reply_to  # type: str
-        self.msg_durable = msg_durable  # type: str
-        self.msg_ttl = msg_ttl  # type: int
-        self.msg_priority = msg_priority  # type: str
-        self.msg_correlation_id = msg_correlation_id  # type: str
-        self.msg_user_id = msg_user_id  # type: str
-        self.msg_group_id = msg_group_id  # type: str
-        self.msg_group_seq = msg_group_seq  # type: str
-        self.msg_property = msg_property  # type: str
-        self.msg_content_map_item = msg_content_map_item  # type: str
-        self.msg_content_list_item = msg_content_list_item  # type: str
-        self.msg_content_from_file = msg_content_from_file  # type: str
-        self.msg_content = msg_content  # type: str
-        self.msg_content_type = msg_content_type  # type: str
-        self.content_type = content_type  # type: str
+                 content_type: str = None) -> None:
+        self.msg_id: str = msg_id
+        self.msg_subject: str = msg_subject
+        self.msg_address: str = msg_address
+        self.msg_reply_to: str = msg_reply_to
+        self.msg_durable: str = msg_durable
+        self.msg_ttl: int = msg_ttl
+        self.msg_priority: str = msg_priority
+        self.msg_correlation_id: str = msg_correlation_id
+        self.msg_user_id: str = msg_user_id
+        self.msg_group_id: str = msg_group_id
+        self.msg_group_seq: str = msg_group_seq
+        self.msg_property: str = msg_property
+        self.msg_content_map_item: str = msg_content_map_item
+        self.msg_content_list_item: str = msg_content_list_item
+        self.msg_content_from_file: str = msg_content_from_file
+        self.msg_content: str = msg_content
+        self.msg_content_type: str = msg_content_type
+        self.content_type: str = content_type
 
     def valid_options(self) -> list:
         return [
@@ -289,10 +289,10 @@ class ReceiverOptions(ClientOptionsBase):
     Common client options for all Receiver client commands
     """
 
-    def __init__(self, process_reply_to: str = None, action: str = None, recv_browse: bool = None):
-        self.process_reply_to = process_reply_to  # type: str
-        self.action = action  # type: str
-        self.recv_browse = recv_browse  # type: bool
+    def __init__(self, process_reply_to: str = None, action: str = None, recv_browse: bool = None) -> None:
+        self.process_reply_to: str = process_reply_to
+        self.action: str = action
+        self.recv_browse: bool = recv_browse
 
     def valid_options(self) -> list:
         return [
@@ -307,8 +307,8 @@ class ReactorOptionsSenderReceiver(ClientOptionsBase):
     Common reactor options for all Sender and Receiver client commands
     """
 
-    def __init__(self, reactor_auto_settle_off: bool = None):
-        self.reactor_auto_settle_off = reactor_auto_settle_off  # type: bool
+    def __init__(self, reactor_auto_settle_off: bool = None) -> None:
+        self.reactor_auto_settle_off: bool = reactor_auto_settle_off
 
     def valid_options(self) -> list:
         return [

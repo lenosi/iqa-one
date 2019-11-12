@@ -3,6 +3,6 @@ class Protocol:
 
     default_port = None
 
-    def __init__(self, transport):
-        self.name = type(self).__name__
+    def __init__(self, transport) -> None:
+        self.name: str = type(self).__name__
         self.transport = transport

@@ -1,12 +1,17 @@
 from iqa.abstract import Listener
 from iqa.components import protocols
-from iqa.components.abstract.component import Component
 from iqa.components.clients.external import ClientCommand
 from iqa.components.clients.external import ClientExternal
 
 
-class ClientJava(ClientExternal, Component):
+class ClientJava(ClientExternal):
     """Java Qpid JMS client (base abstract class)."""
+    supported_protocols: list = [protocols.Amqp10()]
+    implementation: str = 'java'
+    version: str = '1.0.1'
+
+    def __init__(self, name: str, node, **kwargs):
+        super(ClientJava, self).__init__(name, node, **kwargs)
 
     def _new_command(self, stdout: bool = False, stderr: bool = False, daemon: bool = False, timeout: int = 0,
                      encoding: str = "utf-8") -> ClientCommand:
@@ -27,10 +32,3 @@ class ClientJava(ClientExternal, Component):
 
     def connect(self):
         pass
-
-    supported_protocols = [protocols.Amqp10()]
-    implementation = 'java'
-    version = '1.0.1'
-
-    def __init__(self, name: str, node, **kwargs):
-        super(ClientJava, self).__init__(name, node, **kwargs)

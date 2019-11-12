@@ -2,9 +2,8 @@ import logging
 
 from .client_external import ClientExternal
 from .command.client_command import ClientCommand
-from .java import *
-from .nodejs import *
-from .python import *
+from iqa.system.node import Node
+from iqa.system.executor import Executor
 
 
 class ClientFactory(object):
@@ -21,14 +20,14 @@ class ClientFactory(object):
                 continue
 
             # Now loop through concrete client types (sender, receiver, connector)
-            clients = []
+            clients: list = []
             for client_impl in cl.__subclasses__():
-                name = '%s-%s-%s' % (implementation, client_impl.__name__.lower(), node.hostname)
+                name: str = '%s-%s-%s' % (implementation, client_impl.__name__.lower(), node.hostname)
                 clients.append(client_impl(name=name, node=node, executor=executor, **kwargs))
 
             return clients
 
-        exception = ValueError('Invalid client implementation: %s' % implementation)
+        exception: ValueError = ValueError('Invalid client implementation: %s' % implementation)
         logging.getLogger(ClientFactory.__module__).error(exception)
         raise exception
 
@@ -39,7 +38,7 @@ class ClientFactory(object):
         if ClientFactory._implementations:
             return ClientFactory._implementations
 
-        result = []
+        result: list = []
 
         for cl in ClientExternal.__subclasses__():
             result.append(cl.implementation)
