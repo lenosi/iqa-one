@@ -1,8 +1,8 @@
-from iqa.abstract.message import Message
-from tests import get_func_name
+from iqa.abstract.message.message import Message
+from iqa.utils.types import NodeType
 
 
-def test_send_receive(in_node, out_node, sender_node, receiver_node):
+def test_send_receive(in_node: NodeType, out_node: NodeType, sender_node: NodeType, receiver_node: NodeType):
     """
     Basic send & receive
     :param in_node: input node, node which where senders sends all messages
@@ -15,7 +15,7 @@ def test_send_receive(in_node, out_node, sender_node, receiver_node):
     :type receiver_node: Node
     :return:
     """
-    message = Message()
-    sender_node.send(node=in_node, address=get_func_name(), messages=[message])
-    receiver_node.receive(node=out_node, address=get_func_name())
+    message: Message = Message()
+    sender_node.send(node=in_node, messages=[message])
+    receiver_node.receive(node=out_node)
     assert sender_node.last_message._get_id() == receiver_node.last_message._get_id()

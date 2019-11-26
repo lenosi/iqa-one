@@ -1,10 +1,12 @@
 import time
 from typing import Tuple
-from iqa.components.routers import Dispatch
+from iqa.components.routers.dispatch import Dispatch
 from iqa.components.routers.dispatch.management import RouterQuery
+from iqa.instance import Instance
+from iqa.system.executor.execution import Execution
 from iqa.utils.openshift_util import OpenShiftUtil
 
-MESH_SIZE = 3
+MESH_SIZE: int = 3
 
 
 def test_scale_up_router(router_cluster: Tuple[Dispatch, str, str]):
@@ -24,13 +26,13 @@ def test_scale_up_router(router_cluster: Tuple[Dispatch, str, str]):
     token: str = router_cluster[2]
 
     # OCP Instance
-    ocp = OpenShiftUtil(router.node.executor, 'https://%s:8443' % cluster, token)
+    ocp: OpenShiftUtil = OpenShiftUtil(router.node.executor, 'https://%s:8443' % cluster, token)
 
-    execution = ocp.scale(MESH_SIZE, 'amq-interconnect')
+    execution: Execution = ocp.scale(MESH_SIZE, 'amq-interconnect')
     assert execution.completed_successfully()
 
 
-def test_router_mesh_after_scale_up(router_cluster: Tuple[Dispatch, str, str], iqa):
+def test_router_mesh_after_scale_up(router_cluster: Tuple[Dispatch, str, str], iqa: Instance):
     """
     Queries Router for all Node Entities available in the topology.
     It expects the number of nodes matches number of PODs (mesh is correctly formed).
@@ -49,6 +51,6 @@ def validate_mesh_size(router: Dispatch, new_size: int):
     :return:
     """
     time.sleep(90)
-    query = RouterQuery(host=router.node.ip, port=router.port, router=router)
-    node_list = query.node()
+    query: RouterQuery = RouterQuery(host=router.node.ip, port=router.port, router=router)
+    node_list: list = query.node()
     assert len(node_list) == new_size

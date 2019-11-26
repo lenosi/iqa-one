@@ -1,4 +1,5 @@
-from iqa.abstract.client import Sender, Receiver
+from iqa.abstract.client.receiver import Receiver
+from iqa.abstract.client.sender import Sender
 from iqa.abstract.server.broker import Broker
 from iqa.abstract.server.router import Router
 

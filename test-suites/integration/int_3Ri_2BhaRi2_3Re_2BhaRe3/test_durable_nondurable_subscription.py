@@ -1,10 +1,12 @@
 import hashlib
 import time
+from typing import List, Optional
 
 from iqa.instance.instance import Instance
 
 from integration.int_3Ri_2BhaRi2_3Re_2BhaRe3.receiver import Receiver
 from integration.int_3Ri_2BhaRi2_3Re_2BhaRe3.sender import Sender
+from iqa.utils.types import RouterType, BrokerType
 
 """
 Test that validates Durable/Non-durable subscription using addresses that
@@ -17,13 +19,13 @@ multi-cast addresses/queues in the Broker).
 
 class TestDurableNonDurableSubscription(object):
 
-    MESSAGES = 1000
-    MESSAGE_SIZE = 128
-    TIMEOUT = 600
-    DELAY = 5
+    MESSAGES: int = 1000
+    MESSAGE_SIZE: int = 128
+    TIMEOUT: int = 600
+    DELAY: int = 5
 
     @staticmethod
-    def _get_router_url(router, topic):
+    def _get_router_url(router: RouterType, topic: str) -> str:
         """
         Returns an "amqp" url to connect with the given router / topic
         :param router:
@@ -33,7 +35,7 @@ class TestDurableNonDurableSubscription(object):
         """
         return "amqp://%s:%s/%s" % (router.node.get_ip(), router.port, topic)
 
-    def create_publishers(self, routers, topic):
+    def create_publishers(self, routers: List[RouterType], topic: str) -> List[Sender]:
         """
         Returns a list of Publisher (sender) threads (already started) to
         send messages through the given router/topic (address).
@@ -45,15 +47,15 @@ class TestDurableNonDurableSubscription(object):
         :return:
         """
         # Starting publishers
-        publishers = list()
+        publishers: List[Sender] = list()
 
         for router in routers:
-            publisher = Sender(url=self._get_router_url(router, topic),
-                               message_count=self.MESSAGES,
-                               sender_id='sender-%s' % router.node.hostname,
-                               timeout=self.TIMEOUT,
-                               message_size=self.MESSAGE_SIZE,
-                               use_unique_body=True)
+            publisher: Sender = Sender(url=self._get_router_url(router, topic),
+                                       message_count=self.MESSAGES,
+                                       sender_id='sender-%s' % router.node.hostname,
+                                       timeout=self.TIMEOUT,
+                                       message_size=self.MESSAGE_SIZE,
+                                       use_unique_body=True)
             publishers.append(publisher)
 
             # Starting publisher
@@ -61,7 +63,8 @@ class TestDurableNonDurableSubscription(object):
 
         return publishers
 
-    def create_subscribers(self, routers, topic, durable, timeout=None):
+    def create_subscribers(self, routers: List[RouterType], topic: str, durable: bool, timeout: int = None) \
+            -> List[Receiver]:
         """
         Returns a list of Subscriber (receiver) threads (already started) to
         receive messages from the given router/topic (address).
@@ -76,21 +79,21 @@ class TestDurableNonDurableSubscription(object):
         """
 
         # List of subscribers and subscribers
-        subscribers = list()
+        subscribers: List[Receiver] = list()
 
         # Creating durable subscriptions across all routers
-        container_id = None
+        container_id: Optional[str] = None
 
         for router in routers:
             if durable:
                 container_id = 'receiver-%s' % router.node.hostname
 
-            subscriber = Receiver(url=self._get_router_url(router, topic),
-                                  message_count=self.MESSAGES * len(routers),
-                                  timeout=timeout or self.TIMEOUT,
-                                  container_id=container_id,
-                                  durable=durable,
-                                  save_messages=True)
+            subscriber: Receiver = Receiver(url=self._get_router_url(router, topic),
+                                            message_count=self.MESSAGES * len(routers),
+                                            timeout=timeout or self.TIMEOUT,
+                                            container_id=container_id,
+                                            durable=durable,
+                                            save_messages=True)
             subscribers.append(subscriber)
 
             # Starting subscriber
@@ -98,7 +101,8 @@ class TestDurableNonDurableSubscription(object):
 
         return subscribers
 
-    def validate_all_messages_received(self, sent_body, routers, subscribers):
+    def validate_all_messages_received(self, sent_body: str, routers: List[RouterType], subscribers: List[Receiver]) \
+            -> None:
         """
         Common validation for test cases where receivers are expected to
         receive a pre-defined amount of messages. The following validations
@@ -116,10 +120,10 @@ class TestDurableNonDurableSubscription(object):
         """
 
         # Validate all subscribers received expected amount of messages
-        expected_count = self.MESSAGES * len(routers)
-        receiver_results = [(s.container_id,
-                             s.received,
-                             s.received == expected_count) for s in subscribers]
+        expected_count: int = self.MESSAGES * len(routers)
+        receiver_results: List[tuple] = [(s.container_id,
+                                          s.received,
+                                          s.received == expected_count) for s in subscribers]
         assert all([res[2] for res in receiver_results]), \
             "Unable to receive %d messages through receivers: %s" % \
             (expected_count, ["%s=%d" % (res[0], res[1]) for res in receiver_results if not res[2]])
@@ -137,7 +141,7 @@ class TestDurableNonDurableSubscription(object):
                 res_sha1_sum = hashlib.sha1(m.encode('utf-8')).hexdigest()
                 assert res_sha1_sum == sha1_sum, 'Received message content is not expected on %s' % s.container_id
 
-    def validate_all_messages_sent(self, publishers):
+    def validate_all_messages_sent(self, publishers: List[Sender]) -> None:
         """
         Validates the results for the provided list of publishers. The following
         validation(s) is(are) performed:
@@ -145,12 +149,12 @@ class TestDurableNonDurableSubscription(object):
         :param publishers:
         :return:
         """
-        sender_results = [(p.sender_id, p.sent == self.MESSAGES) for p in publishers]
+        sender_results: List[tuple] = [(p.sender_id, p.sent == self.MESSAGES) for p in publishers]
         assert all([res[1] for res in sender_results]), \
             "Unable to send %d messages through senders: %s" % \
             (self.MESSAGES, [res[0] for res in sender_results if not res[1]])
 
-    def test_synchronous_durable_subscription(self, topic_durable, broker, iqa: Instance):
+    def test_synchronous_durable_subscription(self, topic_durable: str, broker: BrokerType, iqa: Instance) -> None:
         """
         Connects one Durable Subscriber to the "topic_durable" address across all routers.
         Once all subscribers are connected, it starts one Publisher against each router
@@ -167,21 +171,21 @@ class TestDurableNonDurableSubscription(object):
         """
 
         # Broker instance
-        broker_instance = iqa.get_brokers(broker)[0]
+        broker_instance: BrokerType = iqa.get_brokers(broker)[0]
         assert broker_instance
 
         # List of routers to use
-        routers = iqa.get_routers()
+        routers: List[RouterType] = iqa.get_routers()
 
         # Create subscriber list
-        subscribers = self.create_subscribers(routers, topic_durable, durable=True)
+        subscribers: List[Receiver] = self.create_subscribers(routers, topic_durable, durable=True)
 
         # Wait till all receivers have been created
         while not all(s.receiver for s in subscribers):
             time.sleep(TestDurableNonDurableSubscription.DELAY)
 
         # Create publisher list
-        publishers = self.create_publishers(routers, topic_durable)
+        publishers: List[Sender] = self.create_publishers(routers, topic_durable)
 
         # Wait till all publishers and subscribers done
         # the stopped flag will turn into true if any of them times out
@@ -194,7 +198,7 @@ class TestDurableNonDurableSubscription(object):
         # Assert that all receivers received expected amount of messages
         self.validate_all_messages_received(publishers[0].message_body, routers, subscribers)
 
-    def test_asynchronous_durable_subscription(self, topic_durable, broker, iqa: Instance):
+    def test_asynchronous_durable_subscription(self, topic_durable: str, broker: BrokerType, iqa: Instance) -> None:
         """
         This test must be defined as the second one (as tests defined in classes run sequentially in py.test).
         With that said, the previous test left the durable subscriptions available in the related Broker instance.
@@ -214,14 +218,14 @@ class TestDurableNonDurableSubscription(object):
         """
 
         # Broker instance
-        broker_instance = iqa.get_brokers(broker)[0]
+        broker_instance: BrokerType = iqa.get_brokers(broker)[0]
         assert broker_instance
 
         # List of routers to use
-        routers = iqa.get_routers()
+        routers: List[RouterType] = iqa.get_routers()
 
         # Create publisher list
-        publishers = self.create_publishers(routers, topic_durable)
+        publishers: List[Sender] = self.create_publishers(routers, topic_durable)
 
         # Wait till all senders have delivered their messages
         [p.join() for p in publishers]
@@ -232,7 +236,7 @@ class TestDurableNonDurableSubscription(object):
         # Create subscriber list
         # At this point, as previous test (synchronous) completed, a durable subscription already
         # exists, so subscribers should be able to retrieve their messages properly now
-        subscribers = self.create_subscribers(routers, topic_durable, durable=True)
+        subscribers: List[Receiver] = self.create_subscribers(routers, topic_durable, durable=True)
 
         # Wait till all subscribers are done
         # the stopped flag will turn into true if any of them times out
@@ -241,7 +245,8 @@ class TestDurableNonDurableSubscription(object):
         # Assert that all receivers received expected amount of messages
         self.validate_all_messages_received(publishers[0].message_body, routers, subscribers)
 
-    def test_synchronous_nondurable_subscription(self, topic_nondurable, broker, iqa: Instance):
+    def test_synchronous_nondurable_subscription(self, topic_nondurable: str, broker: BrokerType, iqa: Instance) \
+            -> None:
         """
         Connects one Non-Durable Subscriber instance to the "topic_durable" address across all routers.
         Once all subscribers are connected, it starts one Publisher against each router
@@ -258,21 +263,21 @@ class TestDurableNonDurableSubscription(object):
         """
 
         # Broker instance
-        broker_instance = iqa.get_brokers(broker)[0]
+        broker_instance: BrokerType = iqa.get_brokers(broker)[0]
         assert broker_instance
 
         # List of routers to use
-        routers = iqa.get_routers()
+        routers: List[RouterType] = iqa.get_routers()
 
         # Create subscriber list
-        subscribers = self.create_subscribers(routers, topic_nondurable, durable=False)
+        subscribers: List[Receiver] = self.create_subscribers(routers, topic_nondurable, durable=False)
 
         # Wait till all receivers have been created
         while not all(s.receiver for s in subscribers):
             time.sleep(TestDurableNonDurableSubscription.DELAY)
 
         # Create publisher list
-        publishers = self.create_publishers(routers, topic_nondurable)
+        publishers: List[Sender] = self.create_publishers(routers, topic_nondurable)
 
         # Wait till all publishers and subscribers done
         # the stopped flag will turn into true if any of them times out
@@ -285,7 +290,8 @@ class TestDurableNonDurableSubscription(object):
         # Assert that all receivers received expected amount of messages
         self.validate_all_messages_received(publishers[0].message_body, routers, subscribers)
 
-    def test_asynchronous_nondurable_subscription(self, topic_nondurable, broker, iqa: Instance):
+    def test_asynchronous_nondurable_subscription(self, topic_nondurable: str, broker: BrokerType, iqa: Instance) \
+            -> None:
         """
         Publishers run first and will publish a pre-defined (self.MESSAGES) number of messages into the related
         multi-cast address (topic_nondurable).
@@ -302,16 +308,17 @@ class TestDurableNonDurableSubscription(object):
         :return:
         """
 
-        async_timeout = 30
+        async_timeout: int = 30
 
-        broker_instance = iqa.get_brokers(broker)[0]
+        broker_instance: BrokerType = iqa.get_brokers(broker)[0]
         assert broker_instance
 
         # List of routers to use
-        routers = iqa.get_routers()
+        routers: List[RouterType] = iqa.get_routers()
 
         # Create subscriber list
-        subscribers = self.create_subscribers(routers, topic_nondurable, durable=False, timeout=async_timeout)
+        subscribers: List[Receiver] = self.create_subscribers(routers, topic_nondurable, durable=False,
+                                                              timeout=async_timeout)
 
         # Wait till all receivers have been created
         while not all(s.receiver for s in subscribers):
@@ -321,7 +328,7 @@ class TestDurableNonDurableSubscription(object):
         [s.stop_receiver() for s in subscribers]
 
         # Create publisher list
-        publishers = self.create_publishers(routers, topic_nondurable)
+        publishers: List[Sender] = self.create_publishers(routers, topic_nondurable)
 
         # Wait till all publishers are done sending
         [p.join() for p in publishers]

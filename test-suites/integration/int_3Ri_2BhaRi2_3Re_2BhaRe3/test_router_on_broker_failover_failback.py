@@ -1,9 +1,10 @@
 import time
 
 from iqa.system.service.service import ServiceStatus
-from iqa.components.routers import Dispatch
+from iqa.components.routers.dispatch import Dispatch
 from iqa.components.brokers import Artemis
 from iqa.components.routers.dispatch.management import RouterQuery
+from iqa.utils.types import RouterType, BrokerType
 
 from .receiver import Receiver
 from .sender import Sender
@@ -22,9 +23,9 @@ class TestRouterOnBrokerFailOverFailBack(object):
     """
 
     # Static parameters
-    MESSAGE_COUNT = 10
-    MESSAGE_SIZE = 1024
-    TIMEOUT = 30
+    MESSAGE_COUNT: int = 10
+    MESSAGE_SIZE: int = 1024
+    TIMEOUT: int = 30
 
     @staticmethod
     def _get_router_query(router: Dispatch) -> RouterQuery:
@@ -33,13 +34,13 @@ class TestRouterOnBrokerFailOverFailBack(object):
         :param router:
         :return:
         """
-        query = RouterQuery(host=router.node.get_ip(),
-                            port=router.port,
-                            router=router)
+        query: RouterQuery = RouterQuery(host=router.node.get_ip(),
+                                         port=router.port,
+                                         router=router)
         return query
 
     @staticmethod
-    def validate_broker_connector_has_failoverurls(router):
+    def validate_broker_connector_has_failoverurls(router: RouterType) -> None:
         """
         Validate provided router instance has at least one route-container connector,
         and that the connector has the "failoverUrls" property set and it defines at least two urls.
@@ -53,10 +54,10 @@ class TestRouterOnBrokerFailOverFailBack(object):
         time.sleep(30)
 
         # Creates an instance of the RouterQuery class and retrieve autolinks and connectors
-        query = TestRouterOnBrokerFailOverFailBack._get_router_query(router)
+        query: RouterQuery = TestRouterOnBrokerFailOverFailBack._get_router_query(router)
 
         # Changed to true if at least one connector has been found
-        connector_found = False
+        connector_found: bool = False
 
         # Retrieving all connectors
         for connector in query.connector():
@@ -74,7 +75,7 @@ class TestRouterOnBrokerFailOverFailBack(object):
         assert connector_found is True
 
     @staticmethod
-    def validate_autolinks_active(router):
+    def validate_autolinks_active(router: RouterType) -> None:
         """
         Validates that all autolinks are in active state for provided router instance.
         :param router:
@@ -84,12 +85,12 @@ class TestRouterOnBrokerFailOverFailBack(object):
         assert isinstance(router, Dispatch)
 
         # Creates an instance of the RouterQuery class and retrieve autolinks and connectors
-        query = TestRouterOnBrokerFailOverFailBack._get_router_query(router)
+        query: RouterQuery = TestRouterOnBrokerFailOverFailBack._get_router_query(router)
 
         # Ensure all autolinks are in "active" status
-        max_attempts = 10
-        attempt = 0
-        all_autolinks_active = False
+        max_attempts: int = 10
+        attempt: int = 0
+        all_autolinks_active: bool = False
 
         while not all_autolinks_active and attempt < max_attempts:
             inactive = 0
@@ -102,7 +103,7 @@ class TestRouterOnBrokerFailOverFailBack(object):
 
         assert all_autolinks_active
 
-    def send_and_receive(self, queue, router):
+    def send_and_receive(self, queue: str, router: RouterType) -> None:
         """
         Send and receive messages through the given router, using the
         provided queue as the address.
@@ -114,10 +115,10 @@ class TestRouterOnBrokerFailOverFailBack(object):
         """
 
         # URL to be used for sending/receiving (through broker queues)
-        url = "amqp://%s:%s/%s" % (router.node.get_ip(), router.port, queue)
+        url: str = "amqp://%s:%s/%s" % (router.node.get_ip(), router.port, queue)
         # Creating a sender on the given address
-        sender = Sender(url, self.MESSAGE_COUNT, sender_id=router.node.hostname,
-                        message_size=self.MESSAGE_SIZE, timeout=self.TIMEOUT)
+        sender: Sender = Sender(url, self.MESSAGE_COUNT, sender_id=router.node.hostname,
+                                message_size=self.MESSAGE_SIZE, timeout=self.TIMEOUT)
         sender.start()
 
         # Wait for sender to complete or timeout
@@ -128,7 +129,7 @@ class TestRouterOnBrokerFailOverFailBack(object):
         assert sender.sent == self.MESSAGE_COUNT
 
         # Creating a receiver now
-        receiver = Receiver(url=url, message_count=self.MESSAGE_COUNT, timeout=self.TIMEOUT)
+        receiver: Receiver = Receiver(url=url, message_count=self.MESSAGE_COUNT, timeout=self.TIMEOUT)
         receiver.start()
 
         # Waiting till all messages received or timed out
@@ -138,15 +139,15 @@ class TestRouterOnBrokerFailOverFailBack(object):
         # Validate all messages have been received
         assert receiver.received == self.MESSAGE_COUNT
 
-    def broker_has_queues(self, broker):
+    def broker_has_queues(self, broker: BrokerType) -> None:
         """
         Assert that the provided broker instance has queues.
         It attempts to retrieve queues "max_attempts" times with a delay of 1 between attempts.
         :param broker:
         :return:
         """
-        max_attempts = 10
-        attempt = 0
+        max_attempts: int = 10
+        attempt: int = 0
 
         while not broker.queues() and attempt < max_attempts:
             time.sleep(10)
@@ -154,8 +155,8 @@ class TestRouterOnBrokerFailOverFailBack(object):
 
         assert len(broker.queues()) > 0
 
-    def test_initial_state(self, broker_m_internal: Artemis, broker_s_internal: Artemis,
-                           broker_m_edge: Artemis, broker_s_edge: Artemis, router_i2: Dispatch, router_e3: Dispatch):
+    def test_initial_state(self, broker_m_internal: Artemis, broker_s_internal: Artemis, broker_m_edge: Artemis,
+                           broker_s_edge: Artemis, router_i2: Dispatch, router_e3: Dispatch) -> None:
         """
         Sanity check to ensure all elements needed for testing are present
         :param broker_m_internal:
@@ -178,7 +179,7 @@ class TestRouterOnBrokerFailOverFailBack(object):
         assert len(broker_s_internal.queues()) == 0
         assert len(broker_s_edge.queues()) == 0
 
-    def test_validate_broker_connector_initial_state(self, router_with_broker):
+    def test_validate_broker_connector_initial_state(self, router_with_broker: RouterType) -> None:
         """
         Validate initial state of router connector to broker
         :param router_with_broker:
@@ -186,7 +187,7 @@ class TestRouterOnBrokerFailOverFailBack(object):
         """
         self.validate_broker_connector_has_failoverurls(router_with_broker)
 
-    def test_validate_autolinks_initial_state(self, router_with_broker):
+    def test_validate_autolinks_initial_state(self, router_with_broker: RouterType) -> None:
         """
         Validate initial state of autolinks to broker
         :param router_with_broker:
@@ -194,7 +195,7 @@ class TestRouterOnBrokerFailOverFailBack(object):
         """
         self.validate_autolinks_active(router_with_broker)
 
-    def test_exchange_messages_initial_state(self, router, queue):
+    def test_exchange_messages_initial_state(self, router: RouterType, queue: str) -> None:
         """
         Exchange messages to ensure initial state is working fine
         :param router:
@@ -203,7 +204,7 @@ class TestRouterOnBrokerFailOverFailBack(object):
         """
         self.send_and_receive(queue, router)
 
-    def test_broker_failover(self, broker_master: Artemis):
+    def test_broker_failover(self, broker_master: Artemis) -> None:
         """
         Stops the provided master broker instance and ensure it has been stopped.
         :param broker_master:
@@ -212,7 +213,7 @@ class TestRouterOnBrokerFailOverFailBack(object):
         broker_master.service.stop()
         assert broker_master.service.status() == ServiceStatus.STOPPED
 
-    def test_broker_slave_active(self, broker_slave: Artemis):
+    def test_broker_slave_active(self, broker_slave: Artemis) -> None:
         """
         Wait till slave broker shows queues replicated from master broker (active).
         :param broker_slave:
@@ -220,7 +221,7 @@ class TestRouterOnBrokerFailOverFailBack(object):
         """
         self.broker_has_queues(broker_slave)
 
-    def test_validate_broker_connector_after_failover(self, router_with_broker):
+    def test_validate_broker_connector_after_failover(self, router_with_broker: RouterType) -> None:
         """
         Validate state of router connector to broker after fail-over
         :param router_with_broker:
@@ -228,7 +229,7 @@ class TestRouterOnBrokerFailOverFailBack(object):
         """
         self.validate_broker_connector_has_failoverurls(router_with_broker)
 
-    def test_validate_autolinks_after_failover(self, router_with_broker):
+    def test_validate_autolinks_after_failover(self, router_with_broker: RouterType) -> None:
         """
         Validate state of autolinks to broker after fail-over
         :param router_with_broker:
@@ -236,7 +237,7 @@ class TestRouterOnBrokerFailOverFailBack(object):
         """
         self.validate_autolinks_active(router_with_broker)
 
-    def test_exchange_messages_after_failover(self, router, queue):
+    def test_exchange_messages_after_failover(self, router: RouterType, queue: str) -> None:
         """
         Exchange messages to ensure router has recovered from broker fail-over.
         :param router:
@@ -245,7 +246,7 @@ class TestRouterOnBrokerFailOverFailBack(object):
         """
         self.send_and_receive(queue, router)
 
-    def test_broker_failback(self, broker_master: Artemis):
+    def test_broker_failback(self, broker_master: Artemis) -> None:
         """
         Starts the provided master broker instance and ensure it has been started.
         :param broker_master:
@@ -254,7 +255,7 @@ class TestRouterOnBrokerFailOverFailBack(object):
         broker_master.service.start()
         assert broker_master.service.status() == ServiceStatus.RUNNING
 
-    def test_broker_master_active(self, broker_master: Artemis):
+    def test_broker_master_active(self, broker_master: Artemis) -> None:
         """
         Wait till master broker shows queues again (active).
         :param broker_master:
@@ -262,7 +263,7 @@ class TestRouterOnBrokerFailOverFailBack(object):
         """
         self.broker_has_queues(broker_master)
 
-    def test_validate_broker_connector_after_failback(self, router_with_broker):
+    def test_validate_broker_connector_after_failback(self, router_with_broker: RouterType) -> None:
         """
         Validate state of router connector to broker after fail-back
         :param router_with_broker:
@@ -270,7 +271,7 @@ class TestRouterOnBrokerFailOverFailBack(object):
         """
         self.validate_broker_connector_has_failoverurls(router_with_broker)
 
-    def test_validate_autolinks_after_failback(self, router_with_broker):
+    def test_validate_autolinks_after_failback(self, router_with_broker: RouterType) -> None:
         """
         Validate state of autolinks to broker after fail-back
         :param router_with_broker:
@@ -278,7 +279,7 @@ class TestRouterOnBrokerFailOverFailBack(object):
         """
         self.validate_autolinks_active(router_with_broker)
 
-    def test_exchange_messages_after_failback(self, router, queue):
+    def test_exchange_messages_after_failback(self, router: RouterType, queue: str) -> None:
         """
         Exchange messages to ensure router has recovered from broker fail-back.
         :param router:

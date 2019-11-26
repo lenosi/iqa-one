@@ -1,7 +1,13 @@
+from typing import Dict, Union
+
 import pytest
 
-# from messaging_components import clients, routers, brokers
-from iqa.components.clients.external import nodejs, python
+from _pytest.config import Config
+from _pytest.config.argparsing import Parser, OptionGroup
+from _pytest.python import Metafunc
+
+from iqa.components.clients.external.nodejs import SenderNodeJS, ReceiverNodeJS
+from iqa.components.clients.external.python import SenderPython, ReceiverPython
 from iqa.components.clients.core.receiver import ReceiverCore
 from iqa.components.clients.core.sender import SenderCore
 from iqa.components.brokers.artemis import Artemis
@@ -9,16 +15,21 @@ from iqa.components.routers.dispatch import Dispatch
 
 from iqa.instance.instance import Instance
 
+from iqa.system.executor import Executor
+from iqa.system.node import Node
+from iqa.system.service import Service
+
 from iqa.pytest.fixtures import iqa as pytest_iqa
 
 
 ############################
 # Global python namespace  #
 ############################
-iqa_instance = Instance()
+
+iqa_instance: Instance = Instance()
 
 
-def pytest_namespace():
+def pytest_namespace() -> Dict[str, Instance]:
     """
     Provide iqa_instance to pytest global namespace
     """
@@ -38,11 +49,11 @@ def iqa():
 ########################
 # Section: Add option  #
 ########################
-def pytest_addoption(parser):
+def pytest_addoption(parser: Parser) -> None:
     """
     Add messaging options to py.test runner
     """
-    components = parser.getgroup('iqa-messaging_components')
+    components: OptionGroup = parser.getgroup('iqa-messaging_components')
 
     # Senders
     components.addoption("--sender", action="append", default=[], help="Define sender client [native, nodejs]")
@@ -60,7 +71,7 @@ def pytest_addoption(parser):
     components.addoption("--tls", action="append", default=[], help="TLS option [tls10,tls11,tls12,tls13]")
 
 
-def pytest_configure(config):
+def pytest_configure(config: Config) -> None:
     """into iqa instance"""
     pytest_iqa.inventory = config.option.inventory
     # pytest.iqa.inventory = config.option.inventory
@@ -70,7 +81,7 @@ def pytest_configure(config):
 ##############################
 # Section: Parametrization  #
 #############################
-def pytest_generate_tests(metafunc):
+def pytest_generate_tests(metafunc: Metafunc) -> None:
     """
     Generate clients, brokers, matrix
     :param metafunc:
@@ -101,28 +112,38 @@ def pytest_generate_tests(metafunc):
 # Section: Fixtures    #
 ########################
 
-broker_node = iqa_instance.new_node(hostname='ic01')
-router_node = iqa_instance.new_node(hostname='ic01')
-client_node = iqa_instance.new_node(hostname='ic01')
+broker_node: Node = iqa_instance.new_node(hostname='ic01')
+router_node: Node = iqa_instance.new_node(hostname='ic01')
+client_node: Node = iqa_instance.new_node(hostname='ic01')
 
-core_sender = SenderCore()
-core_receiver = ReceiverCore()
+core_sender: SenderCore = SenderCore(name='sender_core', node=client_node)
+core_receiver: ReceiverCore = ReceiverCore(name='receiver_core', node=client_node)
 
-nodejs_sender = iqa_instance.new_component(node=client_node, component=nodejs.Sender)
-nodejs_receiver = iqa_instance.new_component(node=client_node, component=nodejs.Receiver)
+nodejs_sender_component: SenderNodeJS = SenderNodeJS(name='sender_nodejs', node=client_node)
+nodejs_sender: SenderNodeJS = iqa_instance.new_component(component=nodejs_sender_component)
 
-python_sender = iqa_instance.new_component(node=client_node, component=python.SenderPython)
-python_receiver = iqa_instance.new_component(node=client_node, component=python.ReceiverPython)
+nodejs_receiver_component: ReceiverNodeJS = ReceiverNodeJS(name='receiver_nodejs', node=client_node)
+nodejs_receiver: ReceiverNodeJS = iqa_instance.new_component(component=nodejs_receiver_component)
 
-amq6 = iqa_instance.new_component(node=broker_node, component=Artemis)
-amq7 = iqa_instance.new_component(node=broker_node, component=Artemis)
-artemis = iqa_instance.new_component(node=broker_node, component=Artemis)
+python_sender_component: SenderPython = SenderPython(name='sender_python', node=client_node)
+python_sender: SenderPython = iqa_instance.new_component(component=python_sender_component)
 
-dispatch = iqa_instance.new_component(node=router_node, component=Dispatch)
+python_receiver_component: ReceiverPython = ReceiverPython(name='receiver_python', node=client_node)
+python_receiver: ReceiverPython = iqa_instance.new_component(component=python_receiver_component)
+
+artemis_component: Artemis = Artemis(name='artemis', node=broker_node)
+amq6: Artemis = iqa_instance.new_component(component=artemis_component)
+amq7: Artemis = iqa_instance.new_component(component=artemis_component)
+artemis: Artemis = iqa_instance.new_component(component=artemis_component)
+
+dispatch_node: Node = iqa_instance.new_node(hostname='ic01')
+dispatch_service: Service = Service(name='dispatch_service', executor=Executor())
+dispatch_component: Dispatch = Dispatch(name='disp', node=dispatch_node, service=dispatch_service)
+dispatch: Dispatch = iqa_instance.new_component(component=dispatch_component)
 
 
 @pytest.fixture()
-def sender(request):
+def sender(request) -> Union[SenderCore, SenderNodeJS, SenderPython]:
     """
     Sender fixture client
     :param request:
@@ -137,7 +158,7 @@ def sender(request):
 
 
 @pytest.fixture()
-def receiver(request):
+def receiver(request) -> Union[ReceiverCore, ReceiverNodeJS, ReceiverPython]:
     """
     Receiver fixture client
     :param request:
@@ -152,7 +173,7 @@ def receiver(request):
 
 
 @pytest.fixture()
-def broker(request):
+def broker(request) -> Artemis:
     """
     Iteration objects for broker
     :return: Broker object
@@ -167,7 +188,7 @@ def broker(request):
 
 
 @pytest.fixture()
-def router(request):
+def router(request) -> Dispatch:
     """
     Iteration objects for router
     :param request:
@@ -180,7 +201,7 @@ def router(request):
 
 
 @pytest.fixture()
-def tls(request):
+def tls(request) -> str:
     """
     Iteration object for TLS settings
     :param request:
@@ -197,7 +218,7 @@ def tls(request):
 
 
 @pytest.fixture()
-def sasl(request):
+def sasl(request) -> None:
     """
     SASL Authentication fixture
     :param request:

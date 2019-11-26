@@ -1,21 +1,22 @@
 # Initial static configuration
-from iqa.abstract.message import Message
-from iqa.components.clients import \
-    ReceiverJava, SenderJava, \
-    ReceiverPython, SenderPython, \
-    ReceiverNodeJS, SenderNodeJS
+from typing import Union
+
+from iqa.abstract.message.message import Message
+from iqa.components.clients.external.java import ReceiverJava, SenderJava
+from iqa.components.clients.external.python import ReceiverPython, SenderPython
+from iqa.components.clients.external.nodejs import ReceiverNodeJS, SenderNodeJS
 import logging
 
-MESSAGE_COUNT = 10
-MESH_SIZE = 3
+MESSAGE_COUNT: int = 10
+MESH_SIZE: int = 3
 
-logger = logging.getLogger(__name__)
+logger: logging.Logger = logging.getLogger(__name__)
 
 
 def test_basic_messaging(
-        receiver: [ReceiverJava, ReceiverPython, ReceiverNodeJS],
-        sender: [SenderJava, SenderPython, SenderNodeJS],
-        msg_length: [int]):
+        receiver: Union[ReceiverJava, ReceiverPython, ReceiverNodeJS],
+        sender: Union[SenderJava, SenderPython, SenderNodeJS],
+        msg_length: int):
     """
     Exchange messages through the router using a pair of Java Sender and Receiver.
     Expects that all messages are exchanged and external clients complete successfully.
@@ -28,7 +29,7 @@ def test_basic_messaging(
     validate_client_results(receiver, sender)
 
 
-def start_receiver(receiver: [ReceiverJava, ReceiverPython, ReceiverNodeJS]):
+def start_receiver(receiver: Union[ReceiverJava, ReceiverPython, ReceiverNodeJS]):
     """
     Starts the provided receiver instance using pre-defined message count (per implementation)
     and sets it to log received messages as a dictionary (one message per line).
@@ -49,7 +50,7 @@ def start_receiver(receiver: [ReceiverJava, ReceiverPython, ReceiverNodeJS]):
     receiver.receive()
 
 
-def start_sender(sender: [SenderJava, SenderPython, SenderNodeJS], length: int):
+def start_sender(sender: Union[SenderJava, SenderPython, SenderNodeJS], length: int):
     """
     Starts the sender instance, preparing a dummy message whose body size has
     the provided length.
@@ -74,9 +75,9 @@ def start_sender(sender: [SenderJava, SenderPython, SenderNodeJS], length: int):
     sender.send(message)
 
 
-def exchange_messages(receiver: [ReceiverJava, ReceiverPython, ReceiverNodeJS],
-                      sender: [SenderJava, SenderPython, SenderNodeJS],
-                      length):
+def exchange_messages(receiver: Union[ReceiverJava, ReceiverPython, ReceiverNodeJS],
+                      sender: Union[SenderJava, SenderPython, SenderNodeJS],
+                      length: int):
     """
     Starts both receiver and sender (with message sizes set to appropriate length).
     :param receiver:
@@ -88,8 +89,8 @@ def exchange_messages(receiver: [ReceiverJava, ReceiverPython, ReceiverNodeJS],
     start_sender(sender, length)
 
 
-def validate_client_results(receiver: [ReceiverJava, ReceiverPython, ReceiverNodeJS],
-                            sender: [SenderJava, SenderPython, SenderNodeJS]):
+def validate_client_results(receiver: Union[ReceiverJava, ReceiverPython, ReceiverNodeJS],
+                            sender: Union[SenderJava, SenderPython, SenderNodeJS]):
     """
     Validate that both clients completed (or timed out) and if the
     number of messages received by receiver instance matches

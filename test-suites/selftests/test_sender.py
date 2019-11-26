@@ -1,5 +1,4 @@
-from iqa.abstract.client import Sender
-from odict import odict
+from iqa.abstract.client.sender import Sender
 
 
 def test_isinstance(sender: Sender):
