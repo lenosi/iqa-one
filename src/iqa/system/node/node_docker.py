@@ -9,7 +9,7 @@ from docker.models.containers import Container
 from docker.errors import APIError, NotFound
 
 from iqa.system.executor import ExecutorContainer
-from iqa.system.node import Node
+from iqa.system.node.node import Node
 from iqa.utils.docker_util import DockerUtil
 
 
@@ -31,7 +31,7 @@ class NodeDocker(Node):
             container: Container = self.docker_util.get_container(
                 self.executor.container_name)
             return container.attrs['State']['Running']
-        except APIError or NotFound:
+        except Exception or APIError or NotFound:
             logging.info("Unable to get container status for: %s" %
                          self.executor.container_name)
             return False
@@ -47,7 +47,7 @@ class NodeDocker(Node):
                           docker_network)
             ip: str = self.docker_util.get_container_ip(
                 self.executor.container_name, docker_network)
-        except:
+        except Exception or APIError or NotFound:
             logging.debug("Unable to determine IP for container: %s" %
                           self.executor.container_name)
             # TODO fix this

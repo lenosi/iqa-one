@@ -6,17 +6,19 @@ from _pytest.config import Config
 from _pytest.config.argparsing import Parser, OptionGroup
 from _pytest.python import Metafunc
 
-from iqa.components.clients.external.nodejs import SenderNodeJS, ReceiverNodeJS
-from iqa.components.clients.external.python import SenderPython, ReceiverPython
+from iqa.components.clients.external.nodejs.sender import SenderNodeJS
+from iqa.components.clients.external.nodejs.receiver import ReceiverNodeJS
+from iqa.components.clients.external.python.sender import SenderPython
+from iqa.components.clients.external.python.receiver import ReceiverPython
 from iqa.components.clients.core.receiver import ReceiverCore
 from iqa.components.clients.core.sender import SenderCore
-from iqa.components.brokers.artemis import Artemis
-from iqa.components.routers.dispatch import Dispatch
+from iqa.components.brokers.artemis.artemis import Artemis
+from iqa.components.routers.dispatch.dispatch import Dispatch
 
 from iqa.instance.instance import Instance
 
 from iqa.system.executor import Executor
-from iqa.system.node import Node
+from iqa.system.node.node import Node
 from iqa.system.service import Service
 
 from iqa.pytest.fixtures import iqa as pytest_iqa

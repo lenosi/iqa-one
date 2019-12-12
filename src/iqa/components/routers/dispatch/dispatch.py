@@ -1,16 +1,20 @@
-from typing import Optional
+from typing import Optional, Union
 
 from iqa.components.abstract.management.client import ManagementClient
 from iqa.components.abstract.server.server_component import ServerComponent
 from iqa.abstract.server.router import Router
 from iqa.system.command.command_base import Command
 from iqa.system.executor.execution import Execution
+from iqa.system.node.node import Node
+from iqa.system.service import Service
+from iqa.utils.types import ManagementClientSubtype
 from .config import Config
 from .log import Log
-from .management import QDManage, QDStat
+from .management.qdmanage import QDManage
+from .management.qdstat import QDStat
 
 
-class Dispatch(Router, ServerComponent):
+class Dispatch(ServerComponent, Router):
     """
     Dispatch router component
     """
@@ -18,8 +22,8 @@ class Dispatch(Router, ServerComponent):
     name: str = 'Qpid Dispatch Router'
     implementation: str = 'dispatch'
 
-    def __init__(self, name: str, **kwargs) -> None:
-        super(Dispatch, self).__init__(name, **kwargs)
+    def __init__(self, name: str, node: Node, service: Service, **kwargs) -> None:
+        super(Dispatch, self).__init__(name, node, service, **kwargs)
 
         self.qdmanage: QDManage = QDManage()
         self.qdstat: QDStat = QDStat()
@@ -28,7 +32,7 @@ class Dispatch(Router, ServerComponent):
         self._version: Optional[str] = None
 
         self.port: str = kwargs.get('router_port', 5672)
-        self.config: str = kwargs.get('router_config', None)
+        self.config = kwargs.get('router_config', None)
         self.user: Optional[str] = None
         self.password: Optional[str] = None
         self.pem_file: Optional[str] = None
@@ -66,7 +70,7 @@ class Dispatch(Router, ServerComponent):
         """
 
     @property
-    def version(self) -> str:
+    def version(self) -> Optional[Union[str, list]]:
         """
         Get qdrouterd version
         :return:
@@ -115,5 +119,5 @@ class Dispatch(Router, ServerComponent):
         else:
             return False
 
-    def get_management_client(self) -> ManagementClient:
+    def get_management_client(self) -> ManagementClientSubtype:
         return NotImplemented

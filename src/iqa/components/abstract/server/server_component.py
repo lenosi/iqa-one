@@ -2,10 +2,10 @@ from typing import List, Optional
 
 from iqa.components.abstract.component import Component
 from iqa.components.abstract.configuration import Configuration
-from iqa.components.abstract.management.client import ManagementClient
 from iqa.abstract.listener import Listener
 from iqa.system.node.node import Node
 from iqa.system.service.service import Service
+from iqa.utils.types import ManagementClientType
 
 
 class ServerComponent(Component):
@@ -21,9 +21,9 @@ class ServerComponent(Component):
         self.node: Node = node
         self.configuration: Optional[Configuration] = configuration
         self.listeners: List[Listener] = listeners
-        self.management_client: ManagementClient = self.get_management_client()
+        self.management_client: ManagementClientType = self.get_management_client()
 
-    def get_management_client(self) -> ManagementClient:
+    def get_management_client(self) -> ManagementClientType:
         raise NotImplementedError
 
     @property

@@ -1,10 +1,10 @@
 from iqa.components.clients.external.python.command.python_commands import PythonReceiverClientCommand
-from iqa.abstract.client import Receiver
-from iqa.system.node import Node
+from iqa.abstract.client.receiver import Receiver
+from iqa.system.node.node import Node
 from .client import ClientPython
 
 
-class ReceiverPython(Receiver, ClientPython):
+class ReceiverPython(ClientPython, Receiver):
     """External Python-Proton receiver client."""
 
     _command: PythonReceiverClientCommand

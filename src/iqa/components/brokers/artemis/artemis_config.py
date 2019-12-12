@@ -1,13 +1,14 @@
 import logging
 import posixpath
+from typing import Optional, Union
 
 from amqcfg import amqcfg
 
-from iqa.components.abstract.component import Component
 from iqa.components.brokers.broker_config import BrokerConfiguration
 from iqa.abstract.user import User
 from iqa.system.executor.execution import Execution
 from iqa.utils.iqa_exceptions import IQAConfigurationException
+from iqa.utils.types import ComponentSubtype
 from iqa.utils.utils import Utils
 
 
@@ -71,17 +72,17 @@ class ArtemisConfig(BrokerConfiguration):
     P_WEB_PORT: str = "bootstrap_xml/web/bind/port"
     P_JMX_PORT: str = "management_xml/connector_port"
 
-    instance_name: str = None
-    instance_home: str = None
-    instance_home_etc: str = None
-    instance_home_data: str = None
-    instance_home_log: str = None
-    instance_home_tmp: str = None
+    instance_name: Union[int, str, list, dict]
+    instance_home: Union[int, str, list, dict]
+    instance_home_etc: Optional[str]
+    instance_home_data: Union[int, str, list, dict]
+    instance_home_log: Union[int, str, list, dict]
+    instance_home_tmp: Union[int, str, list, dict]
 
-    home: str = None
-    amqcfg_profile_path: str = None
+    home: Union[int, str, list, dict]
+    amqcfg_profile_path: Union[int, str, list, dict]
 
-    def __init__(self, component: Component, **kwargs) -> None:
+    def __init__(self, component: ComponentSubtype, **kwargs) -> None:
         """Initialize ExternalBrokerData from provided configuration file.
 
         :param broker_data: empty data object, to be filled with provided configuration data
@@ -90,7 +91,7 @@ class ArtemisConfig(BrokerConfiguration):
         :type test_node: TestNode
         """
         super(ArtemisConfig, self).__init__(component, **kwargs)
-        self.node_config_dir: str = self.instance_home_etc
+        self.node_config_dir: Optional[str] = self.instance_home_etc
 
     def create_default_configuration(self, **kwargs) -> None:
         self.home = kwargs.get('broker_home', self.DEFAULT_HOME)
@@ -107,7 +108,7 @@ class ArtemisConfig(BrokerConfiguration):
         self.home = self._data_getter(self.P_HOME, self.DEFAULT_HOME)
         self.instance_home = self._data_getter(self.P_INSTANCE_HOME, self.DEFAULT_INSTANCE_HOME)
         self.instance_name = self._data_getter(self.P_INSTANCE_NAME, self.DEFAULT_INSTANCE_NAME)
-        self.instance_home_etc = Utils.remove_prefix(self._data_getter(self.P_INSTANCE_DIR_ETC), "file:")
+        self.instance_home_etc = Utils.remove_prefix(self._data_getter(self.P_INSTANCE_DIR_ETC, str), "file:")
         self.instance_home_data = self._data_getter(self.P_INSTANCE_DIR_DATA)
         self.instance_home_log = posixpath.join(self.instance_home, "log")
         self.instance_home_tmp = posixpath.join(self.instance_home, "tmp")

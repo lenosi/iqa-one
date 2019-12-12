@@ -8,7 +8,7 @@ import time
 # Displaying all queues
 from iqa.system.service.service import ServiceStatus
 from iqa.abstract.server.broker import Broker
-from iqa.components.abstract.server import ServerComponent
+from iqa.components.abstract.server.server_component import ServerComponent
 from iqa.utils.tcp_util import TcpUtil
 from iqa.instance.instance import Instance
 

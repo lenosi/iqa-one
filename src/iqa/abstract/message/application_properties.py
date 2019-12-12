@@ -1,12 +1,15 @@
+from typing import Optional
+
+
 class Property:
     """
     The keys of this map are restricted to be of type string (which excludes the possibility of a null key)
     and the values are restricted to be of simple types only, that is, excluding map, list, and array types.
     """
 
-    def __init__(self, name: str, value: str = None) -> None:
+    def __init__(self, name: str, value: Optional[str] = None) -> None:
         self.name: str = name
-        self.value: str = value
+        self.value: Optional[str] = value
 
 
 class ApplicationProperties(list):

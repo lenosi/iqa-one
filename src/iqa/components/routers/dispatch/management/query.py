@@ -1,14 +1,13 @@
 import logging
-from collections import namedtuple
-from typing import NamedTuple, TypeVar
+from typing import Optional
 
 import proton
+
+from collections import namedtuple
 from proton import Url, SSLDomain
 from proton.utils import BlockingConnection, SyncRequestResponse
 
-from iqa.abstract.server.router import Router
-
-RouterType = TypeVar('RouterType', bound=Router)
+from iqa.components.routers.dispatch.dispatch import Dispatch
 
 
 class RouterQuery(object):
@@ -17,12 +16,12 @@ class RouterQuery(object):
     Connections are closed after each query.
     """
 
-    def __init__(self, host: str = "0.0.0.0", port: str = 5672, router: RouterType = None) -> None:
+    def __init__(self, host: str = "0.0.0.0", port: int = 5672, router: Dispatch = None) -> None:
 
-        self._logger: logging.getLogger = logging.getLogger(self.__module__)
-        self.port: str = port
+        self._logger: logging.Logger = logging.getLogger(self.__module__)
+        self.port: int = port
         self.host: str = host
-        self._router: RouterType = router
+        self._router: Optional[Dispatch] = router
         self._connection_options: dict = {
                 'sasl_enabled': False,
                 'ssl_domain': None,

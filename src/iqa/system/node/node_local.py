@@ -10,7 +10,7 @@ from typing import Union
 from iqa.system.command.command_base import Command
 from iqa.system.executor.execution import Execution
 from iqa.system.executor import Executor
-from iqa.system.node import Node
+from iqa.system.node.node import Node
 
 
 class NodeLocal(Node):

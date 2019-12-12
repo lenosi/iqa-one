@@ -2,7 +2,7 @@ from proton import Message, Event
 from proton.handlers import MessagingHandler
 from proton.reactor import Container
 import time
-from iqa.components.brokers.artemis import Artemis
+from iqa.components.brokers.artemis.artemis import Artemis
 from iqa.system.command.command_base import Command
 from iqa.system.executor.execution import Execution
 

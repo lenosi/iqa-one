@@ -6,6 +6,8 @@ Options are also common to implementation language (java, python, etc).
 In case an implementation has a different set of options, specialize it
 in a separate module inside abstract.client.command.impl.
 """
+from typing import Optional
+
 from iqa.components.clients.external.command.options.client_options import ClientOptionsBase, ControlOptionsCommon,\
     LoggingOptionsCommon, ConnectionOptionsCommon, ConnectorOptions, ControlOptionsReceiver, \
     LoggingOptionsSenderReceiver, TransactionOptionsSenderReceiver, ReceiverOptions, ControlOptionsSenderReceiver, \
@@ -23,6 +25,8 @@ class ClientCommand(Command):
 
     def __init__(self, args) -> None:
         super().__init__(args)
+        self.control: Optional[ControlOptionsCommon] = None
+        self.logging: Optional[LoggingOptionsCommon] = None
 
     @property
     def args(self) -> list:

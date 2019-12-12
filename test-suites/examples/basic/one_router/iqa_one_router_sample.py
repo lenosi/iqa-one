@@ -6,10 +6,10 @@ import sys
 
 
 # Displaying all connections
-from iqa.components.routers.dispatch import Dispatch
-from iqa.components.routers.dispatch.management import RouterQuery
+from iqa.components.routers.dispatch.dispatch import Dispatch
+from iqa.components.routers.dispatch.management.query import RouterQuery
 from iqa.instance.instance import Instance
-from iqa.components.abstract.server import ServerComponent
+from iqa.components.abstract.server.server_component import ServerComponent
 from iqa.abstract.server.router import Router
 from iqa.system.service.service import ServiceStatus
 

@@ -1,13 +1,13 @@
-from iqa.components import protocols
+from iqa.components.protocols.amqp import Amqp10
 from iqa.components.abstract.component import Component
-from iqa.abstract.client import MessagingClient
+from iqa.abstract.client.messaging_client import MessagingClient
 from iqa.system.node.node import Node
 
 
-class CoreMessagingClient(MessagingClient, Component):
+class CoreMessagingClient(Component, MessagingClient):
     """Internal core Proton mapping client."""
 
-    supported_protocols: list = [protocols.Amqp10()]
+    supported_protocols: list = [Amqp10()]
     implementation: str = 'core'
     version: str = '0.1'
 

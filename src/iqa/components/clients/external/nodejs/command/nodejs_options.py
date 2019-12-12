@@ -1,6 +1,8 @@
 """
 Specialized options for external Node JS client commands (cli-rhea).
 """
+from typing import Optional
+
 from optconstruct.types import Prefixed, Toggle
 
 from iqa.components.clients.external.command.options.client_options import ControlOptionsCommon, \
@@ -87,11 +89,11 @@ class NodeJSConnectionOptionsCommon(ConnectionOptionsCommon):
         ConnectionOptionsCommon.__init__(self, urls=urls, reconnect=reconnect, reconnect_interval=reconnect_interval,
                                          reconnect_limit=reconnect_limit, reconnect_timeout=reconnect_timeout,
                                          heartbeat=heartbeat, max_frame_size=max_frame_size)
-        self.conn_ssl: bool = conn_ssl
-        self.conn_ssl_certificate: str = conn_ssl_certificate
-        self.conn_ssl_private_key: str = conn_ssl_private_key
-        self.conn_ws: bool = conn_ws
-        self.conn_ws_protocols: str = conn_ws_protocols
+        self.conn_ssl: Optional[bool] = conn_ssl
+        self.conn_ssl_certificate: Optional[str] = conn_ssl_certificate
+        self.conn_ssl_private_key: Optional[str] = conn_ssl_private_key
+        self.conn_ws: Optional[bool] = conn_ws
+        self.conn_ws_protocols: Optional[str] = conn_ws_protocols
 
     def valid_options(self) -> list:
         return ConnectionOptionsCommon.valid_options(self) + [

@@ -1,7 +1,7 @@
 import time
-from iqa.components.routers.dispatch import Dispatch
-from iqa.components.routers.dispatch.management import RouterQuery
-from iqa.instance import Instance
+from iqa.components.routers.dispatch.dispatch import Dispatch
+from iqa.components.routers.dispatch.management.query import RouterQuery
+from iqa.instance.instance import Instance
 from iqa.system.executor.execution import Execution
 from iqa.utils.openshift_util import OpenShiftUtil
 

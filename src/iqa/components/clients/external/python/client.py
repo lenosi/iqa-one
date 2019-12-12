@@ -1,12 +1,12 @@
-from iqa.components import protocols
+from iqa.components.protocols.amqp import Amqp10
 from iqa.components.clients.external import ClientExternal
-from iqa.system.node import Node
+from iqa.system.node.node import Node
 
 
 class ClientPython(ClientExternal):
     """Python Proton client (base abstract class)."""
 
-    supported_protocols: list = [protocols.Amqp10()]
+    supported_protocols: list = [Amqp10()]
     implementation: str = 'python'
     version: str = '1.0.1'
 

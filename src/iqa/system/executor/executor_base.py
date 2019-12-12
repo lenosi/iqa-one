@@ -1,4 +1,5 @@
 import logging
+from typing import Optional
 
 from iqa.system.command.command_base import Command
 from iqa.system.executor.execution import ExecutionProcess, Execution
@@ -6,7 +7,7 @@ from iqa.system.executor.execution import ExecutionProcess, Execution
 """
 Defines the generic Executor class, which is responsible for
 running a given Command instance similarly across different
-implementations. 
+implementations.
 """
 
 

@@ -1,17 +1,16 @@
 from iqa.components.clients.external.nodejs.client import ClientNodeJS
 from iqa.components.clients.external.nodejs.command.nodejs_commands import NodeJSSenderClientCommand
-from iqa.abstract.client import Sender
-from iqa.abstract.message import Message
-from iqa.system.node import Node
+from iqa.abstract.client.sender import Sender
+from iqa.abstract.message.message import Message
+from iqa.system.node.node import Node
 
 try:
     from urlparse import urlparse, urlunparse
-    from urllib import quote, unquote
 except ImportError:
-    from urllib.parse import urlparse, urlunparse, quote, unquote
+    from urllib.parse import urlparse, urlunparse
 
 
-class SenderNodeJS(Sender, ClientNodeJS):
+class SenderNodeJS(ClientNodeJS, Sender):
     """External NodeJS sender client."""
 
     _command: NodeJSSenderClientCommand

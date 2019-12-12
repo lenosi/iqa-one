@@ -1,13 +1,13 @@
-from iqa.components import protocols
+from iqa.components.protocols.amqp import Amqp10
 from iqa.components.clients.external import ClientExternal
 from iqa.components.clients.external.command.client_command import ClientCommand
 from iqa.abstract.listener import Listener
-from iqa.system.node import Node
+from iqa.system.node.node import Node
 
 
 class ClientNodeJS(ClientExternal):
     """NodeJS RHEA client"""
-    supported_protocols: list = [protocols.Amqp10()]
+    supported_protocols: list = [Amqp10()]
     implementation: str = 'nodejs'
     version: str = '1.0.1'
 

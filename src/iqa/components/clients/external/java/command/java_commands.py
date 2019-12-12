@@ -1,5 +1,5 @@
 """
-Specialized implementation of external command for java clients (currently cli-qpid.jar only). 
+Specialized implementation of external command for java clients (currently cli-qpid.jar only).
 """
 from iqa.components.clients.external.command.client_command import ConnectorClientCommand, ReceiverClientCommand, \
     SenderClientCommand

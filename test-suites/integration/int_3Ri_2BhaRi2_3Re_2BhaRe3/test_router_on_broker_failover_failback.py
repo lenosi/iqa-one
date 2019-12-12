@@ -1,9 +1,9 @@
 import time
 
 from iqa.system.service.service import ServiceStatus
-from iqa.components.routers.dispatch import Dispatch
-from iqa.components.brokers import Artemis
-from iqa.components.routers.dispatch.management import RouterQuery
+from iqa.components.routers.dispatch.dispatch import Dispatch
+from iqa.components.brokers.artemis.artemis import Artemis
+from iqa.components.routers.dispatch.management.query import RouterQuery
 from iqa.utils.types import RouterType, BrokerType
 
 from .receiver import Receiver

@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import Optional
 
 from iqa.abstract.listener import Listener
 
@@ -15,7 +16,7 @@ class Client(ABC):
 
     @property
     @abstractmethod
-    def name(self) -> str:
+    def name(self) -> Optional[str]:
         """
 
         :return: String
@@ -24,7 +25,7 @@ class Client(ABC):
 
     @property
     @abstractmethod
-    def version(self) -> str:
+    def version(self) -> Optional[str]:
         """
 
         :return: String

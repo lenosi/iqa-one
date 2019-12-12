@@ -10,10 +10,12 @@ from logging import Logger
 
 from _pytest.python import Function
 
-from iqa.instance import Instance
+from iqa.instance.instance import Instance
 from .logger import get_logger
 
 # Default timeout settings
+from ..abstract.client.client import Client
+
 CLIENTS_TIMEOUT: int = 60
 DEFAULT_LOG_FORMAT: str = '%(asctime)s [%(levelname)s] (%(pathname)s:%(lineno)s) - %(message)s'
 DEFAULT_LOG_DATE_FORMAT: str = '%Y-%m-%d %H:%M:%S'
@@ -99,7 +101,8 @@ def pytest_configure(config) -> None:
 
     # Adjusting clients timeout
     for client in iqa.clients:
-        client.command.control.timeout = CLIENTS_TIMEOUT
+        if type(client) != Client:
+            client.command.control.timeout = CLIENTS_TIMEOUT
 
     config.iqa = iqa
 

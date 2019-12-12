@@ -1,5 +1,5 @@
 from iqa.components.clients.external.python.command.python_commands import PythonConnectorClientCommand
-from iqa.system.node import Node
+from iqa.system.node.node import Node
 from .client import ClientPython
 
 

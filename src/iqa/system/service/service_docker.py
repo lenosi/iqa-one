@@ -19,7 +19,7 @@ class ServiceDocker(Service):
     """
     _logger: logging.Logger = logging.getLogger(__name__)
 
-    def __init__(self, name: str, executor: Union[ExecutorAnsible, ExecutorContainer]) -> None:
+    def __init__(self, name: str, executor: ExecutorContainer) -> None:
         super().__init__(name, executor)
         self.docker_host: Optional[str] = executor.docker_host
         self.docker_util: DockerUtil = DockerUtil(docker_host=executor.docker_host)
@@ -66,21 +66,21 @@ class ServiceDocker(Service):
     def restart(self) -> Execution:
         return self.executor.execute(self._create_command(self.ServiceDockerState.RESTARTED))
 
-    def enable(self) -> None:
+    def enable(self) -> Optional[Execution]:
         """
         Simply ignore it (not applicable to containers)
         :return:
         """
         return None
 
-    def disable(self) -> None:
+    def disable(self) -> Optional[Execution]:
         """
         Simply ignore it (not applicable to containers)
         :return:
         """
         return None
 
-    def _create_command(self, service_state: ServiceDockerState) -> Union[CommandAnsible, CommandContainer]:
+    def _create_command(self, service_state: ServiceDockerState) -> Optional[Union[CommandAnsible, CommandContainer]]:
         """
         Creates a Command instance based on executor type and state
         that is specific to each type of command.
@@ -105,3 +105,5 @@ class ServiceDocker(Service):
         elif isinstance(self.executor, ExecutorContainer):
             state = service_state.system_state
             return CommandContainer([], docker_command=state, stdout=True, timeout=self.TIMEOUT)
+        else:
+            return None

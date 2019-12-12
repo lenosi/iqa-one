@@ -1,3 +1,5 @@
+from typing import Optional
+
 from optconstruct.types import Prefixed
 
 from iqa.components.clients.external.command.options.client_options import ControlOptionsCommon, \
@@ -64,24 +66,24 @@ class JavaControlOptionsReceiver(ControlOptionsReceiver, JavaControlOptionsSende
 
 
 class JavaConnectionOptionsCommon(ConnectionOptionsCommon):
-    def __init__(self, conn_auth_mechanisms: str = None, conn_username: str = None,
-                 conn_password: str = None, conn_ssl_keystore_location: str = None,
-                 conn_ssl_keystore_password: str = None, conn_ssl_key_alias: str = None,
-                 conn_ssl_trust_all: str = None, conn_ssl_verify_host: str = None,
-                 urls: str = None, reconnect: bool = None,
+    def __init__(self, conn_auth_mechanisms: Optional[str] = None, conn_username: Optional[str] = None,
+                 conn_password: Optional[str] = None, conn_ssl_keystore_location: Optional[str] = None,
+                 conn_ssl_keystore_password: Optional[str] = None, conn_ssl_key_alias: Optional[str] = None,
+                 conn_ssl_trust_all: Optional[str] = None, conn_ssl_verify_host: Optional[str] = None,
+                 urls: Optional[str] = None, reconnect: bool = None,
                  reconnect_interval: int = None, reconnect_limit: int = None, reconnect_timeout: int = None,
                  heartbeat: int = None, max_frame_size: int = None) -> None:
         ConnectionOptionsCommon.__init__(self, urls=urls, reconnect=reconnect, reconnect_interval=reconnect_interval,
                                          reconnect_limit=reconnect_limit, reconnect_timeout=reconnect_timeout,
                                          heartbeat=heartbeat, max_frame_size=max_frame_size)
-        self.conn_auth_mechanisms: str = conn_auth_mechanisms
-        self.conn_username: str = conn_username
-        self.conn_password: str = conn_password
-        self.conn_ssl_keystore_location: str = conn_ssl_keystore_location
-        self.conn_ssl_keystore_password: str = conn_ssl_keystore_password
-        self.conn_ssl_key_alias: str = conn_ssl_key_alias
-        self.conn_ssl_trust_all: str = conn_ssl_trust_all
-        self.conn_ssl_verify_host: str = conn_ssl_verify_host
+        self.conn_auth_mechanisms: Optional[str] = conn_auth_mechanisms
+        self.conn_username: Optional[str] = conn_username
+        self.conn_password: Optional[str] = conn_password
+        self.conn_ssl_keystore_location: Optional[str] = conn_ssl_keystore_location
+        self.conn_ssl_keystore_password: Optional[str] = conn_ssl_keystore_password
+        self.conn_ssl_key_alias: Optional[str] = conn_ssl_key_alias
+        self.conn_ssl_trust_all: Optional[str] = conn_ssl_trust_all
+        self.conn_ssl_verify_host: Optional[str] = conn_ssl_verify_host
 
     def valid_options(self) -> list:
         return ConnectionOptionsCommon.valid_options(self) + [

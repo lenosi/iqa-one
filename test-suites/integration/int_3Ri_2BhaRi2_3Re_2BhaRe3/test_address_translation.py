@@ -17,7 +17,7 @@ import pytest
 from typing import Optional, List, Union
 
 from iqa.abstract.destination.queue import Queue
-from iqa.components.brokers import Broker
+from iqa.abstract.server.broker import Broker
 from iqa.instance.instance import Instance
 from iqa.abstract.message.message import Message
 from iqa.utils.types import BrokerType, SenderType, RouterType, ReceiverType

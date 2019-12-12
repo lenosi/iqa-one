@@ -1,7 +1,7 @@
 import pytest
 
 from iqa.instance.instance import Instance
-from iqa.system.node import Node
+from iqa.system.node.node import Node
 from iqa.system.node.node_docker import NodeDocker
 from iqa.system.executor.executor_container import ExecutorContainer
 

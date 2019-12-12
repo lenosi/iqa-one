@@ -12,7 +12,7 @@ from iqa.abstract.client.receiver import Receiver
 from iqa.abstract.message.message import Message
 from iqa.components.abstract.component import Component
 from iqa.components.clients.external import ClientExternal
-from iqa.instance import Instance
+from iqa.instance.instance import Instance
 from iqa.utils.types import BrokerSubtype, ReceiverType, RouterSubtype, SenderType
 
 # Inventory file to use

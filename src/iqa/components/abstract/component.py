@@ -18,7 +18,7 @@ class Component(object):
         raise NotImplementedError
 
     @staticmethod
-    def call_if_all_arguments_in_kwargs(func: Callable, **kwargs) -> None:
+    def call_if_all_arguments_in_kwargs(func, **kwargs) -> None:
         """
         Call the given function if all declared arguments exist in
         the kwargs dictionary. In example, if passed function is set_ssl_auth,

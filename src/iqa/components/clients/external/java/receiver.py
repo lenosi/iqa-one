@@ -1,16 +1,16 @@
 from iqa.components.clients.external.java.client import ClientJava
 from iqa.components.clients.external.java.command.java_commands import JavaReceiverClientCommand
-from iqa.abstract.client import Receiver
-from iqa.system.node import Node
+from iqa.abstract.client.receiver import Receiver
+from iqa.system.node.node import Node
 
 try:
     from urlparse import urlparse, urlunparse
-    from urllib import quote, unquote
+    from urllib import unquote
 except ImportError:
-    from urllib.parse import urlparse, urlunparse, quote, unquote
+    from urllib.parse import urlparse, urlunparse, unquote
 
 
-class ReceiverJava(Receiver, ClientJava):
+class ReceiverJava(ClientJava, Receiver):
     """External Java Qpid JMS receiver client."""
 
     _command: JavaReceiverClientCommand

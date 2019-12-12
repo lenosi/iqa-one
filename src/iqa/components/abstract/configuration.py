@@ -11,6 +11,7 @@ from typing import Union, Optional, Any
 from iqa.components.abstract.component import Component
 from iqa.system.command.command_ansible import CommandAnsible
 from iqa.system.command.command_base import Command
+from iqa.system.executor import ExecutorAnsible
 from iqa.system.executor.execution import Execution
 from iqa.system.node import NodeAnsible, NodeLocal
 from iqa.system.node.node_docker import NodeDocker
@@ -27,7 +28,7 @@ class Configuration(object):
     config_file: str = 'data_config_file'
     original_config_file: str
     local_config_dir: str  # local configuration directory (ansible inventory dir)
-    node_config_dir: str  # remote configuration directory
+    node_config_dir: Optional[str]  # remote configuration directory
     object_list: list = []
     yaml_data = None
     old_yaml_data = None  # re|store configuration data
@@ -44,14 +45,11 @@ class Configuration(object):
             LOGGER.info("No configuration file provided, using defaults")
 
         # ansible synchronize must have trailing "/" to sync dir-content
-        """
-        @TODO Component has no executor
-        """
-        self.local_config_dir = posixpath.join(os.path.dirname(component.executor.inventory),
+        executor: ExecutorAnsible = component.node.executor
+        self.local_config_dir = posixpath.join(os.path.dirname(executor.inventory),
                                                component.instance_name, "")
 
-    def _data_getter(self, path: str, default: Optional[Union[int, str, list, dict]] = None)\
-            -> Optional[Union[int, str, list, dict]]:
+    def _data_getter(self, path: str, default: Union[int, str, list, dict]) -> Union[int, str, list, dict]:
         """General function to query data from provided external data dictionary.
 
         :param path: internal path to query data (broker_xml/journal/persistence_enabled)
@@ -91,11 +89,11 @@ class Configuration(object):
         pass
 
     @abc.abstractmethod
-    def create_configuration(self, config_file_path: Optional[Any]) -> None:
+    def create_configuration(self, config_file_path: str) -> None:
         pass
 
     @abc.abstractmethod
-    def apply_config(self, yaml_configuration: Optional[Any]) -> None:
+    def apply_config(self, yaml_configuration: str) -> None:
         pass
 
     @abc.abstractmethod
@@ -106,7 +104,7 @@ class Configuration(object):
         self.apply_config(self.original_config_file)
 
     def copy_configuration_files(self) -> Execution:
-        cmd_copy_files: Optional[Union[Command, CommandAnsible]] = None
+        cmd_copy_files: Command = Command(args=[])
         if isinstance(self.component.node, NodeAnsible):
             cmd_copy_files = CommandAnsible(
                 ansible_module="synchronize",

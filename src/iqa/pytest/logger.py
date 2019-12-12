@@ -7,7 +7,6 @@ try:
 except ImportError:
     from logging import Handler
 
-
     class NullHandler(Handler):
 
         """Python-2.6 friendly NullHandler."""

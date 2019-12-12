@@ -48,7 +48,8 @@ class ServiceSystemD(Service):
         # (dead)
 
         # On RHEL7> service is automatically redirected to systemctl
-        cmd_status: Command = Command(['systemctl', '--no-pager', 'status', self.name], stdout=True, timeout=self.TIMEOUT)
+        cmd_status: Command = Command(['systemctl', '--no-pager', 'status', self.name], stdout=True,
+                                      timeout=self.TIMEOUT)
         execution: Execution = self.executor.execute(cmd_status)
 
         service_output: Optional[Union[list, str]] = execution.read_stdout()

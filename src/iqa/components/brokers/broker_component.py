@@ -1,7 +1,8 @@
-from iqa.abstract import Broker
-from iqa.components.abstract.server import ServerComponent
+from iqa.abstract.server.broker import Broker
+from iqa.components.abstract.server.server_component import ServerComponent
+from iqa.system.node.node import Node
 
 
-class BrokerComponent(Broker, ServerComponent):
-    def __init__(self, name: str, **kwargs) -> None:
-        super(BrokerComponent, self).__init__(name, **kwargs)
+class BrokerComponent(ServerComponent, Broker):
+    def __init__(self, name: str, node: Node, **kwargs) -> None:
+        super(BrokerComponent, self).__init__(name, node, **kwargs)

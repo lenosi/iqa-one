@@ -1,18 +1,16 @@
 """PyTest fixtures."""
-from typing import Optional, TypeVar
+from typing import Optional
 
 import pytest
 
-from iqa.abstract import Receiver, Router, Sender
-from iqa.components.abstract.component import Component
-from iqa.components.clients.external.java import ReceiverJava, SenderJava
-from iqa.components.clients.external.python import ReceiverPython, SenderPython
-from iqa.components.clients.external.nodejs import ReceiverNodeJS, SenderNodeJS
+from iqa.components.clients.external.java.receiver import ReceiverJava
+from iqa.components.clients.external.java.sender import SenderJava
+from iqa.components.clients.external.python.receiver import ReceiverPython
+from iqa.components.clients.external.python.sender import SenderPython
+from iqa.components.clients.external.nodejs.receiver import ReceiverNodeJS
+from iqa.components.clients.external.nodejs.sender import SenderNodeJS
 from iqa.instance.instance import Instance
-
-CmpType = TypeVar('CmpType', bound=Component)
-ReceiverType = TypeVar('ReceiverType', bound=Receiver)
-SenderType = TypeVar('SenderType', bound=Sender)
+from iqa.utils.types import ComponentType, ReceiverType, SenderType, RouterType, ReceiverSubtype
 
 
 @pytest.fixture()
@@ -20,7 +18,7 @@ def iqa(request) -> Instance:
     return request.config.iqa
 
 
-def first_or_none(components: list) -> Optional[CmpType]:
+def first_or_none(components: list) -> Optional[ComponentType]:
     """
     Returns first component provided or None
     :param components:
@@ -32,7 +30,7 @@ def first_or_none(components: list) -> Optional[CmpType]:
 
 
 @pytest.fixture()
-def router(iqa: Instance) -> Optional[Router]:
+def router(iqa: Instance) -> Optional[RouterType]:
     """
     Returns the first Router instance or None
     :param iqa:
@@ -50,7 +48,7 @@ def java_receiver(iqa: Instance) -> Optional[ReceiverJava]:
     :return:
     """
     assert iqa
-    return first_or_none(iqa.get_clients(ReceiverType, 'java'))
+    return first_or_none(iqa.get_clients(ReceiverSubtype, 'java'))
 
 
 @pytest.fixture()

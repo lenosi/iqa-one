@@ -1,12 +1,13 @@
+from typing import Optional
+
 from iqa.components.clients.external.nodejs.command.nodejs_commands import NodeJSConnectorClientCommand
-from iqa.system.node import Node
+from iqa.system.node.node import Node
 from .client import ClientNodeJS
 
 try:
     from urlparse import urlparse, urlunparse
-    from urllib import quote, unquote
 except ImportError:
-    from urllib.parse import urlparse, urlunparse, quote, unquote
+    from urllib.parse import urlparse, urlunparse
 
 
 class ConnectorNodeJS(ClientNodeJS):
@@ -27,8 +28,9 @@ class ConnectorNodeJS(ClientNodeJS):
     def set_auth_mechs(self, mechs: str) -> None:
         pass
 
-    def set_ssl_auth(self, pem_file: str = None, key_file: str = None, keystore: str = None, keystore_pass: str = None,
-                     keystore_alias: str = None) -> None:
+    def set_ssl_auth(self, pem_file: Optional[str] = None, key_file: Optional[str] = None,
+                     keystore: Optional[str] = None, keystore_pass: Optional[str] = None,
+                     keystore_alias: Optional[str] = None) -> None:
         self._command.connection.conn_ssl_certificate = pem_file
         self._command.connection.conn_ssl_private_key = key_file
         self._command.connection.conn_ssl = True

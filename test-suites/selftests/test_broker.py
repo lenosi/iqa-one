@@ -1,5 +1,5 @@
 from iqa.utils.types import BrokerType
-from iqa.system.node import Node
+from iqa.system.node.node import Node
 
 
 def test_isinstance(broker: BrokerType):

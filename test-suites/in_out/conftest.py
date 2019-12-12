@@ -2,13 +2,13 @@ import pytest
 from _pytest.config.argparsing import Parser
 from _pytest.python import Metafunc
 
-from iqa.components.brokers.artemis import Artemis
-from iqa.components.routers.dispatch import Dispatch
+from iqa.components.brokers.artemis.artemis import Artemis
+from iqa.components.routers.dispatch.dispatch import Dispatch
 from iqa.components.clients.core.receiver import ReceiverCore
 from iqa.components.clients.core.sender import SenderCore
-from iqa.instance import Instance
+from iqa.instance.instance import Instance
 from iqa.system.executor import Executor
-from iqa.system.node import Node
+from iqa.system.node.node import Node
 from iqa.system.service import Service
 
 iqa_instance: Instance = Instance()

@@ -1,4 +1,6 @@
-from iqa.instance import Instance
+from typing import Optional
+
+from iqa.instance.instance import Instance
 
 
 class _Attribute:
@@ -7,7 +9,7 @@ class _Attribute:
         self.value: str = value
         self.deprecated: bool = deprecated
 
-    def get_config(self) -> str:
+    def get_config(self) -> Optional[str]:
         """Get in config format"""
         return '    %s: %s\n' % (self.name, self.value) if self.value else None
 
@@ -19,19 +21,19 @@ class _Attribute:
 
 
 class _Section:
-    section_name: str = None
+    section_name: Optional[str] = None
     deprecated: bool = False
 
-    # def get_config(self):
-    #     sec = '%s: {\n' % self.section_name
-    #     for x in self.__dict__.items():
-    #         for value in x:
-    #             if isinstance(value, _Attribute):
-    #                 val = value.value
-    #                 if val is not None:
-    #                     sec += '    %s: %s\n' % (value.name, val)
-    #     sec += '}'
-    #     return sec
+    def get_config(self):
+        sec = '%s: {\n' % self.section_name
+        for x in self.__dict__.items():
+            for value in x:
+                if isinstance(value, _Attribute):
+                    val = value.value
+                    if val is not None:
+                        sec += '    %s: %s\n' % (value.name, val)
+        sec += '}'
+        return sec
 
     def __str__(self) -> str:
         return self.get_config()

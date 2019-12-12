@@ -3,14 +3,17 @@ from typing import List
 from iqa.system.executor.execution import Execution
 from iqa.system.command.command_base import Command
 from iqa.abstract.message.message import Message
-from iqa.components.clients.external.java import ReceiverJava, SenderJava
-from iqa.components.clients.external.python import ReceiverPython, SenderPython
-from iqa.components.clients.external.nodejs import ReceiverNodeJS, SenderNodeJS
+from iqa.components.clients.external.java.receiver import ReceiverJava
+from iqa.components.clients.external.java.sender import SenderJava
+from iqa.components.clients.external.python.receiver import ReceiverPython
+from iqa.components.clients.external.python.sender import SenderPython
+from iqa.components.clients.external.nodejs.receiver import ReceiverNodeJS
+from iqa.components.clients.external.nodejs.sender import SenderNodeJS
 from iqa.utils.types import ReceiverType, SenderType, RouterType
 
 # Initial static configuration
-from iqa.components.routers.dispatch import Dispatch
-from iqa.components.routers.dispatch.management import RouterQuery
+from iqa.components.routers.dispatch.dispatch import Dispatch
+from iqa.components.routers.dispatch.management.query import RouterQuery
 from iqa.instance.instance import Instance
 import time
 import logging

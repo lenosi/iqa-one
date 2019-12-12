@@ -1,7 +1,7 @@
 import pytest
 
-from iqa.components.brokers.artemis import Artemis
-from iqa.instance import Instance
+from iqa.components.brokers.artemis.artemis import Artemis
+from iqa.instance.instance import Instance
 
 iqa_instance: Instance = Instance()
 

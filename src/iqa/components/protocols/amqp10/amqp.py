@@ -1,4 +1,4 @@
-from iqa.components.abstract.network.protocol import Protocol
+from iqa.components.abstract.network.protocol.protocol import Protocol
 
 
 class AMQP10(Protocol):

@@ -1,5 +1,5 @@
 import iqa
-from iqa.abstract import Message as AbstractMessage
+from iqa.abstract.message.message import Message as AbstractMessage
 
 
 class Message(AbstractMessage):
@@ -8,4 +8,4 @@ class Message(AbstractMessage):
     """
 
     def __init__(self) -> None:
-        iqa.abstract.message.Message.__init__(self)
+        iqa.abstract.message.message.Message.__init__(self)

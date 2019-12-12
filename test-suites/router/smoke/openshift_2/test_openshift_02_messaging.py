@@ -2,9 +2,12 @@
 from typing import Union
 
 from iqa.abstract.message.message import Message
-from iqa.components.clients.external.java import ReceiverJava, SenderJava
-from iqa.components.clients.external.python import ReceiverPython, SenderPython
-from iqa.components.clients.external.nodejs import ReceiverNodeJS, SenderNodeJS
+from iqa.components.clients.external.java.receiver import ReceiverJava
+from iqa.components.clients.external.java.sender import SenderJava
+from iqa.components.clients.external.python.receiver import ReceiverPython
+from iqa.components.clients.external.python.sender import SenderPython
+from iqa.components.clients.external.nodejs.receiver import ReceiverNodeJS
+from iqa.components.clients.external.nodejs.sender import SenderNodeJS
 import logging
 
 MESSAGE_COUNT: int = 10

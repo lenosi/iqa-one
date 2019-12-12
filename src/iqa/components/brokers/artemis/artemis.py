@@ -1,13 +1,17 @@
 import logging
 from typing import List
 
-from iqa.components import protocols
+from iqa.components.protocols.amqp import Amqp10
+from iqa.components.protocols.mqtt import Mqtt
+from iqa.components.protocols.stomp import Stomp
+from iqa.components.protocols.openwire import Openwire
 from iqa.components.brokers.artemis.artemis_config import ArtemisConfig
-from iqa.components.brokers.artemis.management import ArtemisJolokiaClient
-from iqa.abstract.destination import Address
+from iqa.components.brokers.artemis.management.jolokia_client import ArtemisJolokiaClient
+from iqa.abstract.destination.address import Address
 from iqa.abstract.destination.queue import Queue
 from iqa.abstract.destination.routing_type import RoutingType
 from iqa.components.brokers.broker_component import BrokerComponent
+from iqa.system.node.node import Node
 
 
 class Artemis(BrokerComponent):
@@ -15,12 +19,12 @@ class Artemis(BrokerComponent):
     Apache ActiveMQ Artemis has a proven non blocking architecture. It delivers outstanding performance.
     """
 
-    supported_protocols: list = [protocols.Amqp10(), protocols.Mqtt(), protocols.Stomp(), protocols.Openwire()]
+    supported_protocols: list = [Amqp10(), Mqtt(), Stomp(), Openwire()]
     name: str = 'Artemis'
     implementation: str = 'artemis'
 
-    def __init__(self, name: str, **kwargs) -> None:
-        super(Artemis, self).__init__(name, **kwargs)
+    def __init__(self, name: str, node: Node, **kwargs) -> None:
+        super(Artemis, self).__init__(name, node, **kwargs)
         self._queues: List[Queue] = list()
         self._addresses: List[Address] = list()
         self._addresses_dict: dict = {}

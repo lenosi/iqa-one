@@ -1,5 +1,5 @@
-from iqa.components.abstract.network.protocol import Protocol
-from iqa.components.abstract.network.transport import TCP
+from iqa.components.abstract.network.protocol.protocol import Protocol
+from iqa.components.abstract.network.transport.tcp import TCP
 
 
 class Mqtt(Protocol):

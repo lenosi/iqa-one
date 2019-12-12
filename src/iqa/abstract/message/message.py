@@ -1,9 +1,16 @@
 from dataclasses import dataclass, field
 
-from iqa.abstract.message import Header, DeliveryAnnotations, MessageAnnotations, Properties, ApplicationProperties, \
-    ApplicationData, Footer
+from iqa.abstract.message.application_data import ApplicationData
+from iqa.abstract.message.application_properties import ApplicationProperties
+from iqa.abstract.message.delivery_annotations import DeliveryAnnotations
+from iqa.abstract.message.footer import Footer
+from iqa.abstract.message.header import Header
+from iqa.abstract.message.message_annotations import MessageAnnotations
+from iqa.abstract.message.properties import Properties
 
 # noinspection PyDunderSlots
+
+
 @dataclass(frozen=False)
 class Message:
     """Mapping to specification is '1:1'

@@ -1,8 +1,8 @@
 import logging
 
-from iqa.components.abstract.server import ServerComponent
+from iqa.components.abstract.server.server_component import ServerComponent
 from iqa.system.service.service import ServiceStatus
-from iqa.components.routers.dispatch.management import RouterQuery
+from iqa.components.routers.dispatch.management.query import RouterQuery
 from iqa.utils.types import RouterType
 
 

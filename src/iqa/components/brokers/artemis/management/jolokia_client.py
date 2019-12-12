@@ -21,7 +21,7 @@ class ArtemisJolokiaClientResult(Exception):
         self.error: Optional[str] = None
         self.error_type: Optional[str] = None
         self.data: Optional[list] = None
-        self.response: Optional[requests.Response] = None
+        self.response: requests.Response
 
     @staticmethod
     def from_jolokia_response(jolokia_response):
@@ -63,7 +63,6 @@ class ArtemisJolokiaClientResult(Exception):
         res.error = exception.__str__()
         res.error_type = None
         res.data = None
-        res.response = None
         return res
 
 
@@ -214,7 +213,7 @@ class ArtemisJolokiaClient(object):
         """
 
         all_data: list = []
-        result: Optional[ArtemisJolokiaClientResult] = None
+        result: ArtemisJolokiaClientResult = ArtemisJolokiaClientResult()
 
         # Process all pages
         while True:

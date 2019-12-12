@@ -1,13 +1,16 @@
 import logging
 from typing import List
 
-from iqa.components import protocols
-from iqa.components.brokers.activemq import ActiveMQConfig
-from iqa.components.brokers.artemis.management import ArtemisJolokiaClient
-from iqa.abstract.destination import Address
-from iqa.abstract.destination import Queue
-from iqa.abstract.destination import RoutingType
-from iqa.abstract import Listener
+from iqa.components.protocols.amqp import Amqp10
+from iqa.components.protocols.mqtt import Mqtt
+from iqa.components.protocols.stomp import Stomp
+from iqa.components.protocols.openwire import Openwire
+from iqa.components.brokers.activemq.activemq_config import ActiveMQConfig
+from iqa.components.brokers.artemis.management.jolokia_client import ArtemisJolokiaClient
+from iqa.abstract.destination.address import Address
+from iqa.abstract.destination.queue import Queue
+from iqa.abstract.destination.routing_type import RoutingType
+from iqa.abstract.listener import Listener
 from iqa.components.brokers.broker_component import BrokerComponent
 
 
@@ -16,7 +19,7 @@ class Activemq(BrokerComponent):
     Apache ActiveMQ has a proven non blocking architecture. It delivers outstanding performance.
     """
 
-    supported_protocols: list = [protocols.Amqp10(), protocols.Mqtt(), protocols.Stomp(), protocols.Openwire()]
+    supported_protocols: list = [Amqp10(), Mqtt(), Stomp(), Openwire()]
     name: str = 'Activemq'
     implementation: str = 'activemq'
 

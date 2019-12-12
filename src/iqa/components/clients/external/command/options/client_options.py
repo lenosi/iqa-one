@@ -1,4 +1,8 @@
+from typing import Optional
+
 from optconstruct.types import Toggle, Prefixed, KWOption, ListOption
+
+from iqa.abstract.message.application_data import ApplicationData
 
 """
 This modules defines all supported command line options for external
@@ -54,11 +58,12 @@ class ControlOptionsCommon(ClientOptionsBase):
     Common control options for all clients.
     """
 
-    def __init__(self, count: int = 1, timeout: int = None, sync_mode: str = None, close_sleep: int = None) -> None:
-        self.count: int = count
-        self.timeout: int = timeout
-        self.sync_mode: str = sync_mode
-        self.close_sleep: int = close_sleep
+    def __init__(self, count: Optional[int] = 1, timeout: Optional[int] = None, sync_mode: Optional[str] = None,
+                 close_sleep: Optional[int] = None) -> None:
+        self.count: Optional[int] = count
+        self.timeout: Optional[int] = timeout
+        self.sync_mode: Optional[str] = sync_mode
+        self.close_sleep: Optional[int] = close_sleep
 
     def valid_options(self) -> list:
         return [
@@ -75,11 +80,12 @@ class ControlOptionsSenderReceiver(ControlOptionsCommon):
     """
 
     def __init__(self, count: int = 1, timeout: int = None, sync_mode: str = None, close_sleep: int = None,
-                 duration: int = None, duration_mode: str = None, capacity: int = None) -> None:
+                 duration: Optional[int] = None, duration_mode: Optional[str] = None,
+                 capacity: Optional[int] = None) -> None:
         super(ControlOptionsSenderReceiver, self).__init__(count, timeout, sync_mode, close_sleep)
-        self.duration: int = duration
-        self.duration_mode: str = duration_mode
-        self.capacity: int = capacity
+        self.duration: Optional[int] = duration
+        self.duration_mode: Optional[str] = duration_mode
+        self.capacity: Optional[int] = capacity
 
     def valid_options(self) -> list:
         return super(ControlOptionsSenderReceiver, self).valid_options() + [
@@ -111,8 +117,8 @@ class LoggingOptionsCommon(ClientOptionsBase):
     """
 
     def __init__(self, log_lib: str = None, log_stats: str = None) -> None:
-        self.log_lib: str = log_lib
-        self.log_stats: str = log_stats
+        self.log_lib: Optional[str] = log_lib
+        self.log_stats: Optional[str] = log_stats
 
     def valid_options(self) -> list:
         return [
@@ -128,7 +134,7 @@ class LoggingOptionsSenderReceiver(LoggingOptionsCommon):
 
     def __init__(self, log_lib: str = None, log_stats: str = None, logs_msgs: str = None) -> None:
         super(LoggingOptionsSenderReceiver, self).__init__(log_lib, log_stats)
-        self.log_msgs: str = logs_msgs
+        self.log_msgs: Optional[str] = logs_msgs
 
     def valid_options(self) -> list:
         return super(LoggingOptionsSenderReceiver, self).valid_options() + [
@@ -142,9 +148,9 @@ class TransactionOptionsSenderReceiver(ClientOptionsBase):
     """
 
     def __init__(self, tx_size: int = None, tx_action: str = None, tx_endloop_action: str = None) -> None:
-        self.tx_size: int = tx_size
-        self.tx_action: str = tx_action
-        self.tx_endloop_action: str = tx_endloop_action
+        self.tx_size: Optional[int] = tx_size
+        self.tx_action: Optional[str] = tx_action
+        self.tx_endloop_action: Optional[str] = tx_endloop_action
 
     def valid_options(self) -> list:
         return [
@@ -162,13 +168,13 @@ class ConnectionOptionsCommon(ClientOptionsBase):
     def __init__(self, urls: str = None, reconnect: bool = None, reconnect_interval: int = None,
                  reconnect_limit: int = None, reconnect_timeout: int = None, heartbeat: int = None,
                  max_frame_size: int = None) -> None:
-        self.conn_urls: str = urls
-        self.conn_reconnect: bool = reconnect
-        self.conn_reconnect_interval: int = reconnect_interval
-        self.conn_reconnect_limit: int = reconnect_limit
-        self.conn_reconnect_timeout: int = reconnect_timeout
-        self.conn_heartbeat: int = heartbeat
-        self.conn_max_frame_size: int = max_frame_size
+        self.conn_urls: Optional[str] = urls
+        self.conn_reconnect: Optional[bool] = reconnect
+        self.conn_reconnect_interval: Optional[int] = reconnect_interval
+        self.conn_reconnect_limit: Optional[int] = reconnect_limit
+        self.conn_reconnect_timeout: Optional[int] = reconnect_timeout
+        self.conn_heartbeat: Optional[int] = heartbeat
+        self.conn_max_frame_size: Optional[int] = max_frame_size
 
     def valid_options(self) -> list:
         return [
@@ -187,8 +193,8 @@ class ConnectorOptions(ClientOptionsBase):
     Common options for connector client commands
     """
 
-    def __init__(self, obj_ctrl: str = None) -> None:
-        self.obj_ctrl: str = obj_ctrl
+    def __init__(self, obj_ctrl: Optional[str] = None) -> None:
+        self.obj_ctrl: Optional[str] = obj_ctrl
 
     def valid_options(self) -> list:
         return [
@@ -236,32 +242,33 @@ class MessageOptionsSender(ClientOptionsBase):
     Common options for all Sender client commands
     """
 
-    def __init__(self, msg_id: str = None, msg_subject: str = None, msg_address: str = None,
-                 msg_reply_to: str = None, msg_durable: str = None, msg_ttl: int = None,
-                 msg_priority: str = None, msg_correlation_id: str = None,
-                 msg_user_id: str = None, msg_group_id: str = None, msg_group_seq: str = None,
-                 msg_property: str = None, msg_content_map_item: str = None,
-                 msg_content_list_item: str = None, msg_content_from_file: str = None,
-                 msg_content: str = None, msg_content_type: str = None,
-                 content_type: str = None) -> None:
-        self.msg_id: str = msg_id
-        self.msg_subject: str = msg_subject
-        self.msg_address: str = msg_address
-        self.msg_reply_to: str = msg_reply_to
-        self.msg_durable: str = msg_durable
-        self.msg_ttl: int = msg_ttl
-        self.msg_priority: str = msg_priority
-        self.msg_correlation_id: str = msg_correlation_id
-        self.msg_user_id: str = msg_user_id
-        self.msg_group_id: str = msg_group_id
-        self.msg_group_seq: str = msg_group_seq
-        self.msg_property: str = msg_property
-        self.msg_content_map_item: str = msg_content_map_item
-        self.msg_content_list_item: str = msg_content_list_item
-        self.msg_content_from_file: str = msg_content_from_file
-        self.msg_content: str = msg_content
-        self.msg_content_type: str = msg_content_type
-        self.content_type: str = content_type
+    def __init__(self, msg_id: Optional[str] = None, msg_subject: Optional[str] = None,
+                 msg_address: Optional[str] = None, msg_reply_to: Optional[str] = None,
+                 msg_durable: Optional[str] = None, msg_ttl: Optional[int] = None,
+                 msg_priority: Optional[str] = None, msg_correlation_id: Optional[str] = None,
+                 msg_user_id: Optional[str] = None, msg_group_id: Optional[str] = None,
+                 msg_group_seq: Optional[str] = None, msg_property: Optional[str] = None,
+                 msg_content_map_item: Optional[str] = None, msg_content_list_item: Optional[str] = None,
+                 msg_content_from_file: Optional[str] = None, msg_content: Optional[ApplicationData] = None,
+                 msg_content_type: Optional[str] = None, content_type: Optional[str] = None) -> None:
+        self.msg_id: Optional[str] = msg_id
+        self.msg_subject: Optional[str] = msg_subject
+        self.msg_address: Optional[str] = msg_address
+        self.msg_reply_to: Optional[str] = msg_reply_to
+        self.msg_durable: Optional[str] = msg_durable
+        self.msg_ttl: Optional[int] = msg_ttl
+        self.msg_priority: Optional[str] = msg_priority
+        self.msg_correlation_id: Optional[str] = msg_correlation_id
+        self.msg_user_id: Optional[str] = msg_user_id
+        self.msg_group_id: Optional[str] = msg_group_id
+        self.msg_group_seq: Optional[str] = msg_group_seq
+        self.msg_property: Optional[str] = msg_property
+        self.msg_content_map_item: Optional[str] = msg_content_map_item
+        self.msg_content_list_item: Optional[str] = msg_content_list_item
+        self.msg_content_from_file: Optional[str] = msg_content_from_file
+        self.msg_content: Optional[ApplicationData] = msg_content
+        self.msg_content_type: Optional[str] = msg_content_type
+        self.content_type: Optional[str] = content_type
 
     def valid_options(self) -> list:
         return [
@@ -289,10 +296,11 @@ class ReceiverOptions(ClientOptionsBase):
     Common client options for all Receiver client commands
     """
 
-    def __init__(self, process_reply_to: str = None, action: str = None, recv_browse: bool = None) -> None:
-        self.process_reply_to: str = process_reply_to
-        self.action: str = action
-        self.recv_browse: bool = recv_browse
+    def __init__(self, process_reply_to: Optional[str] = None, action: Optional[str] = None,
+                 recv_browse: Optional[bool] = None) -> None:
+        self.process_reply_to: Optional[str] = process_reply_to
+        self.action: Optional[str] = action
+        self.recv_browse: Optional[bool] = recv_browse
 
     def valid_options(self) -> list:
         return [
@@ -307,8 +315,8 @@ class ReactorOptionsSenderReceiver(ClientOptionsBase):
     Common reactor options for all Sender and Receiver client commands
     """
 
-    def __init__(self, reactor_auto_settle_off: bool = None) -> None:
-        self.reactor_auto_settle_off: bool = reactor_auto_settle_off
+    def __init__(self, reactor_auto_settle_off: Optional[bool] = None) -> None:
+        self.reactor_auto_settle_off: Optional[bool] = reactor_auto_settle_off
 
     def valid_options(self) -> list:
         return [

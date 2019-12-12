@@ -1,11 +1,12 @@
 import logging
 
-from typing import Optional, Union
+from typing import Optional
 
 from iqa.system.command.command_base import Command
 from iqa.system.executor.execution import Execution
 from iqa.system.executor import ExecutorAnsible, ExecutorContainer
 from iqa.system.service.service import Service
+from iqa.utils.types import ExecutorType
 
 from .service_artemis import ServiceFakeArtemis
 from .service_docker import ServiceDocker
@@ -27,7 +28,7 @@ class ServiceFactory(object):
     _logger: logging.Logger = logging.getLogger(__name__)
 
     @staticmethod
-    def create_service(executor: Union[ExecutorAnsible, ExecutorContainer], service_name: Optional[str] = None,
+    def create_service(executor: ExecutorType, service_name: Optional[str] = None,
                        **kwargs) -> Service:
         if service_name:
             # Validate if systemd is available

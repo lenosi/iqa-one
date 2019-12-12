@@ -2,7 +2,9 @@
 Implementation of cli-proton-python external client command.
 """
 from iqa.components.clients.external.command.client_command import ConnectorClientCommand, ReceiverClientCommand, \
-    LinkOptionsReceiver, ReactorOptionsSenderReceiver, SenderClientCommand, LinkOptionsSenderReceiver
+    SenderClientCommand
+from iqa.components.clients.external.command.options.client_options import LinkOptionsReceiver,\
+    LinkOptionsSenderReceiver, ReactorOptionsSenderReceiver
 from iqa.components.clients.external.python.command.python_options import PythonControlOptionsCommon, \
     PythonControlOptionsReceiver, PythonControlOptionsSenderReceiver, PythonConnectionOptionsCommon
 

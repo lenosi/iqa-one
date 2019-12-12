@@ -9,7 +9,7 @@ from iqa.abstract.destination.queue import Queue
 class ManagementBroker(ManagementClient):
 
     def __init__(self) -> None:
-        super(ManagementBroker).__init__()
+        super(ManagementBroker, self).__init__()
 
     def create_destination(self, destination: Destination) -> Destination:  # Address
         pass

@@ -1,11 +1,10 @@
 import logging
-from typing import TypeVar
 
 from iqa.abstract.server.router import Router
-from iqa.system.node import Node, Executor
+from iqa.system.executor import Executor
+from iqa.system.node.node import Node
 from iqa.system.service import Service
-
-RouterType = TypeVar('RouterType', bound=Router)
+from iqa.utils.types import RouterType
 
 
 class RouterFactory(object):

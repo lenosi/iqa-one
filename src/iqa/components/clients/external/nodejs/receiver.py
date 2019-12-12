@@ -1,16 +1,15 @@
 from iqa.components.clients.external.nodejs.client import ClientNodeJS
 from iqa.components.clients.external.nodejs.command.nodejs_commands import NodeJSReceiverClientCommand
-from iqa.abstract.client import Receiver
-from iqa.system.node import Node
+from iqa.abstract.client.receiver import Receiver
+from iqa.system.node.node import Node
 
 try:
     from urlparse import urlparse, urlunparse
-    from urllib import quote, unquote
 except ImportError:
-    from urllib.parse import urlparse, urlunparse, quote, unquote
+    from urllib.parse import urlparse, urlunparse
 
 
-class ReceiverNodeJS(Receiver, ClientNodeJS):
+class ReceiverNodeJS(ClientNodeJS, Receiver):
     """External NodeJS receiver client."""
 
     _command: NodeJSReceiverClientCommand

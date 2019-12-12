@@ -1,7 +1,8 @@
 from abc import abstractmethod
+from typing import Optional
 
-from iqa.abstract import Message
-from iqa.abstract.client import Client
+from iqa.abstract.message.message import Message
+from iqa.abstract.client.client import Client
 from iqa.abstract.listener import Listener
 
 
@@ -12,11 +13,11 @@ class MessagingClient(Client):
 
     # Required variables
     supported_protocols: list = []
-    name: str = None
-    version: str = None
+    name: Optional[str] = None
+    version: Optional[str] = None
 
     def __init__(self, message_buffer: bool = True) -> None:
-        super(MessagingClient).__init__()
+        super(MessagingClient, self).__init__()
         self.message_buffer: bool = message_buffer
         self.messages: list = []
         self.message_counter: int = 0
@@ -34,7 +35,7 @@ class MessagingClient(Client):
         pass
 
     @abstractmethod
-    def connect(self) -> None:
+    def connect(self) -> bool:
         pass
 
     @abstractmethod

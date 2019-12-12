@@ -1,11 +1,11 @@
-from typing import Union, TypeVar
-
 from .executor_ansible import ExecutorAnsible
 from .executor_base import Executor
 from .executor_container import ExecutorContainer
 from .executor_kubernetes import ExecutorKubernetes
 from .executor_local import ExecutorLocal
 from .executor_ssh import ExecutorSsh
+
+from iqa.utils.types import ExecutorType
 
 
 class ExecutorFactory(object):
@@ -14,9 +14,8 @@ class ExecutorFactory(object):
     and returns an instance of the executor initialized from kwargs.
     """
 
-    ExecType = TypeVar('ExecType', bound=Executor)
     @staticmethod
-    def create_executor(exec_impl: str = 'ansible', **kwargs) -> Union[Executor, ExecType]:
+    def create_executor(exec_impl: str = 'ansible', **kwargs) -> ExecutorType:
 
         for exec_class in Executor.__subclasses__():
             if exec_class.implementation != exec_impl:

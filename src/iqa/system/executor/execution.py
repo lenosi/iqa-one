@@ -12,7 +12,7 @@ from iqa.utils.timeout import TimeoutCallback
 
 """
 Defines the representation of a command Execution that is generated
-by the Executor implementations when a command is executed.  
+by the Executor implementations when a command is executed.
 """
 # Logger
 logger: logging.Logger = logging.getLogger(__name__)

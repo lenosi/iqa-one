@@ -1,12 +1,12 @@
-from iqa.abstract import Listener
-from iqa.components import protocols
-from iqa.components.clients.external import ClientCommand
+from iqa.abstract.listener import Listener
+from iqa.components.protocols.amqp import Amqp10
+from iqa.components.clients.external.command.client_command import ClientCommand
 from iqa.components.clients.external import ClientExternal
 
 
 class ClientJava(ClientExternal):
     """Java Qpid JMS client (base abstract class)."""
-    supported_protocols: list = [protocols.Amqp10()]
+    supported_protocols: list = [Amqp10()]
     implementation: str = 'java'
     version: str = '1.0.1'
 

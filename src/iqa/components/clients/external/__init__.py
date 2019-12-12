@@ -1,8 +1,7 @@
 import logging
 
-from .client_external import ClientExternal
-from .command.client_command import ClientCommand
-from iqa.system.node import Node
+from iqa.components.clients.external.client_external import ClientExternal
+from iqa.system.node.node import Node
 from iqa.system.executor import Executor
 
 

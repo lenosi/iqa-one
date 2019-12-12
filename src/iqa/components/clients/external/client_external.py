@@ -2,10 +2,10 @@ from typing import Optional
 
 from iqa.components.abstract.component import Component
 from iqa.components.clients.external.command.client_command import ClientCommand
-from iqa.abstract.client import MessagingClient
+from iqa.abstract.client.messaging_client import MessagingClient
 from iqa.abstract.listener import Listener
 from iqa.system.executor.execution import Execution
-from iqa.system.node import Node
+from iqa.system.node.node import Node
 
 
 class ClientExternal(Component, MessagingClient):
@@ -20,7 +20,7 @@ class ClientExternal(Component, MessagingClient):
     def __init__(self, name: str, node: Node, **kwargs) -> None:
         super(ClientExternal, self).__init__(name, node)
         self.execution: Optional[Execution] = None
-        self._command: Optional[ClientCommand] = None
+        self._command: ClientCommand
         self._url: Optional[str] = None
         self.reset_command()
 
@@ -99,7 +99,7 @@ class ClientExternal(Component, MessagingClient):
     def set_endpoint(self, listener: Listener) -> None:
         raise NotImplementedError
 
-    def connect(self) -> None:
+    def connect(self) -> bool:
         raise NotImplementedError
 
     @property

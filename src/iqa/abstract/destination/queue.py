@@ -1,8 +1,8 @@
 """
 Represents a generic Queue entity.
 """
-from iqa.abstract.destination import Address
-from iqa.abstract.destination import RoutingType
+from iqa.abstract.destination.address import Address
+from iqa.abstract.destination.routing_type import RoutingType
 
 
 class Queue:

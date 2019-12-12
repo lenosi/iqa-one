@@ -1,8 +1,10 @@
 """
-Specialized implementation of external command for cli-rhea clients (NodeJS). 
+Specialized implementation of external command for cli-rhea clients (NodeJS).
 """
 from iqa.components.clients.external.command.client_command import ConnectorClientCommand, ReceiverClientCommand, \
-    LinkOptionsSenderReceiver, ReactorOptionsSenderReceiver, SenderClientCommand
+    SenderClientCommand
+from iqa.components.clients.external.command.options.client_options import LinkOptionsSenderReceiver, \
+    ReactorOptionsSenderReceiver
 from iqa.components.clients.external.nodejs.command.nodejs_options import NodeJSControlOptionsCommon, \
     NodeJSConnectionOptionsCommon, NodeJSControlOptionsReceiver, NodeJSControlOptionsSender
 
