@@ -1,5 +1,4 @@
 from inspect import signature
-from typing import Callable
 
 from iqa.system.node.node import Node
 

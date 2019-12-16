@@ -4,9 +4,13 @@ from typing import Optional, Union
 
 from amqcfg import amqcfg
 
+from iqa.components.abstract.component import Component
+from iqa.components.abstract.server.server_component import ServerComponent
 from iqa.components.brokers.broker_config import BrokerConfiguration
 from iqa.abstract.user import User
+from iqa.system.executor import Executor
 from iqa.system.executor.execution import Execution
+from iqa.system.service import ServiceFakeArtemis
 from iqa.utils.iqa_exceptions import IQAConfigurationException
 from iqa.utils.types import ComponentSubtype
 from iqa.utils.utils import Utils
@@ -72,17 +76,17 @@ class ArtemisConfig(BrokerConfiguration):
     P_WEB_PORT: str = "bootstrap_xml/web/bind/port"
     P_JMX_PORT: str = "management_xml/connector_port"
 
-    instance_name: Union[int, str, list, dict]
-    instance_home: Union[int, str, list, dict]
-    instance_home_etc: Optional[str]
-    instance_home_data: Union[int, str, list, dict]
+    instance_name: Optional[Union[int, str, list, dict]]
+    instance_home: Optional[Union[int, str, list, dict]]
+    instance_home_etc: Union[int, str, list, dict]
+    instance_home_data: Optional[Union[int, str, list, dict]]
     instance_home_log: Union[int, str, list, dict]
     instance_home_tmp: Union[int, str, list, dict]
 
-    home: Union[int, str, list, dict]
-    amqcfg_profile_path: Union[int, str, list, dict]
+    home: Optional[Union[int, str, list, dict]]
+    amqcfg_profile_path: Optional[Union[int, str, list, dict]]
 
-    def __init__(self, component: ComponentSubtype, **kwargs) -> None:
+    def __init__(self, component: ServerComponent, **kwargs) -> None:
         """Initialize ExternalBrokerData from provided configuration file.
 
         :param broker_data: empty data object, to be filled with provided configuration data
@@ -91,7 +95,7 @@ class ArtemisConfig(BrokerConfiguration):
         :type test_node: TestNode
         """
         super(ArtemisConfig, self).__init__(component, **kwargs)
-        self.node_config_dir: Optional[str] = self.instance_home_etc
+        self.node_config_dir: Union[int, str, list, dict] = self.instance_home_etc
 
     def create_default_configuration(self, **kwargs) -> None:
         self.home = kwargs.get('broker_home', self.DEFAULT_HOME)
@@ -108,18 +112,19 @@ class ArtemisConfig(BrokerConfiguration):
         self.home = self._data_getter(self.P_HOME, self.DEFAULT_HOME)
         self.instance_home = self._data_getter(self.P_INSTANCE_HOME, self.DEFAULT_INSTANCE_HOME)
         self.instance_name = self._data_getter(self.P_INSTANCE_NAME, self.DEFAULT_INSTANCE_NAME)
-        self.instance_home_etc = Utils.remove_prefix(self._data_getter(self.P_INSTANCE_DIR_ETC, str), "file:")
-        self.instance_home_data = self._data_getter(self.P_INSTANCE_DIR_DATA)
-        self.instance_home_log = posixpath.join(self.instance_home, "log")
-        self.instance_home_tmp = posixpath.join(self.instance_home, "tmp")
+        self.instance_home_etc = Utils.remove_prefix(
+            self._data_getter(self.P_INSTANCE_DIR_ETC, "artemis_profile/instance_etc_uri"), "file:")
+        self.instance_home_data = self._data_getter(self.P_INSTANCE_DIR_DATA, "artemis_profile/data_dir")
+        self.instance_home_log = posixpath.join(self.instance_home, "log")  # type: ignore
+        self.instance_home_tmp = posixpath.join(self.instance_home, "tmp")  # type: ignore
         self.ports = self.assign_ports()
         self.assign_users()
-        self.amqcfg_profile_path = self._data_getter(self.P_PROFILE_PATH)
+        self.amqcfg_profile_path = self._data_getter(self.P_PROFILE_PATH, "render/profile_path")
         # self.topology = TopologyData(broker_data) or None
 
     def assign_ports(self) -> dict:
         ports = {}
-        acceptors: dict = self._data_getter(self.P_PORTS, self.DEFAULT_PORTS)
+        acceptors: dict = self._data_getter(self.P_PORTS, self.DEFAULT_PORTS)  # type: ignore
 
         for acceptor in acceptors:
             ports[acceptor.get('name')] = acceptor.get('port')
@@ -133,8 +138,8 @@ class ArtemisConfig(BrokerConfiguration):
         :return:
         :rtype:
         """
-        tmp_users: dict = self._data_getter(self.P_USERS, self.DEFAULT_USERS)
-        roles: dict = self._data_getter(self.P_ROLES)
+        tmp_users: dict = self._data_getter(self.P_USERS, self.DEFAULT_USERS)  # type: ignore
+        roles: dict = self._data_getter(self.P_ROLES, None)  # type: ignore
 
         for user in tmp_users:
             self.users[user] = (User(user, tmp_users[user]))
@@ -151,7 +156,7 @@ class ArtemisConfig(BrokerConfiguration):
         return self.ports
 
     def _get_user(self, username: str) -> User:
-        return self.users.get(username)
+        return self.users.get(username)  # type: ignore
 
     def get_username(self, user: User) -> str:
         return self._get_user(user.username).username
@@ -161,6 +166,8 @@ class ArtemisConfig(BrokerConfiguration):
 
     def apply_config(self, yaml_configuration_path: str, restart: bool = True):
         # self.store_configuration()
+        self.component.service = ServiceFakeArtemis(None, Executor())
+
         try:
             # Todo hacky way to turn off debug logging from amqcfg module
             amqcfg.LOG.setLevel(logging.WARN)

@@ -2,8 +2,8 @@ import logging
 import os
 import tempfile
 import threading
-
 import urllib3
+
 from kubernetes import config, client
 from kubernetes.client import Configuration, CoreV1Api
 from kubernetes.client.apis import core_v1_api

@@ -6,9 +6,10 @@ import posixpath
 import dpath
 import yaml
 
-from typing import Union, Optional, Any
+from typing import Union, Optional
 
 from iqa.components.abstract.component import Component
+from iqa.components.abstract.server.server_component import ServerComponent
 from iqa.system.command.command_ansible import CommandAnsible
 from iqa.system.command.command_base import Command
 from iqa.system.executor import ExecutorAnsible
@@ -28,13 +29,13 @@ class Configuration(object):
     config_file: str = 'data_config_file'
     original_config_file: str
     local_config_dir: str  # local configuration directory (ansible inventory dir)
-    node_config_dir: Optional[str]  # remote configuration directory
+    node_config_dir: Union[int, str, list, dict]  # remote configuration directory
     object_list: list = []
     yaml_data = None
     old_yaml_data = None  # re|store configuration data
 
-    def __init__(self, component: Component, **kwargs) -> None:
-        self.component: Component = component
+    def __init__(self, component: ServerComponent, **kwargs) -> None:
+        self.component: ServerComponent = component
 
         if self.config_file in kwargs.keys():
             print(kwargs.get(self.config_file))
@@ -45,11 +46,12 @@ class Configuration(object):
             LOGGER.info("No configuration file provided, using defaults")
 
         # ansible synchronize must have trailing "/" to sync dir-content
-        executor: ExecutorAnsible = component.node.executor
+        executor: ExecutorAnsible = component.node.executor  # type: ignore
         self.local_config_dir = posixpath.join(os.path.dirname(executor.inventory),
                                                component.instance_name, "")
 
-    def _data_getter(self, path: str, default: Union[int, str, list, dict]) -> Union[int, str, list, dict]:
+    def _data_getter(self, path: str, default: Optional[Union[int, str, list, dict]]) -> \
+            Optional[Union[int, str, list, dict]]:
         """General function to query data from provided external data dictionary.
 
         :param path: internal path to query data (broker_xml/journal/persistence_enabled)

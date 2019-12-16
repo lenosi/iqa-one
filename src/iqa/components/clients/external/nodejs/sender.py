@@ -4,10 +4,7 @@ from iqa.abstract.client.sender import Sender
 from iqa.abstract.message.message import Message
 from iqa.system.node.node import Node
 
-try:
-    from urlparse import urlparse, urlunparse
-except ImportError:
-    from urllib.parse import urlparse, urlunparse
+from urllib.parse import urlparse, urlunparse
 
 
 class SenderNodeJS(ClientNodeJS, Sender):
@@ -20,7 +17,7 @@ class SenderNodeJS(ClientNodeJS, Sender):
 
     def _set_url(self, url: str) -> None:
         p_url = urlparse(url)
-        p_url._replace(scheme=None)
+        p_url._replace(scheme="")
         self._command.control.broker = p_url.netloc
         self._command.control.address = urlunparse(('', '', p_url.path or '', p_url.params or '',
                                                     p_url.query or '', p_url.fragment or ''))

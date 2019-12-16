@@ -4,10 +4,7 @@ from iqa.components.clients.external.nodejs.command.nodejs_commands import NodeJ
 from iqa.system.node.node import Node
 from .client import ClientNodeJS
 
-try:
-    from urlparse import urlparse, urlunparse
-except ImportError:
-    from urllib.parse import urlparse, urlunparse
+from urllib.parse import urlparse
 
 
 class ConnectorNodeJS(ClientNodeJS):
@@ -20,10 +17,8 @@ class ConnectorNodeJS(ClientNodeJS):
 
     def _set_url(self, url: str) -> None:
         p_url = urlparse(url)
-        p_url._replace(scheme=None)
+        p_url._replace(scheme="")
         self._command.control.broker = p_url.netloc
-        self._command.control.address = urlunparse(('', '', p_url.path or '', p_url.params or '',
-                                                    p_url.query or '', p_url.fragment or ''))
 
     def set_auth_mechs(self, mechs: str) -> None:
         pass

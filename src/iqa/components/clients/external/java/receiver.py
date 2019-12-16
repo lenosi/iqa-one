@@ -3,11 +3,7 @@ from iqa.components.clients.external.java.command.java_commands import JavaRecei
 from iqa.abstract.client.receiver import Receiver
 from iqa.system.node.node import Node
 
-try:
-    from urlparse import urlparse, urlunparse
-    from urllib import unquote
-except ImportError:
-    from urllib.parse import urlparse, urlunparse, unquote
+from urllib.parse import urlparse, urlunparse, unquote
 
 
 class ReceiverJava(ClientJava, Receiver):

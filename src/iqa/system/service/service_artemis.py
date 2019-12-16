@@ -32,7 +32,7 @@ class ServiceFakeArtemis(ServiceFake):
         self.ansible_host: str = kwargs.get("ansible_host", "localhost")
         self.service_default_port: str = kwargs.get("artemis_port", "61616")
         self.service_web_port: str = kwargs.get("broker_web_port", "8161")
-        self.service_path: str = posixpath.join(kwargs.get("broker_path"), "bin", "artemis-service")
+        self.service_path: str = posixpath.join(kwargs.get("broker_path"), "bin", "artemis-service")  # type: ignore
         self.service_username: str = kwargs.get("broker_service_user", "jamq")
 
     class ServiceSystemState(Enum):
@@ -88,6 +88,12 @@ class ServiceFakeArtemis(ServiceFake):
 
     def stop(self) -> Execution:
         return self.executor.execute(self._create_command(self.ServiceSystemState.STOPPED))
+
+    def enable(self) -> Execution:
+        return NotImplemented
+
+    def disable(self) -> Execution:
+        return NotImplemented
 
     def restart(self, wait_for_messaging=False) -> Execution:
         execution: Execution = self.executor.execute(self._create_command(self.ServiceSystemState.RESTARTED))

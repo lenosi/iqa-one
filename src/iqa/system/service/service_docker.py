@@ -1,9 +1,10 @@
 import logging
 from enum import Enum
-from typing import Union, Optional
+from typing import Optional
 from docker.errors import APIError, NotFound
 
 from iqa.system.command.command_ansible import CommandAnsible
+from iqa.system.command.command_base import Command
 from iqa.system.executor import ExecutorAnsible, ExecutorContainer
 from iqa.system.executor.execution import Execution
 from iqa.system.command.command_container import CommandContainer
@@ -80,7 +81,7 @@ class ServiceDocker(Service):
         """
         return None
 
-    def _create_command(self, service_state: ServiceDockerState) -> Optional[Union[CommandAnsible, CommandContainer]]:
+    def _create_command(self, service_state: ServiceDockerState) -> Command:
         """
         Creates a Command instance based on executor type and state
         that is specific to each type of command.
@@ -106,4 +107,4 @@ class ServiceDocker(Service):
             state = service_state.system_state
             return CommandContainer([], docker_command=state, stdout=True, timeout=self.TIMEOUT)
         else:
-            return None
+            return Command([])

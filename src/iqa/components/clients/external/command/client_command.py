@@ -28,7 +28,7 @@ class ClientCommand(Command):
         self.control: Optional[ControlOptionsCommon] = None
         self.logging: Optional[LoggingOptionsCommon] = None
 
-    @property
+    @property  # type: ignore
     def args(self) -> list:
         return self._build_command()
 

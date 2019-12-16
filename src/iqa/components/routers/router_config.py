@@ -1,13 +1,14 @@
 from iqa.components.abstract.component import Component
 from iqa.components.abstract.configuration import Configuration
+from iqa.components.abstract.server.server_component import ServerComponent
 
 
 class RouterConfiguration(Configuration):
 
-    def __init__(self, component: Component, **kwargs) -> None:
+    def __init__(self, component: ServerComponent, **kwargs) -> None:
         super(RouterConfiguration, self).__init__(component, **kwargs)
 
-    def apply_config(self, configuration: Configuration) -> None:
+    def apply_config(self, configuration: str) -> None:
         pass
 
     def create_default_configuration(self, **kwargs) -> None:

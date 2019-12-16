@@ -3,10 +3,7 @@ from iqa.components.clients.external.nodejs.command.nodejs_commands import NodeJ
 from iqa.abstract.client.receiver import Receiver
 from iqa.system.node.node import Node
 
-try:
-    from urlparse import urlparse, urlunparse
-except ImportError:
-    from urllib.parse import urlparse, urlunparse
+from urllib.parse import urlparse, urlunparse
 
 
 class ReceiverNodeJS(ClientNodeJS, Receiver):
@@ -19,7 +16,7 @@ class ReceiverNodeJS(ClientNodeJS, Receiver):
 
     def _set_url(self, url: str) -> None:
         p_url = urlparse(url)
-        p_url._replace(scheme=None)
+        p_url._replace(scheme="")
         self._command.control.broker = p_url.netloc
         self._command.control.address = urlunparse(('', '', p_url.path or '', p_url.params or '',
                                                     p_url.query or '', p_url.fragment or ''))

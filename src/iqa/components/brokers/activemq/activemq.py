@@ -1,20 +1,21 @@
 import logging
 from typing import List
 
+from iqa.abstract.server.broker import Broker
+from iqa.components.abstract.server.server_component import ServerComponent
+from iqa.components.brokers.artemis.artemis_config import ArtemisConfig
 from iqa.components.protocols.amqp import Amqp10
 from iqa.components.protocols.mqtt import Mqtt
 from iqa.components.protocols.stomp import Stomp
 from iqa.components.protocols.openwire import Openwire
-from iqa.components.brokers.activemq.activemq_config import ActiveMQConfig
 from iqa.components.brokers.artemis.management.jolokia_client import ArtemisJolokiaClient
 from iqa.abstract.destination.address import Address
 from iqa.abstract.destination.queue import Queue
 from iqa.abstract.destination.routing_type import RoutingType
 from iqa.abstract.listener import Listener
-from iqa.components.brokers.broker_component import BrokerComponent
 
 
-class Activemq(BrokerComponent):
+class Activemq(Broker, ServerComponent):
     """
     Apache ActiveMQ has a proven non blocking architecture. It delivers outstanding performance.
     """
@@ -28,8 +29,9 @@ class Activemq(BrokerComponent):
         self._queues: List[Queue] = list()
         self._addresses: List[Address] = list()
         self._addresses_dict: dict = {}
+        self.management_client: ArtemisJolokiaClient = None  # type: ignore
 
-        self.config: ActiveMQConfig = ActiveMQConfig(**kwargs)
+        self.config: ArtemisConfig = ArtemisConfig(**kwargs)
         self.users: dict = self.config.users
 
     def queues(self, refresh: bool = True) -> List[Queue]:
@@ -137,15 +139,15 @@ class Activemq(BrokerComponent):
         self._addresses = addresses
         self._queues = queues
 
-    def get_management_client(self) -> ArtemisJolokiaClient:
+    def get_management_client(self) -> ArtemisJolokiaClient:  # type: ignore
         """
         Creates a new instance of the Jolokia Client.
         :return:
         """
-        client: ArtemisJolokiaClient = ArtemisJolokiaClient(self.config.instance_name,
+        client: ArtemisJolokiaClient = ArtemisJolokiaClient(self.config.instance_name,  # type: ignore
                                                             self.node.get_ip(),
                                                             self.config.ports['web'],
-                                                            self.config.get_username('admin'),
+                                                            'admin',
                                                             self.config.get_user_password('admin'))
         return client
 

@@ -5,8 +5,6 @@ from .executor_kubernetes import ExecutorKubernetes
 from .executor_local import ExecutorLocal
 from .executor_ssh import ExecutorSsh
 
-from iqa.utils.types import ExecutorType
-
 
 class ExecutorFactory(object):
     """
@@ -15,7 +13,7 @@ class ExecutorFactory(object):
     """
 
     @staticmethod
-    def create_executor(exec_impl: str = 'ansible', **kwargs) -> ExecutorType:
+    def create_executor(exec_impl: str = 'ansible', **kwargs):
 
         for exec_class in Executor.__subclasses__():
             if exec_class.implementation != exec_impl:

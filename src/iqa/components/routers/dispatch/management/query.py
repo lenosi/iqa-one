@@ -91,8 +91,7 @@ class RouterQuery(object):
 
         # Namedtuple that represents the query response from the router
         # so fields can be read based on their attribute names.
-        RouterQueryResults = namedtuple('RouterQueryResults',
-                                        response.body["attributeNames"])
+        RouterQueryResults = namedtuple('RouterQueryResults', response.body["attributeNames"])  # type: ignore
         records: list = []
 
         for record in response.body["results"]:

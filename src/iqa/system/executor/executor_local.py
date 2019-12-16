@@ -18,4 +18,4 @@ class ExecutorLocal(Executor):
         self.name: str = name
 
     def _execute(self, command) -> Execution:
-        return Execution(command, self)
+        return Execution(command, self)  # type: ignore

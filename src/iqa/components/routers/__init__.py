@@ -1,17 +1,19 @@
 import logging
+from typing import TYPE_CHECKING
 
 from iqa.abstract.server.router import Router
 from iqa.system.executor import Executor
 from iqa.system.node.node import Node
 from iqa.system.service import Service
-from iqa.utils.types import RouterType
+if TYPE_CHECKING:
+    from iqa.utils.types import RouterType
 
 
 class RouterFactory(object):
 
     @staticmethod
     def create_router(implementation: str, node: Node, executor: Executor, service_impl: Service, **kwargs)\
-            -> RouterType:
+            -> 'RouterType':
 
         for router in Router.__subclasses__():
 

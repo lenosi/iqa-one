@@ -1,19 +1,6 @@
 """Provide a common interface to the `logging` module."""
 
-from logging import getLogger, Logger
-
-try:
-    from logging import NullHandler
-except ImportError:
-    from logging import Handler
-
-    class NullHandler(Handler):
-
-        """Python-2.6 friendly NullHandler."""
-
-        def emit(self, record) -> None:
-            """Fake `emit` method."""
-            pass
+from logging import getLogger, Logger, NullHandler
 
 
 def get_logger(name: str) -> Logger:

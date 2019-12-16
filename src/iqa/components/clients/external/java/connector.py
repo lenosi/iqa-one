@@ -4,11 +4,7 @@ from .client import ClientJava
 from iqa.components.clients.external.java.command.java_commands import JavaConnectorClientCommand
 from iqa.system.node.node import Node
 
-try:
-    from urlparse import urlparse
-    from urllib import unquote
-except ImportError:
-    from urllib.parse import urlparse, unquote
+from urllib.parse import urlparse, unquote
 
 
 class ConnectorJava(ClientJava):

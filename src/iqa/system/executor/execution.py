@@ -1,14 +1,18 @@
-import abc
+from __future__ import annotations
+from abc import ABC, abstractmethod
+
 import logging
 import subprocess
 import tempfile
 import threading
-from typing import IO, Optional, Union
+from typing import IO, Optional, Union, TYPE_CHECKING
 
 from iqa.system.command.command_base import Command
-from iqa.system.executor.executor_base import Executor
 from iqa.utils.process import Process
 from iqa.utils.timeout import TimeoutCallback
+
+if TYPE_CHECKING:
+    from iqa.system.executor.executor_base import Executor
 
 """
 Defines the representation of a command Execution that is generated
@@ -25,7 +29,7 @@ class ExecutionException(Exception):
     pass
 
 
-class Execution(abc.ABC):
+class Execution(ABC):
     """
     Represents the execution of a process that has been started by an Executor instance.
     It wraps the command that was triggered as well as the executor
@@ -51,7 +55,7 @@ class Execution(abc.ABC):
         self.failure: bool = False
 
         # Adjust time out settings if provided
-        self._timeout: TimeoutCallback
+        self._timeout: Optional[TimeoutCallback] = None
         if command.timeout and command.timeout > 0:
             self._timeout = TimeoutCallback(command.timeout, self._on_timeout)
 
@@ -63,7 +67,7 @@ class Execution(abc.ABC):
         logger.debug('Executing: %s' % self.args)
         self._run()
 
-    @abc.abstractmethod
+    @abstractmethod
     def _run(self) -> None:
         """
         Executes the command with different execution strategies (subprocess or others).
@@ -71,7 +75,7 @@ class Execution(abc.ABC):
         """
         raise NotImplementedError()
 
-    @abc.abstractmethod
+    @abstractmethod
     def wait(self) -> None:
         """
         Waits for command execution to complete.
@@ -79,7 +83,7 @@ class Execution(abc.ABC):
         """
         raise NotImplementedError()
 
-    @abc.abstractmethod
+    @abstractmethod
     def is_running(self) -> bool:
         """
         Returns True if execution is still running and False otherwise.
@@ -87,7 +91,7 @@ class Execution(abc.ABC):
         """
         raise NotImplementedError()
 
-    @abc.abstractmethod
+    @abstractmethod
     def completed_successfully(self) -> bool:
         """
         Returns True if execution is done and no errors observed or False otherwise.
@@ -95,11 +99,11 @@ class Execution(abc.ABC):
         """
         raise NotImplementedError()
 
-    @abc.abstractmethod
+    @abstractmethod
     def on_timeout(self) -> None:
         raise NotImplementedError()
 
-    @abc.abstractmethod
+    @abstractmethod
     def terminate(self) -> None:
         """
         Terminates the execution.
@@ -107,7 +111,7 @@ class Execution(abc.ABC):
         """
         raise NotImplementedError
 
-    @abc.abstractmethod
+    @abstractmethod
     def read_stdout(self, lines: bool = False) -> Optional[Union[str, list]]:
         """
         Returns a string with the whole STDOUT content if the original
@@ -119,7 +123,7 @@ class Execution(abc.ABC):
         """
         raise NotImplementedError()
 
-    @abc.abstractmethod
+    @abstractmethod
     def read_stderr(self, lines: bool = False) -> Optional[Union[str, list]]:
         """
         Returns a string with the whole STDERR content if the original
@@ -197,8 +201,8 @@ class ExecutionProcess(Execution):
             self.fh_stderr = subprocess.DEVNULL
 
         # Subprocess instance
-        self._process: Process
-        self._timeout: TimeoutCallback
+        self._process: Process = None  # type: ignore
+        self._timeout: Optional[TimeoutCallback] = None
 
         # Initializes the super class which will invoke the run method
         super(ExecutionProcess, self).__init__(command=command, executor=executor, modified_args=modified_args, env=env)
@@ -288,15 +292,16 @@ class ExecutionProcess(Execution):
         :type lines: bool
         :return: Stdout content as str if lines is False, or as a list
         """
-        if self.fh_stdout == subprocess.DEVNULL:
+        if not isinstance(self.fh_stdout, int) and self.fh_stdout != subprocess.DEVNULL:
+            self.fh_stdout.seek(0)
+
+            if lines:
+                return self.fh_stdout.readlines()
+
+            return self.fh_stdout.read()
+
+        else:
             return None
-
-        self.fh_stdout.seek(0)
-
-        if lines:
-            return self.fh_stdout.readlines()
-
-        return self.fh_stdout.read()
 
     def read_stderr(self, lines: bool = False) -> Optional[Union[str, list]]:
         """
@@ -306,13 +311,14 @@ class ExecutionProcess(Execution):
         :param lines: whether to return stdout as a list of lines
         :type lines: bool
         :return: Stdout content as str if lines is False, or as a list
-       """
-        if self.fh_stderr == subprocess.DEVNULL:
+        """
+        if not isinstance(self.fh_stderr, int) and self.fh_stderr != subprocess.DEVNULL:
+            self.fh_stderr.seek(0)
+
+            if lines:
+                return self.fh_stderr.readlines()
+
+            return self.fh_stderr.read()
+
+        else:
             return None
-
-        self.fh_stderr.seek(0)
-
-        if lines:
-            return self.fh_stderr.readlines()
-
-        return self.fh_stderr.read()

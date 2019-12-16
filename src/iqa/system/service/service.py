@@ -34,7 +34,7 @@ class Service(ABC):
         return NotImplemented
 
     @abstractmethod
-    def start(self, wait_for_messaging: bool = False) -> Execution:
+    def start(self) -> Execution:
         return NotImplemented
 
     @abstractmethod
@@ -42,7 +42,7 @@ class Service(ABC):
         return NotImplemented
 
     @abstractmethod
-    def restart(self, wait_for_messaging: bool = False) -> Execution:
+    def restart(self) -> Execution:
         return NotImplemented
 
     @abstractmethod

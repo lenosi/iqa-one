@@ -1,5 +1,4 @@
 import logging
-from typing import Optional
 
 from iqa.system.command.command_base import Command
 from iqa.system.executor.execution import ExecutionProcess, Execution

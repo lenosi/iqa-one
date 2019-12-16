@@ -1,4 +1,3 @@
-proton
 requests
 PyYAML
 pytest

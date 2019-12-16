@@ -2,13 +2,14 @@ import abc
 
 from iqa.components.abstract.component import Component
 from iqa.components.abstract.configuration import Configuration
+from iqa.components.abstract.server.server_component import ServerComponent
 
 
 class BrokerConfiguration(Configuration):
     users: dict = {}
     ports: dict = {}
 
-    def __init__(self, component: Component, **kwargs) -> None:
+    def __init__(self, component: ServerComponent, **kwargs) -> None:
         super(BrokerConfiguration, self).__init__(component, **kwargs)
 
     @abc.abstractmethod

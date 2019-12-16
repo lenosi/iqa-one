@@ -4,11 +4,7 @@ from iqa.abstract.client.sender import Sender
 from iqa.abstract.message.message import Message
 from iqa.system.node.node import Node
 
-try:
-    from urlparse import urlparse, urlunparse
-    from urllib import unquote
-except ImportError:
-    from urllib.parse import urlparse, urlunparse, unquote
+from urllib.parse import urlparse, urlunparse, unquote
 
 
 class SenderJava(ClientJava, Sender):

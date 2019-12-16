@@ -27,7 +27,7 @@ class Process(subprocess.Popen):
         kwargs.setdefault('bufsize', 1)
         kwargs.setdefault('universal_newlines', True)
         try:
-            super(Process, self).__init__(args, **kwargs)
+            super(Process, self).__init__(args, **kwargs)  # type: ignore
         except TypeError or ValueError or OSError or subprocess.SubprocessError:
             self._logger.warning("Unable to execute command: %s" % args, exc_info=True)
             # traceback.print_tb(tb=ex)

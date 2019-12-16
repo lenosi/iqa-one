@@ -1,6 +1,8 @@
 import logging
 from typing import List
 
+from iqa.abstract.server.broker import Broker
+from iqa.components.abstract.server.server_component import ServerComponent
 from iqa.components.protocols.amqp import Amqp10
 from iqa.components.protocols.mqtt import Mqtt
 from iqa.components.protocols.stomp import Stomp
@@ -10,11 +12,10 @@ from iqa.components.brokers.artemis.management.jolokia_client import ArtemisJolo
 from iqa.abstract.destination.address import Address
 from iqa.abstract.destination.queue import Queue
 from iqa.abstract.destination.routing_type import RoutingType
-from iqa.components.brokers.broker_component import BrokerComponent
 from iqa.system.node.node import Node
 
 
-class Artemis(BrokerComponent):
+class Artemis(ServerComponent, Broker):
     """
     Apache ActiveMQ Artemis has a proven non blocking architecture. It delivers outstanding performance.
     """
@@ -28,6 +29,7 @@ class Artemis(BrokerComponent):
         self._queues: List[Queue] = list()
         self._addresses: List[Address] = list()
         self._addresses_dict: dict = {}
+        self.management_client: ArtemisJolokiaClient = None  # type: ignore
 
         self.config: ArtemisConfig = ArtemisConfig(self, **kwargs)
         self.users = self.config.users

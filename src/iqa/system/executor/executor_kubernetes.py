@@ -2,7 +2,6 @@ import os
 
 from iqa.system.command.command_base import Command
 from iqa.system.executor import Executor
-from iqa.system.executor.execution_kubernetes import ExecutionKubernetes
 
 
 class ExecutorKubernetes(Executor):
@@ -64,5 +63,7 @@ class ExecutorKubernetes(Executor):
     def implementation(self) -> str:
         return 'kubernetes'
 
-    def _execute(self, command: Command) -> ExecutionKubernetes:
+    def _execute(self, command: Command):
+        from iqa.system.executor.execution_kubernetes import ExecutionKubernetes
+
         return ExecutionKubernetes(command, self)
