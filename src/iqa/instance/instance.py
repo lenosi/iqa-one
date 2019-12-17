@@ -15,7 +15,7 @@ from iqa.system.executor.executor_base import Executor
 from iqa.system.executor import ExecutorFactory
 from iqa.system.node.node import Node
 from iqa.system.node import NodeFactory
-from iqa.system.service import Service, ServiceFactory
+from iqa.system.service import ServiceFactory
 
 if TYPE_CHECKING:
     from iqa.utils.types import BrokerType, ClientType, ComponentType, ExecutorType, NodeType, RouterType, \
@@ -90,7 +90,7 @@ class Instance:
                 component = None
                 # A service name is expected
                 cmp_svc: str = get_and_remove_key(cmp_vars, 'service')
-                svc: Service = ServiceFactory.create_service(
+                svc = ServiceFactory.create_service(
                     executor=executor,
                     service_name=cmp_svc,
                     **cmp_vars

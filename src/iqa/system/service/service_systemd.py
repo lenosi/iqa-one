@@ -8,8 +8,7 @@ from iqa.system.command.command_base import Command
 from iqa.system.command.command_ansible import CommandAnsible
 from iqa.system.executor.execution import Execution
 from iqa.system.executor import Executor, ExecutorAnsible
-from iqa.system.service import Service
-from iqa.system.service.service import ServiceStatus
+from iqa.system.service.service import Service, ServiceStatus
 
 
 class ServiceSystemD(Service):

@@ -1,7 +1,7 @@
 from iqa.abstract.server.broker import Broker
 from iqa.system.executor import Executor
 from iqa.system.node.node import Node
-from iqa.system.service import Service
+from iqa.system.service.service import Service
 
 
 class BrokerFactory(object):
