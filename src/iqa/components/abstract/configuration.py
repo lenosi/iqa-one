@@ -8,7 +8,6 @@ import yaml
 
 from typing import Union, Optional
 
-from iqa.components.abstract.component import Component
 from iqa.components.abstract.server.server_component import ServerComponent
 from iqa.system.command.command_ansible import CommandAnsible
 from iqa.system.command.command_base import Command

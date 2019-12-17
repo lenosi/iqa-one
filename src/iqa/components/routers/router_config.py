@@ -1,4 +1,3 @@
-from iqa.components.abstract.component import Component
 from iqa.components.abstract.configuration import Configuration
 from iqa.components.abstract.server.server_component import ServerComponent
 

@@ -2,17 +2,17 @@ import logging
 
 from typing import Optional, TYPE_CHECKING
 
+from .service_artemis import ServiceFakeArtemis
+from .service_docker import ServiceDocker
+from .service_system_init import ServiceSystemInit
+from .service_systemd import ServiceSystemD
+
 from iqa.system.command.command_base import Command
 from iqa.system.executor.execution import Execution
 from iqa.system.executor import ExecutorAnsible, ExecutorContainer
 from iqa.system.service.service import Service
 if TYPE_CHECKING:
     from iqa.utils.types import ExecutorType
-
-from .service_artemis import ServiceFakeArtemis
-from .service_docker import ServiceDocker
-from .service_system_init import ServiceSystemInit
-from .service_systemd import ServiceSystemD
 
 
 class ServiceFactory(object):
