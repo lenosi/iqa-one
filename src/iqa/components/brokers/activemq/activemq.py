@@ -15,7 +15,7 @@ from iqa.abstract.destination.routing_type import RoutingType
 from iqa.abstract.listener import Listener
 
 
-class Activemq(Broker, ServerComponent):
+class Activemq(ServerComponent, Broker):
     """
     Apache ActiveMQ has a proven non blocking architecture. It delivers outstanding performance.
     """

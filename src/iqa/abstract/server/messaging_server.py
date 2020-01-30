@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import List, Optional
 
 from iqa.abstract.listener import Listener
 
@@ -7,7 +8,7 @@ class MessagingServer(ABC):
     implementation = NotImplemented
 
     def __init__(self) -> None:
-        self.listeners: list = []
+        self.listeners: Optional[List[Listener]] = []
         self.connectors: list = []
 
     @abstractmethod

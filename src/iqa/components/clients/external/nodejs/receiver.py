@@ -35,5 +35,5 @@ class ReceiverNodeJS(ClientNodeJS, Receiver):
         return NodeJSReceiverClientCommand(stdout=stdout, stderr=stderr, daemon=daemon,
                                            timeout=timeout, encoding=encoding)
 
-    def receive(self) -> None:
+    def _receive(self) -> None:
         self.execution = self.node.execute(self.command)

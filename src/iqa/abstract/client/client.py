@@ -57,3 +57,7 @@ class Client(ABC):
         :rtype:
         """
         pass
+
+    @property
+    def implementation(self):
+        return NotImplementedError

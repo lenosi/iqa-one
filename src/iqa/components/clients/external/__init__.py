@@ -4,6 +4,10 @@ from iqa.components.clients.external.client_external import ClientExternal
 from iqa.system.node.node import Node
 from iqa.system.executor import Executor
 
+from iqa.components.clients.external.java.client import ClientJava
+from iqa.components.clients.external.nodejs.client import ClientNodeJS
+from iqa.components.clients.external.python.client import ClientPython
+
 
 class ClientFactory(object):
     # Static element to store all available implementations

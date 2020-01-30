@@ -1,5 +1,5 @@
 import logging
-from typing import List
+from typing import List, Optional
 
 from iqa.abstract.server.broker import Broker
 from iqa.components.abstract.server.server_component import ServerComponent
@@ -13,6 +13,7 @@ from iqa.abstract.destination.address import Address
 from iqa.abstract.destination.queue import Queue
 from iqa.abstract.destination.routing_type import RoutingType
 from iqa.system.node.node import Node
+from iqa.abstract.listener import Listener
 
 
 class Artemis(ServerComponent, Broker):
@@ -24,14 +25,13 @@ class Artemis(ServerComponent, Broker):
     name: str = 'Artemis'
     implementation: str = 'artemis'
 
-    def __init__(self, name: str, node: Node, **kwargs) -> None:
-        super(Artemis, self).__init__(name, node, **kwargs)
+    def __init__(self, name: str, node: Node, listeners: Optional[List[Listener]] = None, **kwargs) -> None:
+        super(Artemis, self).__init__(name, node, listeners, **kwargs)  # type: ignore
         self._queues: List[Queue] = list()
         self._addresses: List[Address] = list()
         self._addresses_dict: dict = {}
-        self.management_client: ArtemisJolokiaClient = None  # type: ignore
-
         self.config: ArtemisConfig = ArtemisConfig(self, **kwargs)
+        self.management_client: ArtemisJolokiaClient = self.get_management_client()  # type: ignore
         self.users = self.config.users
 
     def queues(self, refresh: bool = True) -> List[Queue]:
@@ -157,13 +157,16 @@ class Artemis(ServerComponent, Broker):
         self._addresses = addresses
         self._queues = queues
 
-    def get_management_client(self):
+    def get_management_client(self) -> ArtemisJolokiaClient:  # type: ignore
         """
         Creates a new instance of the Jolokia Client.
         :return:
         """
-        client = ArtemisJolokiaClient(self.config.instance_name, self.node.get_ip(), self.config.ports['web'],
-                                      'admin', self.config.get_user_password('admin'))
+        client = ArtemisJolokiaClient(self.config.instance_name,  # type: ignore
+                                      self.node.get_ip(),
+                                      self.config.ports['web'],
+                                      'admin',
+                                      self.config.get_user_password('admin'))
         return client
 
     def _get_routing_type(self, routing_type: RoutingType) -> str:
@@ -175,3 +178,6 @@ class Artemis(ServerComponent, Broker):
         if routing_type == RoutingType.BOTH:
             return 'ANYCAST, MULTICAST'
         return routing_type.name
+
+    def get_url(self, port: int = None, listener: Listener = None) -> str:
+        pass

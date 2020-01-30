@@ -1,11 +1,11 @@
-from typing import Optional, Union
+from typing import Optional, Union, List
 
+from iqa.abstract.listener import Listener
 from iqa.components.abstract.server.server_component import ServerComponent
 from iqa.abstract.server.router import Router
 from iqa.system.command.command_base import Command
 from iqa.system.executor.execution import Execution
 from iqa.system.node.node import Node
-from iqa.system.service import Service
 from iqa.utils.types import ManagementClientSubtype
 from .config import Config
 from .log import Log
@@ -21,8 +21,9 @@ class Dispatch(ServerComponent, Router):
     name: str = 'Qpid Dispatch Router'
     implementation: str = 'dispatch'
 
-    def __init__(self, name: str, node: Node, service: Service, **kwargs) -> None:
-        super(Dispatch, self).__init__(name, node, service, **kwargs)
+    def __init__(self, name: str, node: Node, listeners: Optional[List[Listener]] = None, **kwargs)\
+            -> None:  # type: ignore
+        super(Dispatch, self).__init__(name, node, listeners, **kwargs)
 
         self.qdmanage: QDManage = QDManage()
         self.qdstat: QDStat = QDStat()

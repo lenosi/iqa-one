@@ -5,6 +5,8 @@ from iqa.abstract.server.router import Router
 from iqa.system.executor import Executor
 from iqa.system.node.node import Node
 from iqa.system.service.service import Service
+from iqa.components.routers.dispatch.dispatch import Dispatch
+
 if TYPE_CHECKING:
     from iqa.utils.types import RouterType
 

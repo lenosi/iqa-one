@@ -28,5 +28,5 @@ class ReceiverPython(ClientPython, Receiver):
         return PythonReceiverClientCommand(stdout=stdout, stderr=stderr, daemon=daemon,
                                            timeout=timeout, encoding=encoding)
 
-    def receive(self) -> None:
+    def _receive(self) -> None:
         self.execution = self.node.execute(self.command)

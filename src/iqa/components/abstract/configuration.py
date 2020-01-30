@@ -8,10 +8,8 @@ import yaml
 
 from typing import Union, Optional
 
-from iqa.components.abstract.server.server_component import ServerComponent
 from iqa.system.command.command_ansible import CommandAnsible
 from iqa.system.command.command_base import Command
-from iqa.system.executor import ExecutorAnsible
 from iqa.system.executor.execution import Execution
 from iqa.system.node import NodeAnsible, NodeLocal
 from iqa.system.node.node_docker import NodeDocker
@@ -33,8 +31,8 @@ class Configuration(object):
     yaml_data = None
     old_yaml_data = None  # re|store configuration data
 
-    def __init__(self, component: ServerComponent, **kwargs) -> None:
-        self.component: ServerComponent = component
+    def __init__(self, component, **kwargs) -> None:
+        self.component = component
 
         if self.config_file in kwargs.keys():
             print(kwargs.get(self.config_file))
@@ -45,9 +43,11 @@ class Configuration(object):
             LOGGER.info("No configuration file provided, using defaults")
 
         # ansible synchronize must have trailing "/" to sync dir-content
-        executor: ExecutorAnsible = component.node.executor  # type: ignore
-        self.local_config_dir = posixpath.join(os.path.dirname(executor.inventory),
-                                               component.instance_name, "")
+        if kwargs.get('inventory_dir') is not None and component.instance_name is not None:
+            self.local_config_dir = posixpath.join(kwargs.get('inventory_dir'),  # type: ignore
+                                                   component.instance_name, "")
+        else:
+            self.local_config_dir = os.getcwd()
 
     def _data_getter(self, path: str, default: Optional[Union[int, str, list, dict]]) -> \
             Optional[Union[int, str, list, dict]]:

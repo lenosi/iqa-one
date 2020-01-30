@@ -1,7 +1,5 @@
 from typing import Optional
 
-from iqa.instance.instance import Instance
-
 
 class _Attribute:
     def __init__(self, name: str, value: str, deprecated: bool = False) -> None:
@@ -16,7 +14,7 @@ class _Attribute:
     def __str__(self) -> str:
         return self.value
 
-    def __set__(self, instance: Instance, value: str) -> None:
+    def __set__(self, instance, value: str) -> None:
         self.value = value
 
 

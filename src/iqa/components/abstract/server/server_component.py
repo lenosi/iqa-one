@@ -13,15 +13,16 @@ class ServerComponent(Component):
     Super class for all Server component implementations (for now Routers and Brokers).
     """
 
-    def __init__(self, name: str, node: Node, service: Service, listeners: List[Listener],
-                 configuration: Configuration = None) -> None:
+    def __init__(self, name: str, node: Node, listeners: Optional[List[Listener]],
+                 configuration: Configuration = None, **kwargs) -> None:
         super(ServerComponent, self).__init__(name, node)
-        self.service: Service = service
+        self.service: Service = kwargs.get('service')  # type: ignore
         self.name: str = name
         self.node: Node = node
         self.configuration: Optional[Configuration] = configuration
-        self.listeners: List[Listener] = listeners
-        self.management_client: ManagementClient = self.get_management_client()
+        self.listeners: Optional[List[Listener]] = listeners
+        #self.management_client: ManagementClient = self.get_management_client()
+        # ^^ TODO dvecera fix missing config of client in broker testsuites
 
     def get_management_client(self) -> ManagementClient:
         raise NotImplementedError

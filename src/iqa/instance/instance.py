@@ -51,7 +51,6 @@ class Instance:
 
         # Loading all hosts that provide the component variable
         inventory_hosts: list = self._inv_mgr.get_hosts_containing(var='component')
-        components: List[Optional[Union[Component, Client, Broker, Router]]] = []
         nodes: List['NodeType'] = []
 
         for cmp in inventory_hosts:
@@ -117,7 +116,6 @@ class Instance:
                 self.new_component(component)
 
         self.nodes = nodes
-        self.components = components
 
     # TODO: @dlenoch reimplement node logic
     def new_node(self, hostname: str, executor_impl: str = 'ansible', ip: str = None) -> Node:
@@ -140,8 +138,8 @@ class Instance:
         self.nodes.append(node)
         return node
 
-    def new_component(self, component: Optional[Union['ComponentType', 'ClientType', 'BrokerType', 'RouterType']])\
-            -> Optional[Union['ComponentType', 'ClientType', 'BrokerType', 'RouterType']]:
+    def new_component(self, component: Union['ComponentType', 'ClientType', 'BrokerType', 'RouterType'])\
+            -> Union['ComponentType', 'ClientType', 'BrokerType', 'RouterType']:
         """Create new component in IQA instance
 
         :param component:

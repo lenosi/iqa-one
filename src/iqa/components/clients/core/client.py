@@ -1,3 +1,4 @@
+from iqa.abstract.listener import Listener
 from iqa.components.protocols.amqp import Amqp10
 from iqa.components.abstract.component import Component
 from iqa.abstract.client.messaging_client import MessagingClient
@@ -14,6 +15,14 @@ class CoreMessagingClient(Component, MessagingClient):
     def __init__(self, name: str, node: Node) -> None:
         super().__init__(name, node)
 
+    def set_endpoint(self, listener: Listener) -> None:
+        pass
+
+    def connect(self) -> bool:
+        pass
+
+    def set_url(self, url: str) -> None:
+        pass
 #
 # # -*- coding: utf-8 -*-
 #

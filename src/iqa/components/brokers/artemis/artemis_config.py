@@ -25,37 +25,37 @@ class ArtemisConfig(BrokerConfiguration):
     DEFAULT_INSTANCE_HOME: str = "/opt/jboss-amq-7-i0"
     DEFAULT_INSTANCE_NAME: str = "amq"
     DEFAULT_USERS: dict = {
-            "admin": {
-                    "password": "admin",
-                    "role": "amq",
-                    "key": "/path/to/key",
-                    "ticket": "/path/to/ticket"
-            },
-            "tckuser": {
-                    "password": "tckuser",
-                    "role": "amq"
-            },
-            "superuser": {
-                    "password": "superuser",
-                    "role": "amq"
-            },
-            "administrator": {
-                    "password": "administrator",
-                    "role": "amq"
-            },
-            "nobody": {
-                    "password": "nobody",
-                    "role": "amq"
-            }
+        "admin": {
+            "password": "admin",
+            "role": "amq",
+            "key": "/path/to/key",
+            "ticket": "/path/to/ticket"
+        },
+        "tckuser": {
+            "password": "tckuser",
+            "role": "amq"
+        },
+        "superuser": {
+            "password": "superuser",
+            "role": "amq"
+        },
+        "administrator": {
+            "password": "administrator",
+            "role": "amq"
+        },
+        "nobody": {
+            "password": "nobody",
+            "role": "amq"
+        }
     }
     DEFAULT_PORTS: dict = {
-            "openwire": 61616,
-            "amqp": 5672,
-            "mqtt": 1883,
-            "core": 5445,
-            "stomp": 61613,
-            "web": 8161,
-            "jmx": 1099
+        "openwire": 61616,
+        "amqp": 5672,
+        "mqtt": 1883,
+        "core": 5445,
+        "stomp": 61613,
+        "web": 8161,
+        "jmx": 1099
     }
     DEFAULT_PORT_JMX: int = 1099
     DEFAULT_PORT_WEB: int = 8161
@@ -92,8 +92,8 @@ class ArtemisConfig(BrokerConfiguration):
         :param test_node: test node which is running given broker
         :type test_node: TestNode
         """
+
         super(ArtemisConfig, self).__init__(component, **kwargs)
-        self.node_config_dir: Union[int, str, list, dict] = self.instance_home_etc
 
     def create_default_configuration(self, **kwargs) -> None:
         self.home = kwargs.get('broker_home', self.DEFAULT_HOME)
@@ -112,6 +112,7 @@ class ArtemisConfig(BrokerConfiguration):
         self.instance_name = self._data_getter(self.P_INSTANCE_NAME, self.DEFAULT_INSTANCE_NAME)
         self.instance_home_etc = Utils.remove_prefix(
             self._data_getter(self.P_INSTANCE_DIR_ETC, "artemis_profile/instance_etc_uri"), "file:")
+        self.node_config_dir: Union[int, str, list, dict] = self.instance_home_etc
         self.instance_home_data = self._data_getter(self.P_INSTANCE_DIR_DATA, "artemis_profile/data_dir")
         self.instance_home_log = posixpath.join(self.instance_home, "log")  # type: ignore
         self.instance_home_tmp = posixpath.join(self.instance_home, "tmp")  # type: ignore

@@ -70,7 +70,7 @@ for receiver in iqa.get_clients(ReceiverType):
 
 # Starting senders
 print("-> Starting sender abstract")
-msg = Message(body="1234567890")
+msg = Message()  # TODO message body with appropriate class and data
 for sender in iqa.get_clients(SenderType):
     sender.set_url('amqp://%s:%s/client/%s' % (router_or_broker.node.get_ip(), '5672', sender.implementation))
     sender.command.timeout = TIMEOUT
