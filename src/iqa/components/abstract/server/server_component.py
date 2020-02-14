@@ -21,8 +21,7 @@ class ServerComponent(Component):
         self.node: Node = node
         self.configuration: Optional[Configuration] = configuration
         self.listeners: Optional[List[Listener]] = listeners
-        #self.management_client: ManagementClient = self.get_management_client()
-        # ^^ TODO dvecera fix missing config of client in broker testsuites
+        self.management_client: ManagementClient = self.get_management_client()
 
     def get_management_client(self) -> ManagementClient:
         raise NotImplementedError

@@ -3,7 +3,7 @@ import logging
 import os
 import posixpath
 
-import dpath
+import dpath.util
 import yaml
 
 from typing import Union, Optional
@@ -61,7 +61,7 @@ class Configuration(object):
         :rtype: int | str | list | dict
         """
         try:
-            output: Union[int, str, list, dict] = dpath.get(self.yaml_data, path)
+            output: Union[int, str, list, dict] = dpath.util.get(self.yaml_data, path)
             # LOGGER.debug("Dpath_search=%s\n%s" % (path, output))
         except (KeyError, ValueError):
             LOGGER.debug('Unknown key or value %s', path)

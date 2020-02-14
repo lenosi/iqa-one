@@ -6,6 +6,7 @@ import sys
 
 from typing import Union, Optional
 
+from iqa.abstract.client.sender import Sender
 from iqa.abstract.server.broker import Broker
 from iqa.abstract.server.router import Router
 from iqa.abstract.client.receiver import Receiver
@@ -13,7 +14,7 @@ from iqa.abstract.message.message import Message
 from iqa.components.abstract.component import Component
 from iqa.components.clients.external import ClientExternal
 from iqa.instance.instance import Instance
-from iqa.utils.types import BrokerSubtype, ReceiverType, RouterSubtype, SenderType
+from iqa.utils.types import BrokerType, RouterType
 
 # Inventory file to use
 TIMEOUT: int = 10
@@ -49,7 +50,7 @@ for component in iqa.components:  # type: Component
     ))
 
 # Router instance to use on clients
-router_or_broker: Optional[Union[BrokerSubtype, RouterSubtype]] = None
+router_or_broker: Optional[Union[BrokerType, RouterType]] = None
 for component in iqa.components:
     if isinstance(component, Broker) or isinstance(component, Router):
         router_or_broker = component
@@ -57,7 +58,7 @@ assert router_or_broker or 'No Router or Broker component defined in inventory f
 
 # Starting receivers
 print("\n-> Starting receiver against [%s]" % type(router_or_broker))
-for receiver in iqa.get_clients(ReceiverType):
+for receiver in iqa.get_clients(Receiver):
     receiver.set_url('amqp://%s:%s/client/%s' % (router_or_broker.node.get_ip(), '5672', receiver.implementation))
     receiver.command.stdout = True
     receiver.command.timeout = TIMEOUT
@@ -71,7 +72,7 @@ for receiver in iqa.get_clients(ReceiverType):
 # Starting senders
 print("-> Starting sender abstract")
 msg = Message()  # TODO message body with appropriate class and data
-for sender in iqa.get_clients(SenderType):
+for sender in iqa.get_clients(Sender):
     sender.set_url('amqp://%s:%s/client/%s' % (router_or_broker.node.get_ip(), '5672', sender.implementation))
     sender.command.timeout = TIMEOUT
     sender.command.control.timeout = TIMEOUT
@@ -80,9 +81,9 @@ for sender in iqa.get_clients(SenderType):
     sender.send(msg)
 
 # Wait till all senders and receivers are done
-print("\n** Waiting all senders and receivers to complete **")
+print("\n** Waiting for all senders and receivers to complete **")
 client_errors: list = []
-for client in iqa.get_clients(SenderType) + iqa.get_clients(ReceiverType):  # type: ClientExternal
+for client in iqa.get_clients(Sender) + iqa.get_clients(Receiver):  # type: ClientExternal
     # Wait till execution finishes/timeout
     while client.execution.is_running():
         pass
@@ -94,7 +95,7 @@ for client in iqa.get_clients(SenderType) + iqa.get_clients(ReceiverType):  # ty
 # Verifying clients
 if not client_errors:
     all_msgs_received: bool = True
-    for receiver in iqa.get_clients(ReceiverType):
+    for receiver in iqa.get_clients(Receiver):
         received_count: int = len(receiver.execution.read_stdout(lines=True))
         if MESSAGE_COUNT != received_count:
             all_msgs_received = False

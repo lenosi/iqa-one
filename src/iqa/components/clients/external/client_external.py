@@ -20,7 +20,7 @@ class ClientExternal(Component, MessagingClient):
     def __init__(self, name: str, node: Node, **kwargs) -> None:
         super(ClientExternal, self).__init__(name, node)
         self.execution: Optional[Execution] = None
-        self._command: ClientCommand
+        self._command: ClientCommand = ClientCommand([])
         self._url: Optional[str] = None
         self.reset_command()
 

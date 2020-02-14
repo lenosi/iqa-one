@@ -19,7 +19,7 @@ from iqa.system.service import ServiceFactory
 
 if TYPE_CHECKING:
     from iqa.utils.types import BrokerType, ClientType, ComponentType, ExecutorType, NodeType, RouterType, \
-        ReceiverType, SenderType, ReceiverSubtype, SenderSubtype
+                                ReceiverSubtype, SenderSubtype
 
 
 class Instance:
@@ -170,17 +170,16 @@ class Instance:
         return [component for component in self.components
                 if isinstance(component, Client)]
 
-    def get_clients(self, client_type: Union['ReceiverType', 'SenderType'], implementation: str = None)\
-            -> List['ClientType']:
+    def get_clients(self, client_type: type, implementation: str = None) -> List['ClientType']:
         """
         Get all client instances on this node
         @TODO
         :return:
         """
         return [component for component in self.clients
-                if isinstance(component, type(client_type)) and
-                (implementation is None or (not isinstance(component, Client) and
-                 component.implementation == implementation.lower()))]
+                if isinstance(component, client_type) and
+                (implementation is None or
+                 component.implementation == implementation.lower())]
 
     def get_receiver(self, hostname: str) -> Optional['ClientType']:
         """

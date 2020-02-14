@@ -15,7 +15,6 @@ class ClientFactory(object):
 
     @staticmethod
     def create_clients(implementation: str, node: Node, executor: Executor, **kwargs) -> list:
-
         for cl in ClientExternal.__subclasses__():
 
             # Ignore clients with different implementation
@@ -24,9 +23,13 @@ class ClientFactory(object):
 
             # Now loop through concrete client types (sender, receiver, connector)
             clients: list = []
-            for client_impl in cl.__subclasses__():
-                name: str = '%s-%s-%s' % (implementation, client_impl.__name__.lower(), node.hostname)
-                clients.append(client_impl(name=name, node=node, executor=executor, **kwargs))
+            if cl.__subclasses__():
+                for client_impl in cl.__subclasses__():
+                    name: str = '%s-%s-%s' % (implementation, client_impl.__name__.lower(), node.hostname)
+                    clients.append(client_impl(name=name, node=node, executor=executor, **kwargs))
+            else:
+                name = '%s-%s-%s' % (implementation, cl.implementation, node.hostname)
+                clients.append(cl(name=name, node=node, executor=executor, **kwargs))
 
             return clients
 

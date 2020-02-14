@@ -26,13 +26,15 @@ class Artemis(ServerComponent, Broker):
     implementation: str = 'artemis'
 
     def __init__(self, name: str, node: Node, listeners: Optional[List[Listener]] = None, **kwargs) -> None:
-        super(Artemis, self).__init__(name, node, listeners, **kwargs)  # type: ignore
+        self.instance_name = name
         self._queues: List[Queue] = list()
         self._addresses: List[Address] = list()
         self._addresses_dict: dict = {}
-        self.config: ArtemisConfig = ArtemisConfig(self, **kwargs)
+        self.configuration: ArtemisConfig = ArtemisConfig(self, **kwargs)
+        self.configuration.create_configuration(kwargs.get('inventory_file', 'inventory.yml'))
+        super(Artemis, self).__init__(name, node, listeners, self.configuration, **kwargs)  # type: ignore
         self.management_client: ArtemisJolokiaClient = self.get_management_client()  # type: ignore
-        self.users = self.config.users
+        self.users = self.configuration.users
 
     def queues(self, refresh: bool = True) -> List[Queue]:
         """
@@ -162,11 +164,11 @@ class Artemis(ServerComponent, Broker):
         Creates a new instance of the Jolokia Client.
         :return:
         """
-        client = ArtemisJolokiaClient(self.config.instance_name,  # type: ignore
+        client = ArtemisJolokiaClient(self.configuration.instance_name,  # type: ignore
                                       self.node.get_ip(),
-                                      self.config.ports['web'],
+                                      self.configuration.ports['web'],
                                       'admin',
-                                      self.config.get_user_password('admin'))
+                                      self.configuration.get_user_password('admin'))
         return client
 
     def _get_routing_type(self, routing_type: RoutingType) -> str:
