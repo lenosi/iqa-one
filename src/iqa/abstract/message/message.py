@@ -23,9 +23,6 @@ class Message:
                                                  |
                                           Annotated Message
     """
-    # __slots__ = ['header', 'delivery_annotations', 'message_annotations',
-    #              'properties', 'application_properties', 'application_data',
-    #              'footer']
 
     header: Header = \
         field(default_factory=Header)

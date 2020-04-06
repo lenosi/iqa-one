@@ -1,3 +1,8 @@
+from dataclasses import dataclass, field
+
+
+# noinspection PyDunderSlots
+@dataclass(frozen=False)
 class Property:
     """
     The keys of this map are restricted to be of type string (which excludes the possibility of a null key)
