@@ -8,8 +8,9 @@ import sys
 # Displaying all connections
 from iqa.components.routers import Dispatch
 from iqa.components.routers.dispatch.management import RouterQuery
-from iqa.core.instance import IQAInstance
-from iqa.messaging.abstract.server.router import Router
+from iqa.instance.instance import Instance
+from iqa.components.abstract.server import ServerComponent
+from iqa.abstract.server.router import Router
 from iqa.system.service.service import ServiceStatus
 
 
@@ -47,11 +48,11 @@ print(intro_message)
 
 # Loading the instance
 print("Loading IQAInstance using inventory file: %s" % inventory)
-iqa = IQAInstance(inventory)
+iqa = Instance(inventory)
 
 # Listing all routers in inventory
 print("\nList of Router abstract parsed from inventory")
-for router in iqa.routers:  # type: Router
+for router in iqa.routers:  # type: (ServerComponent, Router)
 
     # List router node hostname and its status
     print("* Router: %s - Status: %s" % (router.node.hostname, router.service.status().name))

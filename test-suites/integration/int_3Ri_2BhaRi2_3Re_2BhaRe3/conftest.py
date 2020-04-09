@@ -2,14 +2,14 @@ from typing import Union
 
 import pytest
 
-from iqa.messaging.abstract.server.broker import Broker
-from iqa.messaging.abstract.client import Sender, Receiver
+from iqa.abstract.server.broker import Broker
+from iqa.abstract.client import Sender, Receiver
 from iqa.components.clients import \
     ReceiverJava, SenderJava, \
     ReceiverPython, SenderPython, \
     ReceiverNodeJS, SenderNodeJS
 from iqa.components.routers.dispatch.dispatch import Dispatch
-from iqa.pytest_iqa import IQAInstance
+from iqa.instance.instance import Instance
 
 
 def pytest_addoption(parser):
@@ -39,7 +39,7 @@ def pytest_generate_tests(metafunc):
     receivers_comb = ['receiver' + '_' + client for client in clients]
 
     # Routers
-    iqa: IQAInstance = metafunc.config.iqa
+    iqa: Instance = metafunc.config.iqa
     routers = list()
     for router in iqa.routers:
         routers.append(router.node.hostname)
@@ -103,7 +103,7 @@ def pytest_generate_tests(metafunc):
         metafunc.parametrize('address,translates_to,broker', address_translation_tuple)
 
     if {'topic_durable', 'broker'}.issubset(metafunc.fixturenames):
-            metafunc.parametrize('topic_durable,broker', broker_durable_topics)
+        metafunc.parametrize('topic_durable,broker', broker_durable_topics)
 
     if {'topic_nondurable', 'broker'}.issubset(metafunc.fixturenames):
         metafunc.parametrize('topic_nondurable,broker', broker_nondurable_topics)
@@ -325,4 +325,3 @@ def broker_slave(request, iqa):
     if "Broker.S." in request.param:
         broker_hostname = request.param
         return iqa.get_brokers(broker_hostname)[0]
-

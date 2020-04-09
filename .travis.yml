@@ -5,15 +5,21 @@ language: python
 
 matrix:
   include:
-  - python: pypy
-    env: TOX_ENV=pypy
+  - python: pypy3
+    env: TOX_ENV=pypy3
   - python: 3.6
+    env: TOX_ENV=flake8
+  - python: 3.7
     env: TOX_ENV=flake8
 
 install:
 - pip install tox
 
+before_script:
+  - echo -e "Host 172.17.*.*\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
+
 script:
+- bash tests/images/sshd_image/run_sshd_image.sh
 - tox -e $TOX_ENV
 
 before_cache:

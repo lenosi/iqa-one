@@ -26,4 +26,4 @@ class MessageAnnotations:
     If the message-annotations section is omitted, it is equivalent to a message-annotations section containing
     an empty map of annotations.
     """
-    non: None = None
+    pass

@@ -55,7 +55,7 @@ def cleanup_files():
 
 def pytest_configure(config):
     """
-    Loads IQAInstance based on provided environment and extra command line args.
+    Loads IQA instance based on provided environment and extra command line args.
     All arguments will be available as variables that can be used inside the inventory.
     The same can be done when using Ansible CLI (using -e cli_arg=value).
     :param config:

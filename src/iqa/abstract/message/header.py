@@ -63,13 +63,6 @@ class Header:
 
         :param delivery_count: the number of prior unsuccessful delivery attempts (optional)
     """
-    # __slots__ = (
-    #         'durable',
-    #         'priority',
-    #         'ttl',
-    #         'first_acquirer',
-    #         'delivery_count'
-    # )
 
     durable: bool = False
     priority: int = 4

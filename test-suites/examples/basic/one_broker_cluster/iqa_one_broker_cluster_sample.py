@@ -5,11 +5,9 @@ to handle a Broker component.
 import sys
 import logging
 
-
-
 # Displaying all queues
 from iqa.broker.abstract_broker_cluster import AbstractBrokerCluster
-from iqa.core.instance import IQAInstance
+from iqa.instance.instance import Instance
 from iqa.system.service.service import ServiceStatus
 
 DELAY = 10
@@ -25,6 +23,7 @@ def query_queues(broker):
     print("  -> List of queues on %s:" % broker.node.hostname)
     for queue in broker.queues():
         print("     - name: %-40s | message count: %s" % (queue.fqqn, queue.message_count))
+
 
 logging.basicConfig(level=logging.INFO)
 
@@ -46,8 +45,8 @@ the '%s' inventory file and it will then:
 print(intro_message)
 
 # Loading the instance
-print("Loading IQAInstance using inventory file: %s" % inventory)
-iqa = IQAInstance(inventory)
+print("Loading IQA instance using inventory file: %s" % inventory)
+iqa = Instance(inventory)
 
 # # Iterating through brokers
 # for virtual_comp in iqa.get_virtual_components():

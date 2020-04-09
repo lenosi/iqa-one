@@ -1,13 +1,14 @@
-from iqa_common.executor import Command, Execution
-from iqa.components.abstract.component import Receiver, Sender
-from iqa.messaging_abstract.message import Message
-from messaging_components.clients import ReceiverJava, SenderJava, ReceiverPython, SenderPython, ReceiverNodeJS, \
+from iqa.system.executor import Execution
+from iqa.system.command.command_base import Command
+from iqa.abstract.client import Receiver, Sender
+from iqa.abstract.message import Message
+from iqa.components.clients import ReceiverJava, SenderJava, ReceiverPython, SenderPython, ReceiverNodeJS, \
     SenderNodeJS
 
 # Initial static configuration
-from messaging_components.routers import Dispatch
-from messaging_components.routers.dispatch.management import RouterQuery
-from iqa.pytest_iqa import IQAInstance
+from iqa.components.routers import Dispatch
+from iqa.components.routers.dispatch.management import RouterQuery
+from iqa.instance.instance import Instance
 import time
 import logging
 
@@ -33,7 +34,7 @@ def test_scale_up_router(router: Dispatch):
     """
     cmd_scale_up = Command(args=['oc', 'scale', '--replicas=%d' % MESH_SIZE, 'dc', 'amq-interconnect'], timeout=TIMEOUT,
                            stderr=True, stdout=True)
-    execution: Execution = router.execute(cmd_scale_up)
+    execution: Execution = router.node.execute(cmd_scale_up)
     execution.wait()
 
     # If debug enabled, logging stdout (or stderr when using local executor)
@@ -93,7 +94,7 @@ def test_basic_messaging_with_nodejs(nodejs_receiver: ReceiverNodeJS, nodejs_sen
     validate_client_results(nodejs_receiver, nodejs_sender)
 
 
-def test_basic_messaging_with_all_clients_concurrently(iqa: IQAInstance, length):
+def test_basic_messaging_with_all_clients_concurrently(iqa: Instance, length):
     """
     Exchange messages through the router using three pairs of:
     - Java Sender and Receiver
@@ -127,7 +128,7 @@ def test_scale_down_router(router: Dispatch):
     :return:
     """
     cmd_scale_up = Command(args=['oc', 'scale', '--replicas=1', 'dc', 'amq-interconnect'], timeout=TIMEOUT)
-    execution: Execution = router.execute(cmd_scale_up)
+    execution: Execution = router.node.execute(cmd_scale_up)
     execution.wait()
 
     # If debug enabled, logging stdout (or stderr when using local executor)

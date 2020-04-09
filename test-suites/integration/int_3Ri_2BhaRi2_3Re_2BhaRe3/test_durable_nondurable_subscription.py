@@ -1,7 +1,7 @@
 import hashlib
 import time
 
-from iqa.pytest_iqa import IQAInstance
+from iqa.instance.instance import Instance
 
 from integration.int_3Ri_2BhaRi2_3Re_2BhaRe3.receiver import Receiver
 from integration.int_3Ri_2BhaRi2_3Re_2BhaRe3.sender import Sender
@@ -150,7 +150,7 @@ class TestDurableNonDurableSubscription(object):
             "Unable to send %d messages through senders: %s" % \
             (self.MESSAGES, [res[0] for res in sender_results if not res[1]])
 
-    def test_synchronous_durable_subscription(self, topic_durable, broker, iqa: IQAInstance):
+    def test_synchronous_durable_subscription(self, topic_durable, broker, iqa: Instance):
         """
         Connects one Durable Subscriber to the "topic_durable" address across all routers.
         Once all subscribers are connected, it starts one Publisher against each router
@@ -194,7 +194,7 @@ class TestDurableNonDurableSubscription(object):
         # Assert that all receivers received expected amount of messages
         self.validate_all_messages_received(publishers[0].message_body, routers, subscribers)
 
-    def test_asynchronous_durable_subscription(self, topic_durable, broker, iqa: IQAInstance):
+    def test_asynchronous_durable_subscription(self, topic_durable, broker, iqa: Instance):
         """
         This test must be defined as the second one (as tests defined in classes run sequentially in py.test).
         With that said, the previous test left the durable subscriptions available in the related Broker instance.
@@ -241,7 +241,7 @@ class TestDurableNonDurableSubscription(object):
         # Assert that all receivers received expected amount of messages
         self.validate_all_messages_received(publishers[0].message_body, routers, subscribers)
 
-    def test_synchronous_nondurable_subscription(self, topic_nondurable, broker, iqa: IQAInstance):
+    def test_synchronous_nondurable_subscription(self, topic_nondurable, broker, iqa: Instance):
         """
         Connects one Non-Durable Subscriber instance to the "topic_durable" address across all routers.
         Once all subscribers are connected, it starts one Publisher against each router
@@ -285,7 +285,7 @@ class TestDurableNonDurableSubscription(object):
         # Assert that all receivers received expected amount of messages
         self.validate_all_messages_received(publishers[0].message_body, routers, subscribers)
 
-    def test_asynchronous_nondurable_subscription(self, topic_nondurable, broker, iqa: IQAInstance):
+    def test_asynchronous_nondurable_subscription(self, topic_nondurable, broker, iqa: Instance):
         """
         Publishers run first and will publish a pre-defined (self.MESSAGES) number of messages into the related
         multi-cast address (topic_nondurable).
@@ -338,4 +338,3 @@ class TestDurableNonDurableSubscription(object):
         # Assert that all receivers did not receive any message and that all of them timed out
         assert all([s.received == 0 for s in subscribers]), "Expecting no message received"
         assert all([s.timeout_handler.timed_out() for s in subscribers]), "Expecting all receivers to timeout"
-

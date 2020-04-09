@@ -6,8 +6,8 @@ from iqa.abstract.client import MessagingClient
 class Receiver(MessagingClient):
     """Abstract class of client's receivers."""
 
-    def __init__(self, name: str, message_buffer=True, **kwargs):
-        super(Receiver, self).__init__(name, **kwargs)
+    def __init__(self, message_buffer=True, **kwargs):
+        super(Receiver, self).__init__(**kwargs)
         # Sender settings
 
     def receive(self):

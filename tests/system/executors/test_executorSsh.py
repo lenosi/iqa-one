@@ -1,3 +1,4 @@
+from subprocess import check_output
 import subprocess
 import logging
 
@@ -10,8 +11,9 @@ logging.basicConfig(level=logging.DEBUG)
 
 class TestExecutorSsh:
     def test_execute(self):
-        cmd_ip = Command(['docker', 'inspect', '-f', '"{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}"',
-                          'sshd-iqa'], stdout=True)
+        cmd_ip = Command(
+            ['docker', 'inspect', '-f', '"{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}"',
+             'sshd-iqa'], stdout=True)
         local_exec = ExecutorLocal()
         ip_ex = local_exec.execute(command=cmd_ip)
         ip_ex.wait()
@@ -20,7 +22,7 @@ class TestExecutorSsh:
             user="root",
             hostname=ip,
             name="SSH executor",
-            ssl_private_key="tests/images/sshd_image/identity",
+            ssl_private_key="tests/images/sshd_image/identity"
         )
 
         cmd = Command(args=["whoami"], stdout=True)
