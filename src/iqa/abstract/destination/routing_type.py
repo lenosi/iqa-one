@@ -5,12 +5,12 @@ class RoutingType(Enum):
     """
     Routing type
     """
-    ANYCAST = auto()
-    MULTICAST = auto()
-    BOTH = auto()
+    ANYCAST: auto = auto()
+    MULTICAST: auto = auto()
+    BOTH: auto = auto()
 
     @staticmethod
-    def from_value(value: str):
+    def from_value(value: str) -> 'RoutingType':
         if not value:
             return RoutingType.ANYCAST
 

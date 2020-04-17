@@ -1,1 +1,0 @@
-from .qpid import Qpid

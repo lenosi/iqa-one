@@ -19,17 +19,16 @@ class ExecutorSsh(Executor):
     implementation = 'ssh'
 
     def __init__(self, user: str, hostname: str, port: str = "22",
-                 ssl_private_key: str = None, name: str = "ExecutorSsh", stricthostkeychecking=False, **kwargs):
+                 ssl_private_key: str = None, name: str = "ExecutorSsh", **kwargs) -> None:
         super(ExecutorSsh, self).__init__()
-        self.hostname = kwargs.get('executor_hostname', hostname)
-        self.port = kwargs.get('executor_port', port)
-        self.user = kwargs.get('executor_user', user)
-        self.name = kwargs.get('executor_name', name)
-        self.ssl_private_key = kwargs.get('executor_ssl_private_key', ssl_private_key)
-        self.stricthostkeychecking = stricthostkeychecking
+        self.hostname: str = kwargs.get('executor_hostname', hostname)
+        self.port: str = kwargs.get('executor_port', port)
+        self.user: str = kwargs.get('executor_user', user)
+        self.name: str = kwargs.get('executor_name', name)
+        self.ssl_private_key: str = kwargs.get('executor_ssl_private_key', ssl_private_key)
 
-    def _execute(self, command):
-        ssh_args = ['ssh', '-p', '%s' % self.port]
+    def _execute(self, command) -> ExecutionProcess:
+        ssh_args: list = ['ssh', '-p', '%s' % self.port]
 
         # If an SSL private key given, use it
         if self.ssl_private_key is not None \

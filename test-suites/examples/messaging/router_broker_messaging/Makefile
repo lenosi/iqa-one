@@ -5,11 +5,15 @@ SAMPLE=iqa_messaging_sample.py
 all: router
 .PHONY: clean venv clients run run-container local ssh docker
 
-clean:
+clean: docker-clean
 	# Useful when you have old venv
 	@echo "Removing virtual env: $(VENV_DIR)"
 	rm -rf $(VENV_DIR) || true
-	
+
+docker-clean:
+	@echo "Removing created containers:"
+	@docker rm -f cli-java cli-rhea cli-proton-python broker1 router1 || true
+
 venv: clean
 	@echo "Creating virtual env: $(VENV_DIR)"
 	virtualenv -p python3 $(VENV_DIR)
@@ -46,11 +50,11 @@ router: run-router run
 	@echo "      - cli-java"
 	@echo "      - cli-proton-python"
 	@echo "      - cli-rhea"
-	@echo "      Please remove them as needed."
+	@echo "Please remove them as needed or using make docker-clean."
 
 run-broker:
 	@echo "Executing apache artemis as a local container named 'broker1'"
-	@docker run -itd --name broker1 rhmessagingqe/artemis:2.6.3 2> /dev/null || docker start broker1
+	@docker run -itd --name broker1 rhmessagingqe/artemis:latest 2> /dev/null || docker start broker1
 	@echo Waiting for container to start...
 	@sleep 10
 
@@ -65,4 +69,4 @@ broker: run-broker run
 	@echo "      - cli-java"
 	@echo "      - cli-proton-python"
 	@echo "      - cli-rhea"
-	@echo "      Please remove them as needed."
+	@echo "Please remove them as needed or using make docker-clean."

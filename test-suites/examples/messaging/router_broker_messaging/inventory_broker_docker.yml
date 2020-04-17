@@ -40,3 +40,308 @@ all:
         component: client
         executor: docker
         ansible_connection: docker
+_defaults:
+  broker_name: amq
+  broker_home: /opt/amq-broker-7.2.0
+  broker_instance: /opt/amq-broker-7.2.0-i0
+  cluster_multicast_address: 233.7.7.9
+  cluster_multicast_port: 9876
+  cluster_connector_url: tcp://0.0.0.0:61616
+  log_level_all: INFO
+  cluster_load_balancing: ON_DEMAND
+render:
+  generator_notice: true
+  licenses: true
+  template: artemis/2.6.0
+  profile_path: 'artemis/2.6.0/ha/replication.yaml'
+
+broker_xml:
+  name: amq-10-37-145-202
+  journal:
+    persistence_enabled: true
+    type: ASYNCIO
+    directory: data/journal
+    min_files: 2
+    pool_files: 10
+    file_size: 10M
+    buffer_timeout: 20000
+    max_io: 4096
+  paging_directory: data/paging
+  bindings_directory: data/bindings
+  large_messages_directory: data/large-messages
+  disk_scan_period: 5000
+  max_disk_usage: 90
+  critical_analyzer:
+    enabled: true
+    timeout: 120000
+    check_period: 60000
+    policy: HALT
+  acceptors:
+  - name: artemis
+    protocol: tcp
+    address: 0.0.0.0
+    port: 61616
+    properties:
+    - tcpSendBufferSize: 1048576
+    - tcpReceiveBufferSize: 1048576
+    - protocols: CORE,AMQP,STOMP,HORNETQ,MQTT,OPENWIRE
+    - useEpoll: true
+    - amqpCredits: 1000
+    - amqpLowCredits: 300
+  - name: amqp
+    protocol: tcp
+    address: 0.0.0.0
+    port: 5672
+    properties:
+    - tcpSendBufferSize: 1048576
+    - tcpReceiveBufferSize: 1048576
+    - protocols: AMQP
+    - useEpoll: true
+    - amqpCredits: 1000
+    - amqpLowCredits: 300
+  - name: stomp
+    protocol: tcp
+    address: 0.0.0.0
+    port: 61613
+    properties:
+    - tcpSendBufferSize: 1048576
+    - tcpReceiveBufferSize: 1048576
+    - protocols: STOMP
+    - useEpoll: true
+  - name: hornetq
+    protocol: tcp
+    address: 0.0.0.0
+    port: 5445
+    properties:
+    - anycastPrefix: jms.queue.
+    - multicastPrefix: jms.topic.
+    - protocols: HORNETQ,STOMP
+    - useEpoll: true
+  - name: mqtt
+    protocol: tcp
+    address: 0.0.0.0
+    port: 1883
+    properties:
+    - tcpSendBufferSize: 1048576
+    - tcpReceiveBufferSize: 1048576
+    - protocols: MQTT
+    - useEpoll: true
+  security_settings:
+  - match: '#'
+    permissions:
+      createNonDurableQueue:
+      - amq
+      deleteNonDurableQueue:
+      - amq
+      createDurableQueue:
+      - amq
+      deleteDurableQueue:
+      - amq
+      createAddress:
+      - amq
+      deleteAddress:
+      - amq
+      consume:
+      - amq
+      browse:
+      - amq
+      send:
+      - amq
+      manage:
+      - amq
+  address_settings:
+  - match: activemq.management#
+    dead_letter_address: DLQ
+    expiry_address: ExpiryQueue
+    redelivery_delay: 0
+    max_size_bytes: -1
+    message_counter_history_day_limit: 10
+    address_full_policy: PAGE
+    auto_create_queues: true
+    auto_create_addresses: true
+    auto_create_jms_queues: true
+    auto_create_jms_topics: true
+  - match: '#'
+    dead_letter_address: DLQ
+    expiry_address: ExpiryQueue
+    redelivery_delay: 0
+    max_size_bytes: -1
+    message_counter_history_day_limit: 10
+    address_full_policy: PAGE
+    auto_create_queues: true
+    auto_create_addresses: true
+    auto_create_jms_queues: true
+    auto_create_jms_topics: true
+  addresses:
+  - name: DLQ
+    anycast:
+    - name: test
+      type: queue
+  - name: ExpiryQueue
+    anycast:
+    - name: ExpiryQueue
+      type: queue
+  connectors:
+  - name: cluster-connector
+    protocol: tcp
+    address: 10.37.145.202
+    port: '61616'
+  cluster:
+    user: artemis_cluster_admin
+    password: cluster_secret_password
+  broadcast_groups:
+  - name: cluster-broadcast-group
+    address: 237.7.7.217
+    port: '9876'
+    broadcast_period: 5000
+    connector_ref: cluster-connector
+  discovery_groups:
+  - name: cluster-discovery-group
+    address: 237.7.7.217
+    port: '9876'
+    refresh_timeout: 10000
+  cluster_connections:
+  - name: artemis-cluster
+    connector_ref: cluster-connector
+    message_load_balancing: ON_DEMAND
+    max_hops: 1
+    discovery_group_ref: cluster-discovery-group
+artemis_profile:
+  home: /home/jamq/jboss-amq-7
+  instance: /home/jamq/ci-cluster-amq7
+  data_dir: /home/jamq/ci-cluster-amq7/data
+  instance_uri: file:/home/jamq/ci-cluster-amq7
+  instance_etc_uri: file:/home/jamq/ci-cluster-amq7/etc/
+  java_args:
+  - -XX:+PrintClassHistogram
+  - -XX:+UseG1GC
+  - -Xms512M
+  - -Xmx2G
+  - -Xloggc:gc.log
+  - -XX:+HeapDumpOnOutOfMemoryError
+  - -Dhawtio.realm=activemq
+  - -Dhawtio.offline="true"
+  - -Dhawtio.role=amq
+  - -Dhawtio.rolePrincipalClasses=org.apache.activemq.artemis.spi.core.security.jaas.RolePrincipal
+  - -Djolokia.policyLocation=${ARTEMIS_INSTANCE_ETC_URI}jolokia-access.xml
+artemis_roles:
+  amq:
+  - admin
+artemis_users:
+  admin: admin
+bootstrap_xml:
+  jaas_security:
+  - domain: activemq
+  server:
+    configuration: file:/home/jamq/ci-cluster-amq7/etc/broker.xml
+  web:
+    bind:
+      protocol: http
+      address: 0.0.0.0
+      port: 8161
+    path: web
+    apps:
+    - url: redhat-branding
+      war: redhat-branding.war
+    - url: artemis-plugin
+      war: artemis-plugin.war
+    - url: dispatch-hawtio-console
+      war: dispatch-hawtio-console.war
+    - url: console
+      war: console.war
+jolokia_access:
+  allow_origins:
+  - '*'
+  strict_checking: true
+logging_properties:
+  loggers:
+  - org.eclipse.jetty
+  - org.jboss.logging
+  - org.apache.activemq.artemis.core.server
+  - org.apache.activemq.artemis.utils
+  - org.apache.activemq.artemis.journal
+  - org.apache.activemq.artemis.jms.server
+  - org.apache.activemq.artemis.integration.bootstrap
+  logger_level: INFO
+  logger_properties:
+  - org.apache.activemq.artemis.core.server.level: INFO
+  - org.apache.activemq.artemis.core.journal.level: INFO
+  - org.apache.activemq.artemis.core.utils.level: INFO
+  - org.apache.activemq.artemis.core.jms.level: INFO
+  - org.apache.activemq.artemis.core.integration.bootstrap.level: INFO
+  - org.eclipse.jetty.level: INFO
+  handlers:
+  - name: CONSOLE
+    class_name: org.jboss.logmanager.handlers.ConsoleHandler
+    level: INFO
+    formatter: PATTERN
+    properties:
+    - autoFlush: true
+  - name: FILE
+    class_name: org.jboss.logmanager.handlers.PeriodicRotatingFileHandler
+    level: INFO
+    formatter: PATTERN
+    properties:
+    - suffix: .yyyy-MM-dd
+    - append: true
+    - autoFlush: true
+    - fileName: ${artemis.instance}/log/artemis.log
+  formatters:
+  - name: PATTERN
+    class_name: org.jboss.logmanager.formatters.PatternFormatter
+    properties:
+    - pattern: '%d %-5p [%c] %s%E%n'
+login_config:
+- name: activemq
+  modules:
+  - class_name: org.apache.activemq.artemis.spi.core.security.jaas.PropertiesLoginModule
+    flag: required
+    properties:
+    - debug: false
+    - reload: true
+    - org.apache.activemq.jaas.properties.user: artemis-users.properties
+    - org.apache.activemq.jaas.properties.role: artemis-roles.properties
+management_xml:
+  connector:
+    host: 0.0.0.0
+    port: 1099
+  whitelist:
+  - domain: hawtio
+  default_access:
+  - method: list*
+    roles:
+    - amq
+  - method: get*
+    roles:
+    - amq
+  - method: is*
+    roles:
+    - amq
+  - method: set*
+    roles:
+    - amq
+  - method: '*'
+    roles:
+    - amq
+  role_access:
+  - domain: org.apache.activemq.artemis
+    access:
+    - method: list*
+      roles:
+      - amq
+    - method: get*
+      roles:
+      - amq
+    - method: is*
+      roles:
+      - amq
+    - method: set*
+      roles:
+      - amq
+    - method: '*'
+      roles:
+      - amq
+node_information:
+  default_address: 10.37.145.202
+  addresses:
+    default_ssh: 10.37.145.202

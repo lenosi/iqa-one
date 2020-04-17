@@ -1,12 +1,17 @@
-
 import pytest
+from _pytest.config.argparsing import Parser
+from _pytest.python import Metafunc
 
+from iqa.components.brokers.artemis.artemis import Artemis
+from iqa.components.routers.dispatch.dispatch import Dispatch
+from iqa.components.clients.core.receiver import ReceiverCore
+from iqa.components.clients.core.sender import SenderCore
+from iqa.instance.instance import Instance
+from iqa.system.executor import Executor
+from iqa.system.node.node import Node
+from iqa.system.service import Service
 
-import iqa.components.clients.core as core
-from iqa.system.node import Node
-from iqa.components.brokers.artemis import Artemis
-from iqa.components.routers.dispatch import Dispatch
-
+iqa_instance: Instance = Instance()
 
 ########################
 # Section: Add option  #
@@ -17,7 +22,7 @@ from iqa.components.routers.dispatch import Dispatch
 ########################
 
 
-def pytest_addoption(parser):
+def pytest_addoption(parser: Parser) -> None:
     """
 
     :param parser:
@@ -54,7 +59,7 @@ def pytest_addoption(parser):
 #############################
 
 
-def pytest_generate_tests(metafunc):
+def pytest_generate_tests(metafunc: Metafunc) -> None:
     if 'sender' in metafunc.fixturenames:
         senders = list(metafunc.config.option.sender)
         metafunc.parametrize('sender', senders, indirect=True)
@@ -75,51 +80,57 @@ def pytest_generate_tests(metafunc):
 ########################
 # Section: Fixtures    #
 ########################
+client_node: Node = iqa_instance.new_node(hostname='ic01')
+
+executor: Executor = Executor()
+
+dispatch_service: Service = Service(name='dispatch_service', executor=executor)
 
 
 @pytest.fixture()
-def sender(request):
+def sender(request) -> SenderCore:
     if 'native' in request.param:
-        return core.Sender()
+        return SenderCore(name='sender_core', node=client_node)
 
 
 @pytest.fixture()
-def receiver(request):
+def receiver(request) -> ReceiverCore:
     if 'native' in request.param:
-        return core.Receiver()
+        return ReceiverCore(name='receiver_core', node=client_node)
 
 
 @pytest.fixture()
-def broker(request):
-    broker_node = Node(hostname='ic01-r6i')
+def broker(request) -> Artemis:
+    broker_node: Node = Node(hostname='ic01-r6i', executor=executor)
     if 'artemis' in request.param:
-        return Artemis(node=broker_node)
+        return Artemis(name='artemis', node=broker_node)
     elif 'amq7' in request.param:
-        return Artemis(node=broker_node)
+        return Artemis(name='amq7', node=broker_node)
 
 
 @pytest.fixture()
-def router(request):
-    router_node = Node(hostname='ic01-r6i')
+def router(request) -> Dispatch:
+    router_node: Node = Node(hostname='ic01-r6i', executor=executor)
     if 'dispatch' in request.param:
-        return Dispatch(node=router_node)
+        return Dispatch(name='dispatch', node=router_node, service=dispatch_service)
     elif 'interconnect' in request.param:
-        return Dispatch(node=router_node)
+        return Dispatch(name='interconnect', node=router_node, service=dispatch_service)
+
 
 @pytest.fixture()
-def tls(request):
+def tls(request) -> SenderCore:
     if 'tls10' in request.param:
-        return core.Sender()
+        return SenderCore(name='tls1.0', node=client_node)
     if 'tls11' in request.param:
-        return core.Sender()
+        return SenderCore(name='tls1.1', node=client_node)
     if 'tls12' in request.param:
-        return core.Sender()
+        return SenderCore(name='tls1.2', node=client_node)
     if 'tls13' in request.param:
-        return core.Sender()
+        return SenderCore(name='tls1.3', node=client_node)
 
 
 @pytest.fixture()
-def sasl(request):
+def sasl(request) -> None:
     """
     SASL Authentication fixture
     :param request:

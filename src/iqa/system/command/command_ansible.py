@@ -12,7 +12,7 @@ class CommandAnsible(Command):
 
     def __init__(self, ansible_args: str = "", ansible_module: str = "raw",
                  stdout: bool = False, stderr: bool = False,
-                 daemon: bool = False, timeout: int = 0, encoding: str = "utf-8"):
+                 daemon: bool = False, timeout: int = 0, encoding: str = "utf-8") -> None:
         super(CommandAnsible, self).__init__([ansible_args], stdout, stderr,
                                              daemon, timeout, encoding)
-        self.ansible_module = ansible_module
+        self.ansible_module: str = ansible_module

@@ -1,18 +1,22 @@
-from typing import Union
+from typing import Union, List, Tuple
 
 import pytest
+from _pytest.config.argparsing import Parser
+from _pytest.python import Metafunc
 
 from iqa.abstract.server.broker import Broker
-from iqa.abstract.client import Sender, Receiver
-from iqa.components.clients import \
-    ReceiverJava, SenderJava, \
-    ReceiverPython, SenderPython, \
-    ReceiverNodeJS, SenderNodeJS
+from iqa.components.clients.external.java.receiver import ReceiverJava
+from iqa.components.clients.external.java.sender import SenderJava
+from iqa.components.clients.external.python.receiver import ReceiverPython
+from iqa.components.clients.external.python.sender import SenderPython
+from iqa.components.clients.external.nodejs.receiver import ReceiverNodeJS
+from iqa.components.clients.external.nodejs.sender import SenderNodeJS
 from iqa.components.routers.dispatch.dispatch import Dispatch
 from iqa.instance.instance import Instance
+from iqa.utils.types import RouterType, SenderType, ReceiverType, BrokerType
 
 
-def pytest_addoption(parser):
+def pytest_addoption(parser: Parser) -> None:
     """
     This particular suite requires that the router1 ip address is informed,
     as it is used internally in the related inventory files.
@@ -25,47 +29,47 @@ def pytest_addoption(parser):
                      help="Message length")
 
 
-def pytest_generate_tests(metafunc):
+def pytest_generate_tests(metafunc: Metafunc) -> None:
     """
     Iterations for EdgeRouterMode02 test_suite
     """
-    clients = [
+    clients: List[str] = [
         "java",
         "python",
         "nodejs",
     ]
 
-    senders_comb = ['sender' + '_' + client for client in clients]
-    receivers_comb = ['receiver' + '_' + client for client in clients]
+    senders_comb: List[str] = ['sender' + '_' + client for client in clients]
+    receivers_comb: List[str] = ['receiver' + '_' + client for client in clients]
 
     # Routers
     iqa: Instance = metafunc.config.iqa
-    routers = list()
+    routers: List[RouterType] = list()
     for router in iqa.routers:
         routers.append(router.node.hostname)
 
     # Broker queues
-    broker_queues = ['brokeri2.durable.queue', 'brokeri2.nondurable.queue', 'brokere3.durable.queue',
-                     'brokere3.nondurable.queue', 'interior.autolink.durable.queue',
-                     'interior.autolink.nondurable.queue', 'edge.autolink.durable.queue',
-                     'edge.autolink.nondurable.queue']
+    broker_queues: List[str] = ['brokeri2.durable.queue', 'brokeri2.nondurable.queue', 'brokere3.durable.queue',
+                                'brokere3.nondurable.queue', 'interior.autolink.durable.queue',
+                                'interior.autolink.nondurable.queue', 'edge.autolink.durable.queue',
+                                'edge.autolink.nondurable.queue']
 
     # Address translation tuple
-    address_translation_tuple = [
+    address_translation_tuple: List[Tuple[str, str, str]] = [
         ('addremoveprefix.durable.queue', 'brokeri2.durable.queue', 'Broker.M.I2'),
         ('durable.queue', 'brokeri2.durable.queue', 'Broker.M.I2'),
         ('removeprefix.brokeri2.durable.queue', 'brokeri2.durable.queue', 'Broker.M.I2'),
         ('edgeremove.durable.queue', 'brokere3.durable.queue', 'Broker.M.E3')
     ]
-    address_translation_fixtures = ['address', 'translates_to', 'broker']
+    address_translation_fixtures: List[str] = ['address', 'translates_to', 'broker']
 
     # Broker durable topics
-    broker_durable_topics = [
+    broker_durable_topics: List[Tuple[str, str]] = [
         ('brokeri2.durable.topic', 'Broker.M.I2'),
         ('brokere3.durable.topic', 'Broker.M.E3')
     ]
     # Broker non-durable topics
-    broker_nondurable_topics = [
+    broker_nondurable_topics: List[Tuple[str, str]] = [
         ('brokeri2.nondurable.topic', 'Broker.M.I2'),
         ('brokere3.nondurable.topic', 'Broker.M.E3')
     ]
@@ -110,7 +114,7 @@ def pytest_generate_tests(metafunc):
 
 
 @pytest.fixture()
-def router_e1(iqa) -> Dispatch:
+def router_e1(iqa: Instance) -> Dispatch:
     """
     Returns the router
     :param iqa:
@@ -120,7 +124,7 @@ def router_e1(iqa) -> Dispatch:
 
 
 @pytest.fixture()
-def router_e2(iqa) -> Dispatch:
+def router_e2(iqa: Instance) -> Dispatch:
     """
     Returns the router
     :param iqa:
@@ -130,7 +134,7 @@ def router_e2(iqa) -> Dispatch:
 
 
 @pytest.fixture()
-def router_e3(iqa) -> Dispatch:
+def router_e3(iqa: Instance) -> Dispatch:
     """
     Returns the router
     :param iqa:
@@ -140,7 +144,7 @@ def router_e3(iqa) -> Dispatch:
 
 
 @pytest.fixture()
-def router_i1(iqa) -> Dispatch:
+def router_i1(iqa: Instance) -> Dispatch:
     """
     Returns the router
     :param iqa:
@@ -150,7 +154,7 @@ def router_i1(iqa) -> Dispatch:
 
 
 @pytest.fixture()
-def router_i2(iqa) -> Dispatch:
+def router_i2(iqa: Instance) -> Dispatch:
     """
     Returns the router
     :param iqa:
@@ -160,7 +164,7 @@ def router_i2(iqa) -> Dispatch:
 
 
 @pytest.fixture()
-def router_i3(iqa) -> Dispatch:
+def router_i3(iqa: Instance) -> Dispatch:
     """
     Returns the router
     :param iqa:
@@ -170,7 +174,7 @@ def router_i3(iqa) -> Dispatch:
 
 
 @pytest.fixture()
-def broker_m_internal(iqa) -> Broker:
+def broker_m_internal(iqa: Instance) -> Broker:
     """
     Returns the master broker instance connected to internal 2 router
     :param iqa:
@@ -180,7 +184,7 @@ def broker_m_internal(iqa) -> Broker:
 
 
 @pytest.fixture()
-def broker_s_internal(iqa) -> Broker:
+def broker_s_internal(iqa: Instance) -> Broker:
     """
     Returns the slave broker instance connected to internal 2 router
     :param iqa:
@@ -190,7 +194,7 @@ def broker_s_internal(iqa) -> Broker:
 
 
 @pytest.fixture()
-def broker_m_edge(iqa) -> Broker:
+def broker_m_edge(iqa: Instance) -> Broker:
     """
     Returns the master broker instance connected to edge 3 router
     :param iqa:
@@ -200,7 +204,7 @@ def broker_m_edge(iqa) -> Broker:
 
 
 @pytest.fixture()
-def broker_s_edge(iqa) -> Broker:
+def broker_s_edge(iqa: Instance) -> Broker:
     """
     Returns the slave broker instance connected to edge 3 router
     :param iqa:
@@ -210,7 +214,7 @@ def broker_s_edge(iqa) -> Broker:
 
 
 @pytest.fixture(name='get_sender')
-def get_sender_(request, iqa):
+def get_sender_(request, iqa: Instance):
     """
     Fixture of Sender Factory
     :param request:
@@ -222,13 +226,13 @@ def get_sender_(request, iqa):
         sender1: Union[SenderJava, SenderPython, SenderNodeJS] = get_sender()
         sender2: Union[SenderJava, SenderPython, SenderNodeJS] = get_sender()
     """
-    created = []
+    created: List[SenderType] = []
 
-    def get_sender():
+    def get_sender() -> SenderType:
         if "sender_" in request.param:
-            snd = request.param.split('_')
-            sender_implementation = snd[1]
-            sender = iqa.get_clients(Sender, sender_implementation)[0]
+            snd: List[str] = request.param.split('_')
+            sender_implementation: str = snd[1]
+            sender: SenderType = iqa.get_clients(SenderType, sender_implementation)[0]
             created.append(sender)
             return sender
 
@@ -239,7 +243,7 @@ def get_sender_(request, iqa):
 
 
 @pytest.fixture(name='get_receiver')
-def get_receiver_(request, iqa):
+def get_receiver_(request, iqa: Instance):
     """
     Fixture of Receiver Factory
     :param request:
@@ -251,13 +255,13 @@ def get_receiver_(request, iqa):
         receiver1: Union[SenderJava, SenderPython, SenderNodeJS] = get_receiver()
         receiver2: Union[SenderJava, SenderPython, SenderNodeJS] = get_receiver()
     """
-    created = []
+    created: List[ReceiverType] = []
 
-    def get_receiver():
+    def get_receiver() -> ReceiverType:
         if "receiver_" in request.param:
-            rcv: str = request.param.split('_')
-            receiver_implementation = rcv[1]
-            receiver = iqa.get_clients(Receiver, receiver_implementation)[0]
+            rcv: List[str] = request.param.split('_')
+            receiver_implementation: str = rcv[1]
+            receiver: ReceiverType = iqa.get_clients(ReceiverType, receiver_implementation)[0]
             created.append(receiver)
             return receiver
 
@@ -268,53 +272,53 @@ def get_receiver_(request, iqa):
 
 
 @pytest.fixture
-def receiver(request, iqa) -> Union[ReceiverJava, ReceiverPython, ReceiverNodeJS]:
+def receiver(request, iqa: Instance) -> Union[ReceiverJava, ReceiverPython, ReceiverNodeJS]:
     if "receiver_" in request.param:
-        rcv: str = request.param.split('_')
-        receiver_implementation = rcv[1]
-        receiver = iqa.get_clients(Receiver, receiver_implementation)[0]
+        rcv: List[str] = request.param.split('_')
+        receiver_implementation: str = rcv[1]
+        receiver: ReceiverType = iqa.get_clients(ReceiverType, receiver_implementation)[0]
         return receiver
 
 
 @pytest.fixture
-def sender(request, iqa) -> Union[SenderJava, SenderPython, SenderNodeJS]:
+def sender(request, iqa: Instance) -> Union[SenderJava, SenderPython, SenderNodeJS]:
     if "sender_" in request.param:
-        snd = request.param.split('_')
-        sender_implementation = snd[1]
-        sender = iqa.get_clients(Sender, sender_implementation)[0]
+        snd: List[str] = request.param.split('_')
+        sender_implementation: str = snd[1]
+        sender: SenderType = iqa.get_clients(SenderType, sender_implementation)[0]
         return sender
 
 
 @pytest.fixture
-def router_with_broker(request, iqa):
+def router_with_broker(request, iqa: Instance) -> RouterType:
     if "Router." in request.param:
         router_hostname = request.param
         return iqa.get_routers(router_hostname)[0]
 
 
 @pytest.fixture
-def router(request, iqa):
+def router(request, iqa: Instance) -> RouterType:
     if "Router." in request.param:
         router_hostname = request.param
         return iqa.get_routers(router_hostname)[0]
 
 
 @pytest.fixture
-def router_edge(request, iqa):
+def router_edge(request, iqa: Instance) -> RouterType:
     if "Router.E" in request.param:
         router_hostname = request.param
         return iqa.get_routers(router_hostname)[0]
 
 
 @pytest.fixture
-def router_interior(request, iqa):
+def router_interior(request, iqa: Instance) -> RouterType:
     if "Router.I" in request.param:
         router_hostname = request.param
         return iqa.get_routers(router_hostname)[0]
 
 
 @pytest.fixture
-def broker_master(request, iqa):
+def broker_master(request, iqa: Instance) -> BrokerType:
     if "Broker.M." in request.param:
         broker_hostname = request.param
         return iqa.get_brokers(broker_hostname)[0]

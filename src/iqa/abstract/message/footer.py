@@ -18,5 +18,5 @@ class Footer:
     A registry of defined footers and their meanings is maintained [AMQPFOOTER].
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         pass

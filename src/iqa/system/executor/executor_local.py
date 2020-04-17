@@ -13,9 +13,9 @@ class ExecutorLocal(Executor):
 
     implementation = "local"
 
-    def __init__(self, name: str = "ExecutorLocal", **kwargs):
+    def __init__(self, name: str = "ExecutorLocal", **kwargs) -> None:
         super(ExecutorLocal, self).__init__(**kwargs)
-        self.name = name
+        self.name: str = name
 
-    def _execute(self, command):
-        return Execution(command, self)
+    def _execute(self, command) -> Execution:
+        return Execution(command, self)  # type: ignore

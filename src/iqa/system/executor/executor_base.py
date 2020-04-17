@@ -1,13 +1,12 @@
 import logging
 
 from iqa.system.command.command_base import Command
-from iqa.system.executor.execution import Execution
-from iqa.system.executor.execution import ExecutionProcess
+from iqa.system.executor.execution import ExecutionProcess, Execution
 
 """
 Defines the generic Executor class, which is responsible for
 running a given Command instance similarly across different
-implementations. 
+implementations.
 """
 
 
@@ -16,9 +15,9 @@ class Executor(object):
     Abstract and generic definition of a Command executor.
     """
 
-    def __init__(self, **kwargs):
-        self._logger = logging.getLogger(self.__class__.__module__)
-        self.name = None
+    def __init__(self, **kwargs) -> None:
+        self._logger: logging.Logger = logging.getLogger(self.__class__.__module__)
+        self.name: str
 
     @property
     def implementation(self):
@@ -45,7 +44,7 @@ class Executor(object):
 
         # Delegate execution to concrete Executor
         self._logger.debug("Executing command with [%s] - %s" % (self.__class__.__name__, command.args))
-        execution = self._execute(command)
+        execution: Execution = self._execute(command)
 
         # If command is a not a daemon, wait for it
         if not command.daemon:
@@ -73,9 +72,9 @@ class ExecutorLocal(Executor):
 
     implementation = "local"
 
-    def __init__(self, name: str = "ExecutorLocal", **kwargs):
+    def __init__(self, name: str = "ExecutorLocal", **kwargs) -> None:
         super(ExecutorLocal, self).__init__(**kwargs)
-        self.name = name
+        self.name: str = name
 
-    def _execute(self, command):
+    def _execute(self, command) -> ExecutionProcess:
         return ExecutionProcess(command, self)

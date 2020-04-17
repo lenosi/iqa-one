@@ -1,16 +1,16 @@
-from iqa.components import protocols
+from iqa.components.protocols.amqp import Amqp10
 from iqa.components.abstract.server.server_component import ServerComponent
 from iqa.abstract.server.broker import Broker
 
 
-class Qpid(Broker, ServerComponent):
+class Qpid(ServerComponent, Broker):
     """
     Qpid broker
     A message-oriented middleware message broker written in C++ that stores, routes, and forwards messages using AMQP.
     """
-    supported_protocols = [protocols.Amqp10()]
-    name = 'Qpid C++ Broker'
-    implementation = 'qpid'
+    supported_protocols: list = [Amqp10()]
+    name: str = 'Qpid C++ Broker'
+    implementation: str = 'qpid'
 
-    def __init__(self, name: str, **kwargs):
+    def __init__(self, name: str, **kwargs) -> None:
         super(Qpid, self).__init__(name, **kwargs)
