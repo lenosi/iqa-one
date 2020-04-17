@@ -3,8 +3,13 @@ import posixpath
 import re
 import time
 from enum import Enum
+from typing import Union, Optional
+from typing.re import Pattern
 
-from iqa.system.executor import Executor, Command, Execution, ExecutorAnsible, CommandAnsible
+from iqa.system.command.command_ansible import CommandAnsible
+from iqa.system.command.command_base import Command
+from iqa.system.executor.execution import Execution
+from iqa.system.executor import Executor, ExecutorAnsible
 from iqa.system.service.service import ServiceStatus
 from iqa.system.service.service_fake import ServiceFake
 from iqa.utils.tcp_util import TcpUtil
@@ -15,20 +20,20 @@ class ServiceFakeArtemis(ServiceFake):
     Implementation of a Artemis pseudo-service to manage a Server component.
     """
 
-    MAX_ATTEMPTS = 10
-    DELAY = 3
+    MAX_ATTEMPTS: int = 10
+    DELAY: int = 3
 
-    _logger = logging.getLogger(__name__)
+    _logger: logging.Logger = logging.getLogger(__name__)
 
-    def __init__(self, name: str, executor: Executor, **kwargs):
+    def __init__(self, name:  Optional[str], executor: Executor, **kwargs):
         super().__init__(name, executor)
-        self.name = "artemis-service"
+        self.name: Optional[str] = "artemis-service"
 
-        self.ansible_host = kwargs.get("ansible_host", "localhost")
-        self.service_default_port = kwargs.get("artemis_port", "61616")
-        self.service_web_port = kwargs.get("broker_web_port", "8161")
-        self.service_path = posixpath.join(kwargs.get("broker_path"), "bin", "artemis-service")
-        self.service_username = kwargs.get("broker_service_user", "jamq")
+        self.ansible_host: str = kwargs.get("ansible_host", "localhost")
+        self.service_default_port: str = kwargs.get("artemis_port", "61616")
+        self.service_web_port: str = kwargs.get("broker_web_port", "8161")
+        self.service_path: str = posixpath.join(kwargs.get("broker_path"), "bin", "artemis-service")  # type: ignore
+        self.service_username: str = kwargs.get("broker_service_user", "jamq")
 
     class ServiceSystemState(Enum):
         STARTED = ('start', 'started')
@@ -54,20 +59,22 @@ class ServiceFakeArtemis(ServiceFake):
         # (dead)
 
         # On RHEL7> service is automatically redirected to systemctl
-        cmd_status = Command(['runuser', '-l', self.service_username, '%s status' % self.service_path], stdout=True,
-                             timeout=self.TIMEOUT)
-        execution = self.executor.execute(cmd_status)
+        cmd_status: Command = Command(['runuser', '-l', self.service_username, '%s status' % self.service_path],
+                                      stdout=True, timeout=self.TIMEOUT)
+        execution: Execution = self.executor.execute(cmd_status)
 
-        service_output = execution.read_stdout()
+        service_output: Optional[Union[str, list]] = execution.read_stdout()
 
         if not service_output:
             ServiceFakeArtemis._logger.debug("Service: %s - Status: FAILED" % self.name)
             return ServiceStatus.FAILED
 
-        if re.search(r'(is running|\(running\)|Running)', service_output):
+        running_pattern: Pattern = r'(is running|\(running\)|Running)'
+        stopped_pattern: Pattern = r'(is stopped|\(dead\)|Stopped)'
+        if re.search(running_pattern, service_output):
             ServiceFakeArtemis._logger.debug("Service: %s - Status: RUNNING" % self.name)
             return ServiceStatus.RUNNING
-        elif re.search(r'(is stopped|\(dead\)|Stopped)', service_output):
+        elif re.search(stopped_pattern, service_output):
             ServiceFakeArtemis._logger.debug("Service: %s - Status: STOPPED" % self.name)
             return ServiceStatus.STOPPED
 
@@ -75,15 +82,21 @@ class ServiceFakeArtemis(ServiceFake):
         return ServiceStatus.UNKNOWN
 
     def start(self, wait_for_messaging=False) -> Execution:
-        execution = self.executor.execute(self._create_command(self.ServiceSystemState.STARTED))
+        execution: Execution = self.executor.execute(self._create_command(self.ServiceSystemState.STARTED))
         self._wait_for_messaging(wait_for_messaging)
         return execution
 
     def stop(self) -> Execution:
         return self.executor.execute(self._create_command(self.ServiceSystemState.STOPPED))
 
+    def enable(self) -> Execution:
+        return NotImplemented
+
+    def disable(self) -> Execution:
+        return NotImplemented
+
     def restart(self, wait_for_messaging=False) -> Execution:
-        execution = self.executor.execute(self._create_command(self.ServiceSystemState.RESTARTED))
+        execution: Execution = self.executor.execute(self._create_command(self.ServiceSystemState.RESTARTED))
         self._wait_for_messaging(wait_for_messaging)
         return execution
 
@@ -116,7 +129,7 @@ class ServiceFakeArtemis(ServiceFake):
         :return:
         :return:
         """
-        command = 'runuser -l %s %s %s' % (self.service_username, self.service_path, service_state.system_state)
+        command: str = 'runuser -l %s %s %s' % (self.service_username, self.service_path, service_state.system_state)
         if isinstance(self.executor, ExecutorAnsible):
             return CommandAnsible(command,
                                   ansible_module='command',

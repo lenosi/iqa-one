@@ -1,5 +1,6 @@
 from dataclasses import dataclass, field
 
+
 # noinspection PyDunderSlots
 @dataclass(frozen=False)
 class DeliveryAnnotations:
@@ -24,4 +25,6 @@ class DeliveryAnnotations:
     an empty map of annotations.
 
     """
-    pass
+
+    def __init__(self) -> None:
+        pass

@@ -1,12 +1,10 @@
+from typing import Optional
+
 from .client import ClientJava
 from iqa.components.clients.external.java.command.java_commands import JavaConnectorClientCommand
-from iqa.system.node import Node
+from iqa.system.node.node import Node
 
-try:
-    from urlparse import urlparse, urlunparse
-    from urllib import quote, unquote
-except ImportError:
-    from urllib.parse import urlparse, urlunparse, quote, unquote
+from urllib.parse import urlparse, unquote
 
 
 class ConnectorJava(ClientJava):
@@ -14,7 +12,10 @@ class ConnectorJava(ClientJava):
 
     _command: JavaConnectorClientCommand
 
-    def _set_url(self, url: str):
+    def __init__(self, name: str, node: Node, **kwargs) -> None:
+        super(ConnectorJava, self).__init__(name, node, **kwargs)
+
+    def _set_url(self, url: str) -> None:
         p_url = urlparse(url)
         self._command.control.broker = '{}://{}:{}'. \
             format(p_url.scheme or 'amqp', p_url.hostname or '127.0.0.1', p_url.port or '5672')
@@ -25,11 +26,12 @@ class ConnectorJava(ClientJava):
         if p_url.password:
             self._command.connection.conn_password = unquote(p_url.password)
 
-    def set_auth_mechs(self, mechs: str):
+    def set_auth_mechs(self, mechs: str) -> None:
         self._command.connection.conn_auth_mechanisms = mechs
 
-    def set_ssl_auth(self, pem_file: str = None, key_file: str = None, keystore: str = None, keystore_pass: str = None,
-                     keystore_alias: str = None):
+    def set_ssl_auth(self, pem_file: Optional[str] = None, key_file: Optional[str] = None,
+                     keystore: Optional[str] = None, keystore_pass: Optional[str] = None,
+                     keystore_alias: Optional[str] = None) -> None:
         self._command.connection.conn_ssl_keystore_location = keystore
         self._command.connection.conn_ssl_keystore_password = keystore_pass
         self._command.connection.conn_ssl_key_alias = keystore_alias
@@ -46,6 +48,3 @@ class ConnectorJava(ClientJava):
         if self.execution.completed_successfully():
             return True
         return False
-
-    def __init__(self, name: str, node: Node, **kwargs):
-        super(ConnectorJava, self).__init__(name, node, **kwargs)

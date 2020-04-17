@@ -1,14 +1,14 @@
 import abc
 
-from iqa.components.abstract.component import Component
 from iqa.components.abstract.configuration import Configuration
+from iqa.components.abstract.server.server_component import ServerComponent
 
 
 class BrokerConfiguration(Configuration):
-    users = {}
-    ports = {}
+    users: dict = {}
+    ports: dict = {}
 
-    def __init__(self, component: Component, **kwargs):
+    def __init__(self, component: ServerComponent, **kwargs) -> None:
         super(BrokerConfiguration, self).__init__(component, **kwargs)
 
     @abc.abstractmethod
@@ -30,5 +30,5 @@ class BrokerConfiguration(Configuration):
     get_listeners = get_acceptors
 
     @abc.abstractmethod
-    def apply_config(self, yaml_configuration):
+    def apply_config(self, yaml_configuration: str) -> None:
         pass

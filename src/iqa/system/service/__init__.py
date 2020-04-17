@@ -1,8 +1,18 @@
+import logging
+
+from typing import Optional, TYPE_CHECKING
+
+from .service_artemis import ServiceFakeArtemis
+from .service_docker import ServiceDocker
+from .service_system_init import ServiceSystemInit
+from .service_systemd import ServiceSystemD
+
+from iqa.system.command.command_base import Command
+from iqa.system.executor.execution import Execution
+from iqa.system.executor import ExecutorAnsible, ExecutorContainer
 from iqa.system.service.service import Service
-from .service_artemis import *
-from .service_docker import *
-from .service_system_init import *
-from .service_systemd import *
+if TYPE_CHECKING:
+    from iqa.utils.types import ExecutorType
 
 
 class ServiceFactory(object):
@@ -16,10 +26,11 @@ class ServiceFactory(object):
 
     Otherwise a valid service name must be provided.
     """
-    _logger = logging.getLogger(__name__)
+    _logger: logging.Logger = logging.getLogger(__name__)
 
     @staticmethod
-    def create_service(executor: Executor, service_name: str = None, **kwargs) -> Service:
+    def create_service(executor: 'ExecutorType', service_name: Optional[str] = None,
+                       **kwargs) -> Service:
         if service_name:
             # Validate if systemd is available
             svc_cmd_exec: Execution = executor.execute(Command(['pidof', 'systemd'], stdout=True, timeout=30))
@@ -33,7 +44,7 @@ class ServiceFactory(object):
                                              % (service_name, executor.__class__.__name__))
                 return ServiceSystemInit(name=service_name, executor=executor)
         else:
-            container_name = None
+            container_name: Optional[str] = None
             if isinstance(executor, ExecutorContainer):
                 container_name = executor.container_name
             elif isinstance(executor, ExecutorAnsible) and executor.ansible_connection == 'docker':
@@ -46,7 +57,7 @@ class ServiceFactory(object):
             if container_name:
                 ServiceFactory._logger.debug("Creating ServiceDocker - name: %s - executor: %s"
                                              % (container_name, executor.__class__.__name__))
-                return ServiceDocker(name=container_name, executor=executor)
+                return ServiceDocker(name=container_name, executor=executor)  # type: ignore
 
         ServiceFactory._logger.debug("Unable to determine Service")
         raise ValueError('Unable to determine service for server component')

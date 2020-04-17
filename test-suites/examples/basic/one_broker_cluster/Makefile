@@ -1,6 +1,6 @@
 VENV_DIR=../../venv
 REQUIREMENTS=../../../requirements.txt
-SAMPLE=iqa_one_broker_sample.py
+SAMPLE=iqa_one_broker_cluster_sample.py
 
 all: docker
 .PHONY: clean venv docker

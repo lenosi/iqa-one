@@ -25,7 +25,9 @@ import logging
 import threading
 import time
 
-logger = logging.getLogger(__name__)
+from typing import Callable, List, Optional, Union
+
+logger: logging.Logger = logging.getLogger(__name__)
 
 
 class TimeoutCallback(threading.Thread):
@@ -39,7 +41,7 @@ class TimeoutCallback(threading.Thread):
     called.
     """
 
-    def __init__(self, timeout, callback_method=None):
+    def __init__(self, timeout: float, callback_method: Union[Callable, List[Callable]] = None):
         """
         Timeout must be provided in seconds and callback_method can be either
         a function or a list of functions.
@@ -47,29 +49,29 @@ class TimeoutCallback(threading.Thread):
         :param callback_method:
         """
         threading.Thread.__init__(self)
-        self.timeout = timeout
-        self.callback_method = callback_method
-        self._interrupted = False
-        self._timed_out = False
-        self._finished = threading.Event()
-        self.started_at = time.time()
+        self.timeout: float = timeout
+        self.callback_method: Optional[Union[Callable, List[Callable]]] = callback_method
+        self._interrupted: bool = False
+        self._timed_out: bool = False
+        self._finished: threading.Event = threading.Event()
+        self.started_at: float = time.time()
         self.start()
 
-    def timed_out(self):
+    def timed_out(self) -> bool:
         """
         Returns a bool indicating whether a timeout has occurred or not.
         :return:
         """
         return self._timed_out
 
-    def interrupted(self):
+    def interrupted(self) -> bool:
         """
         Returns a bool indicating whether the callback has been interrupted or not.
         :return:
         """
         return self._interrupted
 
-    def run(self):
+    def run(self) -> None:
         """
         Starts the timer
         :return:
@@ -93,7 +95,7 @@ class TimeoutCallback(threading.Thread):
             else:
                 self.callback_method()
 
-    def interrupt(self):
+    def interrupt(self) -> None:
         """
         Marks timer as interrupted, meaning caller has completed its
         task before a time out has occurred.

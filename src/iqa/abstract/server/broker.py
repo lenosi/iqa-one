@@ -11,22 +11,22 @@ class Broker(MessagingServer):
     """
     Abstract broker class
     """
-    supported_protocols = []
+    supported_protocols: list = []
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs) -> None:
         super(Broker, self).__init__()
 
         # Log missing arguments
-        required_fields = ['broker_name', 'broker_path']
+        required_fields: list = ['broker_name', 'broker_path']
         for field in required_fields:
             if field not in kwargs:
                 logging.error("Missing requirement broker parameter: %s" % field)
 
-        self.broker_name = kwargs.get('broker_name')
-        self.broker_path = kwargs.get('broker_path')
-        self.web_port = kwargs.get('broker_web_port', 8161)
-        self.user = kwargs.get('broker_user', 'admin')
-        self.password = kwargs.get('broker_password', 'admin')
+        self.broker_name: str = kwargs.get('broker_name', None)
+        self.broker_path: str = kwargs.get('broker_path', None)
+        self.web_port: str = kwargs.get('broker_web_port', 8161)
+        self.user: str = kwargs.get('broker_user', 'admin')
+        self.password: str = kwargs.get('broker_password', 'admin')
         self.cluster_member = None
         self.ha_member = None
 

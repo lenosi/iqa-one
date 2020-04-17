@@ -1,22 +1,21 @@
 from iqa.components.clients.external.java.client import ClientJava
 from iqa.components.clients.external.java.command.java_commands import JavaSenderClientCommand
-from iqa.abstract.client import Sender
-from iqa.abstract.message import Message
-from iqa.system.node import Node, Executor
+from iqa.abstract.client.sender import Sender
+from iqa.abstract.message.message import Message
+from iqa.system.node.node import Node
 
-try:
-    from urlparse import urlparse, urlunparse
-    from urllib import quote, unquote
-except ImportError:
-    from urllib.parse import urlparse, urlunparse, quote, unquote
+from urllib.parse import urlparse, urlunparse, unquote
 
 
-class SenderJava(Sender, ClientJava):
+class SenderJava(ClientJava, Sender):
     """External Java Qpid JMS sender client."""
 
     _command: JavaSenderClientCommand
 
-    def _set_url(self, url: str):
+    def __init__(self, name: str, node: Node, **kwargs) -> None:
+        super(SenderJava, self).__init__(name, node, **kwargs)
+
+    def _set_url(self, url: str) -> None:
         p_url = urlparse(url)
         self._command.control.broker = '{}://{}:{}'. \
             format(p_url.scheme or 'amqp', p_url.hostname or '127.0.0.1', p_url.port or '5672')
@@ -29,11 +28,11 @@ class SenderJava(Sender, ClientJava):
         if p_url.password:
             self._command.connection.conn_password = unquote(p_url.password)
 
-    def set_auth_mechs(self, mechs: str):
+    def set_auth_mechs(self, mechs: str) -> None:
         self._command.connection.conn_auth_mechanisms = mechs
 
     def set_ssl_auth(self, pem_file: str = None, key_file: str = None, keystore: str = None, keystore_pass: str = None,
-                     keystore_alias: str = None):
+                     keystore_alias: str = None) -> None:
         self._command.connection.conn_ssl_keystore_location = keystore
         self._command.connection.conn_ssl_keystore_password = keystore_pass
         self._command.connection.conn_ssl_key_alias = keystore_alias
@@ -45,9 +44,6 @@ class SenderJava(Sender, ClientJava):
         return JavaSenderClientCommand(stdout=stdout, stderr=stderr, daemon=daemon,
                                        timeout=timeout, encoding=encoding)
 
-    def _send(self, message: Message, **kwargs):
-        self._command.message.msg_content = message.body
-        self.execution = self.execute(self.command)
-
-    def __init__(self, name: str, node: Node, executor: Executor, **kwargs):
-        super(SenderJava, self).__init__(name, node, executor, **kwargs)
+    def _send(self, message: Message, **kwargs) -> None:
+        self._command.message.msg_content = message.application_data
+        self.execution = self.node.execute(self.command)

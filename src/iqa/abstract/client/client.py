@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import Optional
 
 from iqa.abstract.listener import Listener
 
@@ -8,14 +9,14 @@ class Client(ABC):
     Abstract class for every abstract client
     """
 
-    def __init__(self, **kwargs):
+    def __init__(self) -> None:
         self.url = None  # connectionUrl
         self.users = None
         self.logs = None
 
     @property
     @abstractmethod
-    def name(self):
+    def name(self) -> Optional[str]:
         """
 
         :return: String
@@ -24,7 +25,7 @@ class Client(ABC):
 
     @property
     @abstractmethod
-    def version(self):
+    def version(self) -> Optional[str]:
         """
 
         :return: String
@@ -33,7 +34,7 @@ class Client(ABC):
 
     @property
     @abstractmethod
-    def supported_protocols(self):
+    def supported_protocols(self) -> list:
         """
 
         :return: List
@@ -41,11 +42,11 @@ class Client(ABC):
         pass
 
     @abstractmethod
-    def set_url(self, url: str):
+    def set_url(self, url: str) -> None:
         pass
 
     @abstractmethod
-    def set_endpoint(self, listener: Listener):
+    def set_endpoint(self, listener: Listener) -> None:
         pass
 
     @abstractmethod
@@ -56,3 +57,7 @@ class Client(ABC):
         :rtype:
         """
         pass
+
+    @property
+    def implementation(self):
+        return NotImplementedError

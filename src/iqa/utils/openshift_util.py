@@ -22,7 +22,10 @@ Utility class to help executing OpenShift standard operations
 """
 import logging
 
-from iqa.system.executor import Executor, Execution, Command
+from typing import Any, Callable
+
+from iqa.system.executor import Executor
+from iqa.system.executor.executor_base import Execution, Command
 
 
 class OpenShiftUtil(object):
@@ -30,13 +33,13 @@ class OpenShiftUtil(object):
     Helper class that helps executing standard operations through the "oc" cli.
     """
 
-    TIMEOUT = 30
+    TIMEOUT: int = 30
 
-    def __init__(self, executor: Executor, url: str, token: str):
-        self._logger = logging.getLogger(self.__class__.__module__)
-        self.executor = executor
-        self.url = url
-        self.token = token
+    def __init__(self, executor: Executor, url: str, token: str) -> None:
+        self._logger: logging.Logger = logging.getLogger(self.__class__.__module__)
+        self.executor: Executor = executor
+        self.url: str = url
+        self.token: str = token
 
     def login_first(func):
         """
@@ -44,7 +47,7 @@ class OpenShiftUtil(object):
         :return:
         """
 
-        def wrap(*args, **kwargs):
+        def wrap(*args, **kwargs) -> Callable[..., Any]:
             instance = args[0]
             assert instance.login().completed_successfully()
             return func(*args, **kwargs)

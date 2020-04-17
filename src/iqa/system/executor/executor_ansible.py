@@ -16,7 +16,7 @@ class ExecutorAnsible(Executor):
     implementation = 'ansible'
 
     def __init__(self, ansible_host: str = None, inventory: str = None, ansible_user: str = None, module: str = "raw",
-                 name: str = "ExecutorAnsible", **kwargs):
+                 name: str = "ExecutorAnsible", **kwargs) -> None:
         """
         Initializes the ExecutorAnsible instance based on provided arguments.
         When an inventory is provided, the 'ansible_host' can be an ip address or any
@@ -30,18 +30,18 @@ class ExecutorAnsible(Executor):
         :param kwargs:
         """
         super(ExecutorAnsible, self).__init__()
-        self.inventory = kwargs.get('inventory_file', inventory)
-        self.ansible_host = kwargs.get('ansible_host', ansible_host) \
+        self.inventory: str = kwargs.get('inventory_file', inventory)
+        self.ansible_host: str = kwargs.get('ansible_host', ansible_host) \
             if not self.inventory else kwargs.get('inventory_hostname', ansible_host)
-        self.ansible_user = kwargs.get('ansible_user', ansible_user)
-        self.ansible_connection = kwargs.get('ansible_connection', 'ssh')
-        self.module = kwargs.get('executor_module', module)
-        self.name = kwargs.get('executor_name', name)
-        self.docker_host = kwargs.get('executor_docker_host', None)
+        self.ansible_user: str = kwargs.get('ansible_user', ansible_user)
+        self.ansible_connection: str = kwargs.get('ansible_connection', 'ssh')
+        self.module: str = kwargs.get('executor_module', module)
+        self.name: str = kwargs.get('executor_name', name)
+        self.docker_host: str = kwargs.get('executor_docker_host', None)
 
-    def _execute(self, command: Command):
+    def _execute(self, command: Command) -> ExecutionProcess:
 
-        ansible_args = ['ansible']
+        ansible_args: list = ['ansible']
 
         if self.ansible_user is not None:
             ansible_args += ['-u', self.ansible_user]
@@ -54,7 +54,7 @@ class ExecutorAnsible(Executor):
             ansible_args += ['-i', '%s,' % self.ansible_host]
 
         # Executing using the "raw" module
-        module = self.module
+        module: str = self.module
 
         # If given command is an instance of CommandAnsible
         # the module is read from it

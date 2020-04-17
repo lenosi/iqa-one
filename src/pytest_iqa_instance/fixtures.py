@@ -1,16 +1,18 @@
 """PyTest fixtures."""
+from typing import Optional
 
 import pytest
 
-from iqa.abstract import *
+from iqa.instance.instance import Instance
+from iqa.utils.types import ComponentType, ReceiverSubtype, SenderSubtype
 
 
 @pytest.fixture()
-def iqa(request):
+def iqa(request) -> Instance:
     return request.config.iqa
 
 
-def first_or_none(components: list):
+def first_or_none(components: list) -> Optional[ComponentType]:
     """
     Returns first component provided or None
     :param components:
@@ -22,7 +24,7 @@ def first_or_none(components: list):
 
 
 @pytest.fixture()
-def router(iqa):
+def router(iqa: Instance):
     """
     Returns the first Router instance or None
     :param iqa:
@@ -33,66 +35,66 @@ def router(iqa):
 
 
 @pytest.fixture()
-def java_receiver(iqa):
+def java_receiver(iqa: Instance):
     """
     Returns the first Java Receiver instance or None
     :param iqa:
     :return:
     """
     assert iqa
-    return first_or_none(iqa.get_clients(Receiver, 'java'))
+    return first_or_none(iqa.get_clients(ReceiverSubtype, 'java'))
 
 
 @pytest.fixture()
-def java_sender(iqa):
+def java_sender(iqa: Instance):
     """
     Returns the first Java Sender instance or None
     :param iqa:
     :return:
     """
     assert iqa
-    return first_or_none(iqa.get_clients(Sender, 'java'))
+    return first_or_none(iqa.get_clients(SenderSubtype, 'java'))
 
 
 @pytest.fixture()
-def python_receiver(iqa):
+def python_receiver(iqa: Instance):
     """
     Returns the first Python Receiver instance or None
     :param iqa:
     :return:
     """
     assert iqa
-    return first_or_none(iqa.get_clients(Receiver, 'python'))
+    return first_or_none(iqa.get_clients(ReceiverSubtype, 'python'))
 
 
 @pytest.fixture()
-def python_sender(iqa):
+def python_sender(iqa: Instance):
     """
     Returns the first Python Sender instance or None
     :param iqa:
     :return:
     """
     assert iqa
-    return first_or_none(iqa.get_clients(Sender, 'python'))
+    return first_or_none(iqa.get_clients(SenderSubtype, 'python'))
 
 
 @pytest.fixture()
-def nodejs_receiver(iqa):
+def nodejs_receiver(iqa: Instance):
     """
     Returns the first NodeJS Receiver instance or None
     :param iqa:
     :return:
     """
     assert iqa
-    return first_or_none(iqa.get_clients(Receiver, 'nodejs'))
+    return first_or_none(iqa.get_clients(ReceiverSubtype, 'nodejs'))
 
 
 @pytest.fixture()
-def nodejs_sender(iqa):
+def nodejs_sender(iqa: Instance):
     """
     Returns the first NodeJS Sender instance or None
     :param iqa:
     :return:
     """
     assert iqa
-    return first_or_none(iqa.get_clients(Sender, 'nodejs'))
+    return first_or_none(iqa.get_clients(SenderSubtype, 'nodejs'))

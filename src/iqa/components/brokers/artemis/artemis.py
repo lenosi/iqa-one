@@ -1,33 +1,40 @@
 import logging
-from typing import List
+from typing import List, Optional
 
-from iqa.components import protocols
+from iqa.abstract.server.broker import Broker
 from iqa.components.abstract.server.server_component import ServerComponent
+from iqa.components.protocols.amqp import Amqp10
+from iqa.components.protocols.mqtt import Mqtt
+from iqa.components.protocols.stomp import Stomp
+from iqa.components.protocols.openwire import Openwire
 from iqa.components.brokers.artemis.artemis_config import ArtemisConfig
-from iqa.components.brokers.artemis.management import ArtemisJolokiaClient
-from iqa.abstract.destination import Address
+from iqa.components.brokers.artemis.management.jolokia_client import ArtemisJolokiaClient
+from iqa.abstract.destination.address import Address
 from iqa.abstract.destination.queue import Queue
 from iqa.abstract.destination.routing_type import RoutingType
-from iqa.abstract.server.broker import Broker
+from iqa.system.node.node import Node
+from iqa.abstract.listener import Listener
 
 
-class Artemis(Broker, ServerComponent):
+class Artemis(ServerComponent, Broker):
     """
     Apache ActiveMQ Artemis has a proven non blocking architecture. It delivers outstanding performance.
     """
 
-    supported_protocols = [protocols.Amqp10(), protocols.Mqtt(), protocols.Stomp(), protocols.Openwire()]
-    name = 'Artemis'
-    implementation = 'artemis'
+    supported_protocols: list = [Amqp10(), Mqtt(), Stomp(), Openwire()]
+    name: str = 'Artemis'
+    implementation: str = 'artemis'
 
-    def __init__(self, name: str, **kwargs):
-        super(Artemis, self).__init__(name, **kwargs)
+    def __init__(self, name: str, node: Node, listeners: Optional[List[Listener]] = None, **kwargs) -> None:
+        self.instance_name = name
         self._queues: List[Queue] = list()
         self._addresses: List[Address] = list()
-        self._addresses_dict = {}
-
-        self.config = ArtemisConfig(self, **kwargs)
-        self.users = self.config.users
+        self._addresses_dict: dict = {}
+        self.configuration: ArtemisConfig = ArtemisConfig(self, **kwargs)
+        self.configuration.create_configuration(kwargs.get('inventory_file', 'inventory.yml'))
+        super(Artemis, self).__init__(name, node, listeners, self.configuration, **kwargs)  # type: ignore
+        self.management_client: ArtemisJolokiaClient = self.get_management_client()  # type: ignore
+        self.users = self.configuration.users
 
     def queues(self, refresh: bool = True) -> List[Queue]:
         """
@@ -99,8 +106,8 @@ class Artemis(Broker, ServerComponent):
         :return:
         """
         # Retrieving queues
-        queues = list()
-        addresses = list()
+        queues: list = list()
+        addresses: list = list()
 
         # Get a new client instance
         queues_result = self.management_client.list_queues()
@@ -126,8 +133,8 @@ class Artemis(Broker, ServerComponent):
             # Parsing returned addresses
             for addr_info in addresses_result.data:
                 logging.debug("Address found: %s - routingType: %s" % (addr_info['name'], addr_info['routingTypes']))
-                address = Address(name=addr_info['name'],
-                                  routing_type=RoutingType.from_value(addr_info['routingTypes']))
+                address: Address = Address(name=addr_info['name'],
+                                           routing_type=RoutingType.from_value(addr_info['routingTypes']))
                 addresses_dict[address.name] = address
                 addresses.append(address)
 
@@ -138,11 +145,11 @@ class Artemis(Broker, ServerComponent):
             # Parsing returned queues
             for queue_info in queues_result.data:
                 logging.debug("Queue found: %s - routingType: %s" % (queue_info['name'], queue_info['routingType']))
-                routing_type = RoutingType.from_value(queue_info['routingType'])
-                address = addresses_dict[queue_info['address']]
-                queue = Queue(name=queue_info['name'],
-                              routing_type=routing_type,
-                              address=address)
+                routing_type: RoutingType = RoutingType.from_value(queue_info['routingType'])
+                address: Address = addresses_dict[queue_info['address']]
+                queue: Queue = Queue(name=queue_info['name'],
+                                     routing_type=routing_type,
+                                     address=address)
                 queue.message_count = queue_info['messageCount']
                 address.queues.append(queue)
                 queues.append(queue)
@@ -152,13 +159,16 @@ class Artemis(Broker, ServerComponent):
         self._addresses = addresses
         self._queues = queues
 
-    def get_management_client(self):
+    def get_management_client(self) -> ArtemisJolokiaClient:  # type: ignore
         """
         Creates a new instance of the Jolokia Client.
         :return:
         """
-        client = ArtemisJolokiaClient(self.config.instance_name, self.node.get_ip(), self.config.ports['web'],
-                                      self.config.get_username('admin'), self.config.get_user_password('admin'))
+        client = ArtemisJolokiaClient(self.configuration.instance_name,  # type: ignore
+                                      self.node.get_ip(),
+                                      self.configuration.ports['web'],
+                                      'admin',
+                                      self.configuration.get_user_password('admin'))
         return client
 
     def _get_routing_type(self, routing_type: RoutingType) -> str:
@@ -170,3 +180,6 @@ class Artemis(Broker, ServerComponent):
         if routing_type == RoutingType.BOTH:
             return 'ANYCAST, MULTICAST'
         return routing_type.name
+
+    def get_url(self, port: int = None, listener: Listener = None) -> str:
+        pass

@@ -1,5 +1,5 @@
 import iqa
-from iqa.abstract import Message as AbstractMessage
+from iqa.abstract.message.message import Message as AbstractMessage
 
 
 class Message(AbstractMessage):
@@ -7,5 +7,5 @@ class Message(AbstractMessage):
     AMQP10 Message
     """
 
-    def __init__(self):
-        iqa.iqa.abstract.message.Message.__init__(self)
+    def __init__(self) -> None:
+        iqa.abstract.message.message.Message.__init__(self)
