@@ -13,6 +13,7 @@ class ServerComponent(Component):
     Super class for all Server component implementations (for now Routers and Brokers).
     """
 
+
     def __init__(self, name: str, node: Node, listeners: Optional[List[Listener]],
                  configuration: Configuration = None, **kwargs) -> None:
         super(ServerComponent, self).__init__(name, node)

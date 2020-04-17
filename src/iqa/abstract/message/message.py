@@ -7,7 +7,6 @@ from iqa.abstract.message.footer import Footer
 from iqa.abstract.message.header import Header
 from iqa.abstract.message.message_annotations import MessageAnnotations
 from iqa.abstract.message.properties import Properties
-
 # noinspection PyDunderSlots
 
 
