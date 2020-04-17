@@ -1,3 +1,5 @@
+from typing import Optional
+
 from optconstruct.types import Prefixed
 
 from iqa.components.clients.external.command.options.client_options import ControlOptionsCommon, \
@@ -14,9 +16,9 @@ class JavaControlOptionsCommon(ControlOptionsCommon):
     """
 
     def __init__(self, broker: str = '127.0.0.1:5672', count: int = 1,
-                 timeout: int = None, sync_mode: str = None, close_sleep: int = None):
+                 timeout: int = None, sync_mode: str = None, close_sleep: int = None) -> None:
         super(JavaControlOptionsCommon, self).__init__(count, timeout, sync_mode, close_sleep)
-        self.broker = broker
+        self.broker: str = broker
         # No timeout on java client is -1
         if timeout is None:
             self.timeout = -1
@@ -34,11 +36,11 @@ class JavaControlOptionsSenderReceiver(ControlOptionsSenderReceiver, JavaControl
 
     def __init__(self, broker: str = '127.0.0.1:5672', address: str = 'examples', count: int = 1,
                  timeout: int = None, sync_mode: str = None, close_sleep: int = None,
-                 duration: int = None, duration_mode: str = None, capacity: int = None):
+                 duration: int = None, duration_mode: str = None, capacity: int = None) -> None:
         ControlOptionsSenderReceiver.__init__(self, duration=duration, duration_mode=duration_mode, capacity=capacity)
         JavaControlOptionsCommon.__init__(self, broker=broker, count=count, timeout=timeout,
                                           sync_mode=sync_mode, close_sleep=close_sleep)
-        self.address = address  # type: str
+        self.address: str = address
 
     def valid_options(self) -> list:
         return JavaControlOptionsCommon.valid_options(self) + [
@@ -53,7 +55,7 @@ class JavaControlOptionsReceiver(ControlOptionsReceiver, JavaControlOptionsSende
 
     def __init__(self, broker: str = '127.0.0.1:5672', address: str = 'examples', count: int = 1,
                  timeout: int = None, sync_mode: str = None, duration: int = None,
-                 duration_mode: str = None, capacity: int = None, dynamic: bool = False):
+                 duration_mode: str = None, capacity: int = None, dynamic: bool = False) -> None:
         ControlOptionsReceiver.__init__(self, dynamic=dynamic)
         JavaControlOptionsSenderReceiver.__init__(self, broker=broker, address=address, count=count,
                                                   timeout=timeout, sync_mode=sync_mode, duration=duration,
@@ -64,24 +66,24 @@ class JavaControlOptionsReceiver(ControlOptionsReceiver, JavaControlOptionsSende
 
 
 class JavaConnectionOptionsCommon(ConnectionOptionsCommon):
-    def __init__(self, conn_auth_mechanisms: str = None, conn_username: str = None,
-                 conn_password: str = None, conn_ssl_keystore_location: str = None,
-                 conn_ssl_keystore_password: str = None, conn_ssl_key_alias: str = None,
-                 conn_ssl_trust_all: str = None, conn_ssl_verify_host: str = None,
-                 urls: str = None, reconnect: bool = None,
+    def __init__(self, conn_auth_mechanisms: Optional[str] = None, conn_username: Optional[str] = None,
+                 conn_password: Optional[str] = None, conn_ssl_keystore_location: Optional[str] = None,
+                 conn_ssl_keystore_password: Optional[str] = None, conn_ssl_key_alias: Optional[str] = None,
+                 conn_ssl_trust_all: Optional[str] = None, conn_ssl_verify_host: Optional[str] = None,
+                 urls: Optional[str] = None, reconnect: bool = None,
                  reconnect_interval: int = None, reconnect_limit: int = None, reconnect_timeout: int = None,
-                 heartbeat: int = None, max_frame_size: int = None):
+                 heartbeat: int = None, max_frame_size: int = None) -> None:
         ConnectionOptionsCommon.__init__(self, urls=urls, reconnect=reconnect, reconnect_interval=reconnect_interval,
                                          reconnect_limit=reconnect_limit, reconnect_timeout=reconnect_timeout,
                                          heartbeat=heartbeat, max_frame_size=max_frame_size)
-        self.conn_auth_mechanisms = conn_auth_mechanisms
-        self.conn_username = conn_username
-        self.conn_password = conn_password
-        self.conn_ssl_keystore_location = conn_ssl_keystore_location
-        self.conn_ssl_keystore_password = conn_ssl_keystore_password
-        self.conn_ssl_key_alias = conn_ssl_key_alias
-        self.conn_ssl_trust_all = conn_ssl_trust_all
-        self.conn_ssl_verify_host = conn_ssl_verify_host
+        self.conn_auth_mechanisms: Optional[str] = conn_auth_mechanisms
+        self.conn_username: Optional[str] = conn_username
+        self.conn_password: Optional[str] = conn_password
+        self.conn_ssl_keystore_location: Optional[str] = conn_ssl_keystore_location
+        self.conn_ssl_keystore_password: Optional[str] = conn_ssl_keystore_password
+        self.conn_ssl_key_alias: Optional[str] = conn_ssl_key_alias
+        self.conn_ssl_trust_all: Optional[str] = conn_ssl_trust_all
+        self.conn_ssl_verify_host: Optional[str] = conn_ssl_verify_host
 
     def valid_options(self) -> list:
         return ConnectionOptionsCommon.valid_options(self) + [

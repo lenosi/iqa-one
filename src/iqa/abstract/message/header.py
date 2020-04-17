@@ -2,6 +2,9 @@ from dataclasses import dataclass
 
 
 # noinspection PyDunderSlots
+from typing import Optional
+
+
 @dataclass(frozen=False)
 class Header:
     """
@@ -66,6 +69,6 @@ class Header:
 
     durable: bool = False
     priority: int = 4
-    ttl: int = None
+    ttl: Optional[int] = None
     first_acquirer: bool = False
     delivery_count: int = 0

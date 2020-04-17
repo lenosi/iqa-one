@@ -1,9 +1,9 @@
 import pytest
 
-from iqa.components.brokers.artemis import Artemis
-from iqa.instance import Instance
+from iqa.components.brokers.artemis.artemis import Artemis
+from iqa.instance.instance import Instance
 
-iqa_instance = Instance()
+iqa_instance: Instance = Instance()
 
 
 # def pytest_addoption(parser):
@@ -49,13 +49,16 @@ def pytest_configure(config):
 # Section: Fixtures    #
 ########################
 node_master1 = iqa_instance.new_node(hostname='master1')
-broker_master1 = iqa_instance.new_component(node=node_master1, component=Artemis)
+component_master1 = Artemis(name='artemis_master1', node=node_master1)
+broker_master1 = iqa_instance.new_component(component=component_master1)
 
 node_slave1 = iqa_instance.new_node(hostname='slave1')
-broker_slave1 = iqa_instance.new_component(node=node_slave1, component=Artemis)
+component_slave1 = Artemis(name='artemis_slave1', node=node_slave1)
+broker_slave1 = iqa_instance.new_component(component=component_slave1)
 
 node_slave2 = iqa_instance.new_node(hostname='slave2')
-broker_slave2 = iqa_instance.new_component(node=node_slave2, component=Artemis)
+component_slave2 = Artemis(name='artemis_slave2', node=node_slave2)
+broker_slave2 = iqa_instance.new_component(component=component_slave2)
 
 
 @pytest.fixture()

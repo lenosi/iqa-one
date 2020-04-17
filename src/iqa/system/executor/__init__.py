@@ -1,11 +1,9 @@
-from .execution import *
-from .executor_ansible import *
-from .executor_base import *
-from .executor_container import *
-from .executor_ssh import *
-
-from .execution_kubernetes import *
-from .executor_kubernetes import *
+from .executor_ansible import ExecutorAnsible
+from .executor_base import Executor
+from .executor_container import ExecutorContainer
+from .executor_kubernetes import ExecutorKubernetes
+from .executor_local import ExecutorLocal
+from .executor_ssh import ExecutorSsh
 
 
 class ExecutorFactory(object):

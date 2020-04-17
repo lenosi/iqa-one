@@ -8,17 +8,17 @@ from iqa.abstract.destination.queue import Queue
 
 class ManagementBroker(ManagementClient):
 
-    def __init__(self):
-        super(ManagementBroker).__init__()
+    def __init__(self) -> None:
+        super(ManagementBroker, self).__init__()
 
-    def create_destination(self, destination: Destination):  # Address
+    def create_destination(self, destination: Destination) -> Destination:  # Address
         pass
 
-    def delete_destination(self, name: str, remove_consumers: bool = False):  # Address
+    def delete_destination(self, name: str, remove_consumers: bool = False) -> None:  # Address
         pass
 
     @abc.abstractmethod
-    def create_address(self, address: Address):
+    def create_address(self, address: Address) -> Address:
         """
         Creates an address using its name and specialized type (ANYCAST, MULTICAST).
         :param address:
@@ -27,7 +27,7 @@ class ManagementBroker(ManagementClient):
         pass
 
     @abc.abstractmethod
-    def create_queue(self, queue: Queue, address: Address, durable: bool = True):
+    def create_queue(self, queue: Queue, address: Address, durable: bool = True) -> Queue:
         """
         Creates a queue using its name and specialized type, nested to the given address.
         :param queue:
@@ -37,7 +37,7 @@ class ManagementBroker(ManagementClient):
         """
 
     @abc.abstractmethod
-    def delete_address(self, name: str, force: bool = False):
+    def delete_address(self, name: str, force: bool = False) -> None:
         """
         Deletes a given address.
         :param name:
@@ -47,7 +47,7 @@ class ManagementBroker(ManagementClient):
         pass
 
     @abc.abstractmethod
-    def delete_queue(self, name: str, remove_consumers: bool = False):
+    def delete_queue(self, name: str, remove_consumers: bool = False) -> None:
         """
         Deletes a given queue.
         :param name:

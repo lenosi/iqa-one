@@ -10,8 +10,8 @@ class Command:
     executors, behaving similarly across them.
     """
 
-    def __init__(self, args, stdout=False, stderr=False, daemon=False,
-                 timeout=0, encoding="utf-8"):
+    def __init__(self, args: list, stdout: bool = False, stderr: bool = False, daemon: bool = False,
+                 timeout: int = 0, encoding: str = "utf-8") -> None:
         """
         Creates an instance of a Command representation that can be passed to
         an Executor instance.
@@ -28,27 +28,27 @@ class Command:
         callbacks will be invoked.
         :param encoding: Encoding when reading stdout and stderr.
         """
-        self._args = args
-        self.stdout = stdout
-        self.stderr = stderr
-        self.daemon = daemon
-        self.timeout = timeout
-        self.encoding = encoding
+        self._args: list = args
+        self.stdout: bool = stdout
+        self.stderr: bool = stderr
+        self.daemon: bool = daemon
+        self.timeout: int = timeout
+        self.encoding: str = encoding
 
-        self._timeout_callbacks = []
-        self._interrupt_callbacks = []
-        self._pre_exec_hooks = []
-        self._post_exec_hooks = []
+        self._timeout_callbacks: list = []
+        self._interrupt_callbacks: list = []
+        self._pre_exec_hooks: list = []
+        self._post_exec_hooks: list = []
 
     @property
-    def args(self):
+    def args(self) -> list:
         return self._args
 
     @args.setter
     def args(self, args):
         self._args = args
 
-    def add_timeout_callback(self, callback_method):
+    def add_timeout_callback(self, callback_method) -> None:
         """
         Adds a callback method to a list of methods that will
         be called in case this execution times out.
@@ -59,7 +59,7 @@ class Command:
         """
         self._timeout_callbacks.append(callback_method)
 
-    def add_interrupt_callback(self, callback_method):
+    def add_interrupt_callback(self, callback_method) -> None:
         """
         Adds a callback method to a list of methods that will
         be called in case this execution is interrupted.
@@ -70,7 +70,7 @@ class Command:
         """
         self._interrupt_callbacks.append(callback_method)
 
-    def add_pre_exec_hook(self, pre_exec_hook_method):
+    def add_pre_exec_hook(self, pre_exec_hook_method) -> None:
         """
         Adds a callback method to a list of methods that will
         be called before Executor starts the process.
@@ -81,7 +81,7 @@ class Command:
         """
         self._pre_exec_hooks.append(pre_exec_hook_method)
 
-    def add_post_exec_hook(self, post_exec_hook_method):
+    def add_post_exec_hook(self, post_exec_hook_method) -> None:
         """
         Adds a callback method to a list of methods that will
         be called after Execution instance is started by
@@ -93,7 +93,7 @@ class Command:
         """
         self._post_exec_hooks.append(post_exec_hook_method)
 
-    def on_timeout(self, execution):
+    def on_timeout(self, execution) -> None:
         """
         Called by the Execution in case it times out. This method
         will call all registered timeout callbacks.
@@ -103,7 +103,7 @@ class Command:
         for timeout_callback in self._timeout_callbacks:
             timeout_callback(execution)
 
-    def on_interrupt(self, execution):
+    def on_interrupt(self, execution) -> None:
         """
         Called by the Execution instance in case it gets interrupted.
         Once interrupted, this method will call all registered
@@ -114,7 +114,7 @@ class Command:
         for interrupt_callback in self._interrupt_callbacks:
             interrupt_callback(execution)
 
-    def on_pre_execution(self, executor):
+    def on_pre_execution(self, executor) -> None:
         """
         This is called internally by the Executor when the execute()
         method is invoked, prior to creating the Execution instance.
@@ -125,7 +125,7 @@ class Command:
         for pre_exec_hook in self._pre_exec_hooks:
             pre_exec_hook(self, executor)
 
-    def on_post_execution(self, execution):
+    def on_post_execution(self, execution) -> None:
         """
         This is called internally by the Executor after Execution
         instance is created (and started), causing all registered

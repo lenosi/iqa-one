@@ -31,18 +31,18 @@ class TcpUtil(object):
     """
 
     @staticmethod
-    def is_tcp_port_available(port, host):
+    def is_tcp_port_available(port, host) -> bool:
         """
         Returns True if a given port is accessibly on the specified host.
         :param port:
         :param host:
         :return:
         """
-        test_port = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        test_port: socket.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:
             test_port.connect((host, port))
             test_port.close()
             return True
-        except Exception:
-            logging.getLogger(__name__).debug('%s:%s is_tcp_port_available failed' % (host, port), exc_info=1)
+        except OSError or ValueError:
+            logging.getLogger(__name__).debug('%s:%s is_tcp_port_available failed' % (host, port), exc_info=True)
             return False

@@ -8,15 +8,15 @@ import time
 # Displaying all queues
 from iqa.system.service.service import ServiceStatus
 from iqa.abstract.server.broker import Broker
-from iqa.components.abstract.server import ServerComponent
+from iqa.components.abstract.server.server_component import ServerComponent
 from iqa.utils.tcp_util import TcpUtil
 from iqa.instance.instance import Instance
 
-DELAY = 10
-MAX_ATTEMPTS = 3
+DELAY: int = 10
+MAX_ATTEMPTS: int = 3
 
 
-def query_queues(broker):
+def query_queues(broker) -> None:
     """
     List all queues found on given broker instance and its message count
     :param broker:
@@ -28,15 +28,15 @@ def query_queues(broker):
 
 
 # Inventory file to use
-inventory = sys.argv[1] if len(sys.argv) > 1 else 'inventory_docker.yml'
+inventory: str = sys.argv[1] if len(sys.argv) > 1 else 'inventory_docker.yml'
 
 # Message explaining what this sample does
-intro_message = """
+intro_message: str = """
 This sample will iterate through all the 'broker' abstract defined at
 the '%s' inventory file and it will then:
-- Display the broker node hostname and its current status (if able to 
+- Display the broker node hostname and its current status (if able to
   communicate with it)
-- Attempt to start the broker component if it is not running (using a 
+- Attempt to start the broker component if it is not running (using a
   valid system service or a docker container)
   Note: You can stop the broker component and validate if it gets started
 - Iterate through all queues and displaying its FQQN and the message count
@@ -46,7 +46,7 @@ print(intro_message)
 
 # Loading the instance
 print("Loading IQAInstance using inventory file: %s" % inventory)
-iqa = Instance(inventory)
+iqa: Instance = Instance(inventory)
 
 # Iterating through brokers
 for broker in iqa.brokers:  # type: (ServerComponent, Broker)

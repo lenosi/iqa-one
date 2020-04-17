@@ -4,7 +4,9 @@ for testing Edge Router topology.
 """
 import threading
 import logging
+from typing import Optional
 
+from proton import Connection, Event, Receiver as ProtonReceiver
 from proton.handlers import MessagingHandler
 from proton.reactor import Container, DurableSubscription
 
@@ -15,27 +17,27 @@ class Receiver(MessagingHandler, threading.Thread):
     """
     Receiver implementation of a Proton client that run as a thread.
     """
-    def __init__(self, url, message_count, timeout=0, container_id=None, durable=False, save_messages=False,
-                 ignore_dups=False):
+    def __init__(self, url: str, message_count: int, timeout: int = 0, container_id: str = None, durable: bool = False,
+                 save_messages: bool = False, ignore_dups: bool = False) -> None:
         super(Receiver, self).__init__()
         threading.Thread.__init__(self)
-        self.url = url
-        self.receiver = None
-        self.connection = None
-        self.received = 0
-        self.total = message_count
-        self.timeout_secs = timeout
-        self.timeout_handler = None
-        self.container_id = container_id
-        self.container = None
-        self.durable = durable
-        self.last_received_id = {}
-        self.messages = []
-        self.save_messages = save_messages
-        self.ignore_dups = ignore_dups
-        self._stopped = False
+        self.url: str = url
+        self.receiver: Optional[ProtonReceiver] = None
+        self.connection: Optional[Connection] = None
+        self.received: int = 0
+        self.total: int = message_count
+        self.timeout_secs: int = timeout
+        self.timeout_handler: Optional[TimeoutCallback] = None
+        self.container_id: str = container_id
+        self.container: Optional[Container] = None
+        self.durable: bool = durable
+        self.last_received_id: dict = {}
+        self.messages: list = []
+        self.save_messages: bool = save_messages
+        self.ignore_dups: bool = ignore_dups
+        self._stopped: bool = False
 
-    def run(self):
+    def run(self) -> None:
         """
         Starts the thread and the Proton container
         :return:
@@ -51,19 +53,19 @@ class Receiver(MessagingHandler, threading.Thread):
         # If receiver gets disconnected from remote peer, stop receiver
         self.stop_receiver()
 
-    def on_start(self, event):
+    def on_start(self, event: Event) -> None:
         """
         Creates the receiver
         :param event:
         :return:
         """
-        subs_opts = None
+        subs_opts: Optional[DurableSubscription] = None
         if self.durable:
             subs_opts = DurableSubscription()
         self.receiver = event.container.create_receiver(self.url, name=self.container_id, options=subs_opts)
         self.connection = self.receiver.connection
 
-    def on_message(self, event):
+    def on_message(self, event: Event) -> None:
         """
         Processes an incoming message
         :param event:
@@ -89,7 +91,7 @@ class Receiver(MessagingHandler, threading.Thread):
         if self.is_done_receiving():
             self.stop_receiver(event.receiver, event.connection)
 
-    def stop_receiver(self, receiver=None, connection=None):
+    def stop_receiver(self, receiver: ProtonReceiver = None, connection: Connection = None):
         """
         Stops the receiver. If durable flag is set, then it simply detaches in
         order to preserve the subscription.
@@ -104,8 +106,8 @@ class Receiver(MessagingHandler, threading.Thread):
             self.timeout_handler.interrupt()
 
         self._stopped = True
-        rec = receiver or self.receiver
-        con = connection or self.connection
+        rec: ProtonReceiver = receiver or self.receiver
+        con: Connection = connection or self.connection
 
         # When using durable subscription, detach first (or subscription will be removed)
         if self.durable:
@@ -116,7 +118,7 @@ class Receiver(MessagingHandler, threading.Thread):
         if con:
             con.close()
 
-    def is_done_receiving(self):
+    def is_done_receiving(self) -> bool:
         """
         Validates if all messages have been received (when expecting a
         positive amount of messages)
@@ -125,7 +127,7 @@ class Receiver(MessagingHandler, threading.Thread):
         return self.stopped or (self.total > 0 and (self.received == self.total))
 
     @property
-    def stopped(self):
+    def stopped(self) -> bool:
         """
         Returns a bool. True if receiver has stopped (completed or timed out)
         :return:

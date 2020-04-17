@@ -1,6 +1,7 @@
-from iqa.messaging_abstract.client import Sender, Receiver
-from iqa.messaging_abstract.broker import Broker
-from iqa.messaging_abstract.router import Router
+from iqa.abstract.client.receiver import Receiver
+from iqa.abstract.client.sender import Sender
+from iqa.abstract.server.broker import Broker
+from iqa.abstract.server.router import Router
 
 
 def test_1(receiver: Receiver, sender: Sender, broker: Broker, router: Router, tls):
