@@ -15,7 +15,6 @@ class ClientFactory(object):
 
     @staticmethod
     def create_clients(implementation: str, node: Node, executor: Executor, **kwargs) -> list:
-
         for cl in ClientExternal.__subclasses__():
 
             # Ignore clients with different implementation
