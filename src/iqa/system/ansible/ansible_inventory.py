@@ -1,4 +1,5 @@
 import logging
+from typing import Optional
 
 from ansible.inventory.host import Host
 from ansible.inventory.manager import InventoryManager
@@ -6,12 +7,11 @@ from ansible.parsing.dataloader import DataLoader
 from ansible.template import Templar
 from ansible.vars.manager import VariableManager
 
-from typing import Optional
-
 
 class AnsibleVirtualComponent(object):
-
-    def __init__(self, name: str, cmp_type: str, implementation: str, members: list, **kwargs) -> None:
+    def __init__(
+        self, name: str, cmp_type: str, implementation: str, members: list, **kwargs
+    ) -> None:
         self.name: str = name
         self.cmp_type: str = cmp_type
         self.implementation: str = implementation
@@ -29,8 +29,12 @@ class AnsibleInventory(object):
         self.loader: DataLoader = DataLoader()
         self._logger.info('Loading inventory: %s' % inventory)
         self._logger.debug('Extra variables: %s' % extra_vars)
-        self.inv_mgr: InventoryManager = InventoryManager(loader=self.loader, sources=self.inventory)
-        self.var_mgr: VariableManager = VariableManager(loader=self.loader, inventory=self.inv_mgr)
+        self.inv_mgr: InventoryManager = InventoryManager(
+            loader=self.loader, sources=self.inventory
+        )
+        self.var_mgr: VariableManager = VariableManager(
+            loader=self.loader, inventory=self.inv_mgr
+        )
         self.var_mgr._extra_vars = extra_vars or dict()
 
     def get_hosts_containing(self, var: str = None) -> list:
@@ -68,11 +72,13 @@ class AnsibleInventory(object):
                 vcmp_impl = group_vars.get('implementation')
                 group_vars.pop('implementation')
                 hosts: list = self.inv_mgr.groups[group].get_hosts()
-                vcmp: AnsibleVirtualComponent = AnsibleVirtualComponent(name=group,
-                                                                        cmp_type=vcmp_type,
-                                                                        implementation=vcmp_impl,
-                                                                        members=hosts,
-                                                                        **group_vars)
+                vcmp: AnsibleVirtualComponent = AnsibleVirtualComponent(
+                    name=group,
+                    cmp_type=vcmp_type,
+                    implementation=vcmp_impl,
+                    members=hosts,
+                    **group_vars
+                )
 
                 virtual_components.append(vcmp)
         return virtual_components

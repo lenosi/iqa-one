@@ -1,8 +1,7 @@
-from typing import Optional
+from iqa.utils.singleton import Singleton
 from .transport import Transport
 
 
+@Singleton
 class WebSocket(Transport):
-    def __init__(self) -> None:
-        Transport.__init__(self)
-        self.name: Optional[str] = None
+    name:str = 'WebSocket'

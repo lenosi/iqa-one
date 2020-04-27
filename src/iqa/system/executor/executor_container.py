@@ -1,9 +1,9 @@
+from typing import Optional
+
 from .execution import ExecutionProcess
 from .executor_base import Executor
 from ..command.command_base import Command
 from ..command.command_container import CommandContainer
-
-from typing import Optional
 
 """
 Executor instance that runs a given Command instance using
@@ -18,8 +18,13 @@ class ExecutorContainer(Executor):
 
     implementation: str = 'docker'
 
-    def __init__(self, container_name: str = None, container_user: str = None, name: str = "ExecutorContainer",
-                 **kwargs):
+    def __init__(
+        self,
+        container_name: str = None,
+        container_user: str = None,
+        name: str = 'ExecutorContainer',
+        **kwargs
+    ):
         super(ExecutorContainer, self).__init__()
         self.container_name: str = kwargs.get('inventory_hostname', container_name)
         self.name: str = kwargs.get('executor_name', name)
@@ -33,7 +38,7 @@ class ExecutorContainer(Executor):
 
         if isinstance(command, CommandContainer):
             # Logging docker command to use
-            self._logger.debug("Using docker command: %s" % command.docker_command)
+            self._logger.debug('Using docker command: %s' % command.docker_command)
             docker_args.append(command.docker_command)
         else:
             docker_args.append('exec')

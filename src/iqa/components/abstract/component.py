@@ -31,9 +31,15 @@ class Component(object):
             return
 
         # Not all function arguments needed are available in kwargs
-        if not all([k in list(kwargs.keys()) for k in list(signature(func).parameters.keys())]):
+        if not all(
+            [k in list(kwargs.keys()) for k in list(signature(func).parameters.keys())]
+        ):
             return
 
         # Calling function if all args present in kwargs
-        arg_dict: dict = {k: v for k, v in kwargs.items() if k in list(signature(func).parameters.keys())}
+        arg_dict: dict = {
+            k: v
+            for k, v in kwargs.items()
+            if k in list(signature(func).parameters.keys())
+        }
         func(**arg_dict)

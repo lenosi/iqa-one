@@ -1,7 +1,7 @@
+from iqa.abstract.client.sender import Sender
 from iqa.abstract.listener import Listener
 from iqa.abstract.message.message import Message
 from iqa.components.clients.core.client import CoreMessagingClient
-from iqa.abstract.client.sender import Sender
 from iqa.system.node.node import Node
 
 

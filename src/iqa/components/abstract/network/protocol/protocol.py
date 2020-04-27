@@ -1,11 +1,11 @@
-from typing import Optional
+from abc import ABC
+from typing import Optional, Any
 
 
-class Protocol:
-    """ Protocol abstraction"""
+class Protocol(ABC):
+    """Protocol abstraction"""
 
-    default_port: Optional[int] = None
+    name: str = NotImplementedError
+    default_port: Optional[int] = NotImplementedError
+    transport: Any = NotImplementedError
 
-    def __init__(self, transport) -> None:
-        self.name: str = type(self).__name__
-        self.transport = transport

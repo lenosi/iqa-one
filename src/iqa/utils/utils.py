@@ -1,7 +1,7 @@
-class Utils():
+class Utils:
     @staticmethod
-    def remove_prefix(str, prefix) -> str:
-        if str.startswith(prefix):
-            return str[len(prefix):]
+    def remove_prefix(string, prefix) -> str:
+        if string.startswith(prefix):
+            return string[len(prefix):]
         else:
-            return str
+            return string

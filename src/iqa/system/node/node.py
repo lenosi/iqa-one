@@ -7,6 +7,7 @@ from typing import Optional, TYPE_CHECKING
 
 from iqa.system.command.command_base import Command
 from iqa.system.executor.execution import Execution
+
 if TYPE_CHECKING:
     from iqa.utils.types import ExecutorType
 
@@ -14,8 +15,9 @@ if TYPE_CHECKING:
 class Node:
     """Node abstract component"""
 
-    def __init__(self, hostname: str, executor: 'ExecutorType', name: str = None,
-                 ip: str = None) -> None:
+    def __init__(
+        self, hostname: str, executor: 'ExecutorType', name: str = None, ip: str = None
+    ) -> None:
         self.hostname: str = hostname
         self.name: str = name if name else hostname
         self.executor: ExecutorType = executor

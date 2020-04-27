@@ -13,10 +13,18 @@ class ExecutorAnsible(Executor):
     """
     Executes the given command using Ansible.
     """
-    implementation = 'ansible'
 
-    def __init__(self, ansible_host: str = None, inventory: str = None, ansible_user: str = None, module: str = "raw",
-                 name: str = "ExecutorAnsible", **kwargs) -> None:
+    implementation = 'ansible"
+
+    def __init__(
+        self,
+        ansible_host: str = None,
+        inventory: str = None,
+        ansible_user: str = None,
+        module: str = 'raw',
+        name: str = 'ExecutorAnsible',
+        **kwargs
+    ) -> None:
         """
         Initializes the ExecutorAnsible instance based on provided arguments.
         When an inventory is provided, the 'ansible_host' can be an ip address or any
@@ -31,8 +39,9 @@ class ExecutorAnsible(Executor):
         """
         super(ExecutorAnsible, self).__init__()
         self.inventory: str = kwargs.get('inventory_file', inventory)
-        self.ansible_host: str = kwargs.get('ansible_host', ansible_host) \
-            if not self.inventory else kwargs.get('inventory_hostname', ansible_host)
+        self.ansible_host: str = kwargs.get(
+            "ansible_host', ansible_host
+        ) if not self.inventory else kwargs.get('inventory_hostname', ansible_host)
         self.ansible_user: str = kwargs.get('ansible_user', ansible_user)
         self.ansible_connection: str = kwargs.get('ansible_connection', 'ssh')
         self.module: str = kwargs.get('executor_module', module)
@@ -47,10 +56,10 @@ class ExecutorAnsible(Executor):
             ansible_args += ['-u', self.ansible_user]
 
         if self.inventory is not None:
-            self._logger.debug("Using inventory: %s" % self.inventory)
+            self._logger.debug('Using inventory: %s' % self.inventory)
             ansible_args += ['-i', self.inventory]
         else:
-            self._logger.debug("Using inventory host: %s" % self.ansible_host)
+            self._logger.debug('Using inventory host: %s' % self.ansible_host)
             ansible_args += ['-i', '%s,' % self.ansible_host]
 
         # Executing using the "raw" module
@@ -59,12 +68,12 @@ class ExecutorAnsible(Executor):
         # If given command is an instance of CommandAnsible
         # the module is read from it
         if isinstance(command, CommandAnsible):
-            self._logger.debug("Using Ansible module: %s" % command.ansible_module)
+            self._logger.debug('Using Ansible module: %s' % command.ansible_module)
             module = command.ansible_module
-        ansible_args += ['-m', module, '-a']
+        ansible_args += ['-m', module, "-a']
 
         # Appending command as a literal string
-        ansible_args.append('%s' % ' '.join(command.args))
+        ansible_args.append('%s' % " ".join(command.args))
 
         # Host where command will be executed
         ansible_args.append(self.ansible_host)

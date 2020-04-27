@@ -5,12 +5,12 @@ Defines mandatory options and configuration that can be applied to all test suit
 import atexit
 import os
 
-from iqa.instance import Instance
+from iqa.instance.instance import Instance
 from .logger import get_logger
 
 # Default timeout settings
-CLIENTS_TIMEOUT = 60
-cleanup_file_list = []
+CLIENTS_TIMEOUT: int = 60
+cleanup_file_list: list = []
 
 # linting
 # (iqa)
@@ -18,20 +18,21 @@ cleanup_file_list = []
 log = get_logger(__name__)
 
 
-
-def pytest_addoption(parser):
+def pytest_addoption(parser) -> None:
     """Add options to control ansible."""
 
     group = parser.getgroup('pytest-iqa')
-    group.addoption('--inventory',
-                    action='store',
-                    dest='inventory',
-                    required=True,
-                    metavar='INVENTORY',
-                    help='Inventory file to use')
+    group.addoption(
+        '--inventory',
+        action='store',
+        dest='inventory',
+        required=True,
+        metavar='INVENTORY',
+        help='Inventory file to use',
+    )
 
 
-def cleanup_files():
+def cleanup_files() -> None:
     """
     Remove temporary files.
     :return:
@@ -40,7 +41,7 @@ def cleanup_files():
         os.unlink(f)
 
 
-def pytest_configure(config):
+def pytest_configure(config) -> None:
     """
     Loads IQAInstance based on provided environment and extra command line args.
     All arguments will be available as variables that can be used inside the inventory.
@@ -57,17 +58,21 @@ def pytest_configure(config):
     # would become: router_0: 1.1.1.1 and router_1: 2.2.2.2
     new_options = dict()
     for (key, value) in options.items():
-        if type(value) != list:
+        if not isinstance(value, list):
             continue
         for n in range(len(value)):
             new_options.update({'%s_%d' % (key, n): str(value[n])})
 
     options.update(new_options)
-    options = {key: str(value) for (key, value) in options.items() if key not in os.environ}
+    options = {
+        key: str(value) for (key, value) in options.items() if key not in os.environ
+    }
     os.environ.update(options)
 
     # Loading the inventory
-    iqa = Instance(inventory=config.getvalue('inventory'), cli_args=config.option.__dict__)
+    iqa = Instance(
+        inventory=config.getvalue('inventory'), cli_args=config.option.__dict__
+    )
 
     # Adjusting clients timeout
     for client in iqa.clients:

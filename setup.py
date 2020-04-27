@@ -5,18 +5,19 @@
 
 from setuptools import setup, find_packages
 
-files = ["*"]
-
 setup(
     name='iqa-one',
-    version='0.1.1',
+    version='0.1.2',
     packages=find_packages('src'),
     package_dir={'': 'src'},
     license='Apache 2.0',
     description='Messaging testing project',
     setup_requires=['pytest-runner'],
-    tests_require=['pytest', 'mock', 'pytest-mock'],
-    install_requires=[
+    tests_require=['pytest', 'mock', 'pytest-mock', 'tox', 'flake8'],
+    install_require=[
+        'requests',
+        'PyYAML',
+        'cython',
         'ansible',
         'python-qpid-proton',
         'amqcfg',

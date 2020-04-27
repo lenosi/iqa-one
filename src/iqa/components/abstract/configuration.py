@@ -2,11 +2,10 @@ import abc
 import logging
 import os
 import posixpath
+from typing import Union, Optional
 
 import dpath.util
 import yaml
-
-from typing import Union, Optional
 
 from iqa.system.command.command_ansible import CommandAnsible
 from iqa.system.command.command_base import Command
@@ -22,6 +21,7 @@ class Configuration(object):
     """Placeholder class of read configuration details from provided input file.
     Input file is json supported only (yaml in the future).
     """
+
     LOGGER = logging.getLogger(__name__)
     config_file: str = 'data_config_file'
     original_config_file: str
@@ -40,17 +40,24 @@ class Configuration(object):
             self.create_configuration(self.original_config_file)
         else:
             self.create_default_configuration(**kwargs)
-            LOGGER.info("No configuration file provided, using defaults")
+            LOGGER.info('No configuration file provided, using defaults')
 
-        # ansible synchronize must have trailing "/" to sync dir-content
-        if kwargs.get('inventory_dir') is not None and component.instance_name is not None:
-            self.local_config_dir = posixpath.join(kwargs.get('inventory_dir'),  # type: ignore
-                                                   component.instance_name, "")
+        # Ansible synchronize must have trailing "/" to sync dir-content
+        if (
+            kwargs.get('inventory_dir') is not None
+            and component.instance_name is not None
+        ):
+            self.local_config_dir = posixpath.join(
+                kwargs.get('inventory_dir'),  # type: ignore
+                component.instance_name,
+                '',
+            )
         else:
             self.local_config_dir = os.getcwd()
 
-    def _data_getter(self, path: str, default: Optional[Union[int, str, list, dict]]) -> \
-            Optional[Union[int, str, list, dict]]:
+    def _data_getter(
+        self, path: str, default: Optional[Union[int, str, list, dict]]
+    ) -> Optional[Union[int, str, list, dict]]:
         """General function to query data from provided external data dictionary.
 
         :param path: internal path to query data (broker_xml/journal/persistence_enabled)
@@ -62,7 +69,7 @@ class Configuration(object):
         """
         try:
             output: Union[int, str, list, dict] = dpath.util.get(self.yaml_data, path)
-            # LOGGER.debug("Dpath_search=%s\n%s" % (path, output))
+            # LOGGER.debug('Dpath_search=%s\n%s' % (path, output))
         except (KeyError, ValueError):
             LOGGER.debug('Unknown key or value %s', path)
             return default
@@ -80,10 +87,15 @@ class Configuration(object):
             try:
                 self.yaml_data = yaml.full_load(f)
             except yaml.YAMLError:
-                raise IQAConfigurationException("Unable to load file '%s' for '%s'" % (path, self.__class__.__name__))
+                raise IQAConfigurationException(
+                    'Unable to load file "%s" for "%s"'
+                    % (path, self.__class__.__name__)
+                )
 
-            if "artemis" not in self.yaml_data['render']['template']:
-                raise IQAConfigurationException("Incompatible data structure for %s !" % self.__class__.__name__)
+            if 'artemis' not in self.yaml_data['render']['template']:
+                raise IQAConfigurationException(
+                    'Incompatible data structure for %s !' % self.__class__.__name__
+                )
 
     @abc.abstractmethod
     def load_configuration(self) -> None:
@@ -108,17 +120,18 @@ class Configuration(object):
         cmd_copy_files: Command = Command(args=[])
         if isinstance(self.component.node, NodeAnsible):
             cmd_copy_files = CommandAnsible(
-                ansible_module="synchronize",
-                ansible_args='src=%s dest=%s' %
-                             (self.local_config_dir,
-                              self.node_config_dir),
+                ansible_module='synchronize',
+                ansible_args='src=%s dest=%s'
+                % (self.local_config_dir, self.node_config_dir),
                 stdout=True,
                 stderr=True,
-                timeout=20
+                timeout=20,
             )
         elif isinstance(self.component.node, NodeLocal):
             cmd_copy_files = Command([], stdout=True, timeout=20)
         elif isinstance(self.component.node, NodeDocker):
-            raise IQAConfigurationException("Unable to change configuration on docker node")
+            raise IQAConfigurationException(
+                'Unable to change configuration on docker node'
+            )
 
         return self.component.node.execute(cmd_copy_files)

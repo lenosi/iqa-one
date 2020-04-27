@@ -1,30 +1,39 @@
 # Config file for automatic testing at travis-ci.org
 
 sudo: false
+dist: bionic
 language: python
+
+cache:
+  directories:
+    - $HOME/.cache/pip
+
+services:
+  - docker
+
+git:
+  depth: 1
 
 matrix:
   include:
-  - python: pypy3
-    env: TOX_ENV=pypy3
-  - python: 3.6
-    env: TOX_ENV=flake8
-  - python: 3.7
-    env: TOX_ENV=flake8
+    - python: pypy3
+      env: TOX_ENV=pypy3
+
+    - python: 3.6
+      env: TOX_ENV=flake8
+
+    - python: 3.8
+      env: TOX_ENV=flake8,type
 
 install:
-- pip install tox
+  - pip install tox
 
 before_script:
   - echo -e "Host 172.17.*.*\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
 
 script:
-- bash tests/images/sshd_image/run_sshd_image.sh
-- tox -e $TOX_ENV
+  - bash tests/images/sshd_image/run_sshd_image.sh
+  - tox -e $TOX_ENV
 
 before_cache:
-- rm -rf $HOME/.cache/pip/log
-
-cache:
-  directories:
-  - $HOME/.cache/pip
+  - rm -rf $HOME/.cache/pip/log

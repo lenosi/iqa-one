@@ -1,12 +1,21 @@
 """
 Specialized implementation of external command for cli-rhea clients (NodeJS).
 """
-from iqa.components.clients.external.command.client_command import ConnectorClientCommand, ReceiverClientCommand, \
-    SenderClientCommand
-from iqa.components.clients.external.command.options.client_options import LinkOptionsSenderReceiver, \
-    ReactorOptionsSenderReceiver
-from iqa.components.clients.external.nodejs.command.nodejs_options import NodeJSControlOptionsCommon, \
-    NodeJSConnectionOptionsCommon, NodeJSControlOptionsReceiver, NodeJSControlOptionsSender
+from iqa.components.clients.external.command.client_command import (
+    ConnectorClientCommand,
+    ReceiverClientCommand,
+    SenderClientCommand,
+)
+from iqa.components.clients.external.command.options.client_options import (
+    LinkOptionsSenderReceiver,
+    ReactorOptionsSenderReceiver,
+)
+from iqa.components.clients.external.nodejs.command.nodejs_options import (
+    NodeJSControlOptionsCommon,
+    NodeJSConnectionOptionsCommon,
+    NodeJSControlOptionsReceiver,
+    NodeJSControlOptionsSender,
+)
 
 
 class NodeJSConnectorClientCommand(ConnectorClientCommand):
@@ -16,10 +25,17 @@ class NodeJSConnectorClientCommand(ConnectorClientCommand):
     The control property instance used here is RHEAControlOptionsCommon.
     """
 
-    def __init__(self, stdout: bool = False, stderr: bool = False,
-                 daemon: bool = False, timeout: int = 0,
-                 encoding: str = "utf-8") -> None:
-        super(NodeJSConnectorClientCommand, self).__init__(stdout, stderr, daemon, timeout, encoding)
+    def __init__(
+        self,
+        stdout: bool = False,
+        stderr: bool = False,
+        daemon: bool = False,
+        timeout: int = 0,
+        encoding: str = 'utf-8',
+    ) -> None:
+        super(NodeJSConnectorClientCommand, self).__init__(
+            stdout, stderr, daemon, timeout, encoding
+        )
         self.control: NodeJSControlOptionsCommon = NodeJSControlOptionsCommon()
         self.connection: NodeJSConnectionOptionsCommon = NodeJSConnectionOptionsCommon()
 
@@ -34,10 +50,17 @@ class NodeJSReceiverClientCommand(ReceiverClientCommand):
     The control property instance used here is RHEAControlOptionsCommon.
     """
 
-    def __init__(self, stdout: bool = False, stderr: bool = False,
-                 daemon: bool = False, timeout: int = 0,
-                 encoding: str = "utf-8") -> None:
-        super(NodeJSReceiverClientCommand, self).__init__(stdout, stderr, daemon, timeout, encoding)
+    def __init__(
+        self,
+        stdout: bool = False,
+        stderr: bool = False,
+        daemon: bool = False,
+        timeout: int = 0,
+        encoding: str = 'utf-8',
+    ) -> None:
+        super(NodeJSReceiverClientCommand, self).__init__(
+            stdout, stderr, daemon, timeout, encoding
+        )
         self.control: NodeJSControlOptionsReceiver = NodeJSControlOptionsReceiver()
         self.connection: NodeJSConnectionOptionsCommon = NodeJSConnectionOptionsCommon()
         self.link: LinkOptionsSenderReceiver = LinkOptionsSenderReceiver()
@@ -54,10 +77,17 @@ class NodeJSSenderClientCommand(SenderClientCommand):
     The control property instance used here is RHEAControlOptionsCommon.
     """
 
-    def __init__(self, stdout: bool = False, stderr: bool = False,
-                 daemon: bool = False, timeout: int = 0,
-                 encoding: str = "utf-8") -> None:
-        super(NodeJSSenderClientCommand, self).__init__(stdout, stderr, daemon, timeout, encoding)
+    def __init__(
+        self,
+        stdout: bool = False,
+        stderr: bool = False,
+        daemon: bool = False,
+        timeout: int = 0,
+        encoding: str = 'utf-8',
+    ) -> None:
+        super(NodeJSSenderClientCommand, self).__init__(
+            stdout, stderr, daemon, timeout, encoding
+        )
         self.control: NodeJSControlOptionsSender = NodeJSControlOptionsSender()
         self.connection: NodeJSConnectionOptionsCommon = NodeJSConnectionOptionsCommon()
         self.link: LinkOptionsSenderReceiver = LinkOptionsSenderReceiver()

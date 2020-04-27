@@ -1,0 +1,4 @@
+[flake8]
+
+per-file-ignores =
+    src/iqa/components/routers/dispatch/config/sections.py: E501

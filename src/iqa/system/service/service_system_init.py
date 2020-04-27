@@ -2,12 +2,13 @@ import logging
 import re
 from enum import Enum
 from typing import Union, Optional
+
 from typing.re import Pattern
 
 from iqa.system.command.command_ansible import CommandAnsible
 from iqa.system.command.command_base import Command
-from iqa.system.executor.execution import Execution
 from iqa.system.executor import Executor, ExecutorAnsible
+from iqa.system.executor.execution import Execution
 from iqa.system.service.service import Service, ServiceStatus
 
 
@@ -47,41 +48,53 @@ class ServiceSystemInit(Service):
         # (dead)
 
         # On RHEL7> service is automatically redirected to systemctl
-        cmd_status: Command = Command(['service', self.name, 'status'], stdout=True, timeout=self.TIMEOUT)
+        cmd_status: Command = Command(
+            ['service', self.name, 'status'], stdout=True, timeout=self.TIMEOUT
+        )
         execution: Execution = self.executor.execute(cmd_status)
 
         service_output: Optional[Union[str, list]] = execution.read_stdout()
 
         if not service_output:
-            ServiceSystemInit._logger.debug("Service: %s - Status: FAILED" % self.name)
+            ServiceSystemInit._logger.debug('Service: %s - Status: FAILED' % self.name)
             return ServiceStatus.FAILED
 
         running_pattern: Pattern = r'(is running|\(running\)|Running)'
         stopped_pattern: Pattern = r'(is stopped|\(dead\)|Stopped)'
         if re.search(running_pattern, service_output):
-            ServiceSystemInit._logger.debug("Service: %s - Status: RUNNING" % self.name)
+            ServiceSystemInit._logger.debug('Service: %s - Status: RUNNING' % self.name)
             return ServiceStatus.RUNNING
         elif re.search(stopped_pattern, service_output):
-            ServiceSystemInit._logger.debug("Service: %s - Status: STOPPED" % self.name)
+            ServiceSystemInit._logger.debug('Service: %s - Status: STOPPED' % self.name)
             return ServiceStatus.STOPPED
 
-        ServiceSystemInit._logger.debug("Service: %s - Status: UNKNOWN" % self.name)
+        ServiceSystemInit._logger.debug('Service: %s - Status: UNKNOWN' % self.name)
         return ServiceStatus.UNKNOWN
 
     def start(self) -> Execution:
-        return self.executor.execute(self._create_command(self.ServiceSystemState.STARTED))
+        return self.executor.execute(
+            self._create_command(self.ServiceSystemState.STARTED)
+        )
 
     def stop(self) -> Execution:
-        return self.executor.execute(self._create_command(self.ServiceSystemState.STOPPED))
+        return self.executor.execute(
+            self._create_command(self.ServiceSystemState.STOPPED)
+        )
 
     def restart(self) -> Execution:
-        return self.executor.execute(self._create_command(self.ServiceSystemState.RESTARTED))
+        return self.executor.execute(
+            self._create_command(self.ServiceSystemState.RESTARTED)
+        )
 
     def enable(self) -> Execution:
-        return self.executor.execute(self._create_command(self.ServiceSystemState.ENABLED))
+        return self.executor.execute(
+            self._create_command(self.ServiceSystemState.ENABLED)
+        )
 
     def disable(self) -> Execution:
-        return self.executor.execute(self._create_command(self.ServiceSystemState.DISABLED))
+        return self.executor.execute(
+            self._create_command(self.ServiceSystemState.DISABLED)
+        )
 
     def _create_command(self, service_state: ServiceSystemState):
         """
@@ -92,10 +105,14 @@ class ServiceSystemInit(Service):
         """
         if isinstance(self.executor, ExecutorAnsible):
             state = service_state.ansible_state
-            return CommandAnsible('name=%s state=%s' % (self.name, state),
-                                  ansible_module='service',
-                                  stdout=True,
-                                  timeout=self.TIMEOUT)
+            return CommandAnsible(
+                'name=%s state=%s' % (self.name, state),
+                ansible_module='service',
+                stdout=True,
+                timeout=self.TIMEOUT,
+            )
         else:
             state = service_state.system_state
-            return Command(['service', self.name, state], stdout=True, timeout=self.TIMEOUT)
+            return Command(
+                ['service', self.name, state], stdout=True, timeout=self.TIMEOUT
+            )

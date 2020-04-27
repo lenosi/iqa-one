@@ -1,10 +1,10 @@
 from typing import TypeVar, Union
 
-from iqa.abstract.server.broker import Broker
 from iqa.abstract.client.client import Client
 from iqa.abstract.client.receiver import Receiver
-from iqa.abstract.server.router import Router
 from iqa.abstract.client.sender import Sender
+from iqa.abstract.server.broker import Broker
+from iqa.abstract.server.router import Router
 from iqa.components.abstract.component import Component
 from iqa.components.abstract.management.client import ManagementClient
 from iqa.system.executor import Executor

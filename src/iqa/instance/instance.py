@@ -3,25 +3,35 @@ IQA instance which is populated based on an ansible compatible inventory file.
 """
 from typing import List, Optional, Union, TYPE_CHECKING
 
-from iqa.abstract.server.broker import Broker
 from iqa.abstract.client.client import Client
+from iqa.abstract.server.broker import Broker
 from iqa.abstract.server.router import Router
 from iqa.components.abstract.component import Component
 from iqa.components.brokers import BrokerFactory
 from iqa.components.clients.external import ClientFactory
 from iqa.components.routers import RouterFactory
 from iqa.system.ansible.ansible_inventory import AnsibleInventory
-from iqa.system.executor.executor_base import Executor
 from iqa.system.executor import ExecutorFactory
-from iqa.system.node.node import Node
+from iqa.system.executor.executor_base import Executor
 from iqa.system.node import NodeFactory
+from iqa.system.node.node import Node
 from iqa.system.service import ServiceFactory
+from iqa.utils.singleton import Singleton
 
 if TYPE_CHECKING:
-    from iqa.utils.types import BrokerType, ClientType, ComponentType, ExecutorType, NodeType, RouterType, \
-                                ReceiverSubtype, SenderSubtype
+    from iqa.utils.types import (
+        BrokerType,
+        ClientType,
+        ComponentType,
+        ExecutorType,
+        NodeType,
+        RouterType,
+        ReceiverSubtype,
+        SenderSubtype,
+    )
 
 
+@Singleton
 class Instance:
     """IQA helper class
 
@@ -30,9 +40,13 @@ class Instance:
 
     def __init__(self, inventory: str = '', cli_args: dict = None) -> None:
         self.inventory: str = inventory
-        self._inv_mgr: AnsibleInventory = AnsibleInventory(inventory=self.inventory, extra_vars=cli_args)
+        self._inv_mgr: AnsibleInventory = AnsibleInventory(
+            inventory=self.inventory, extra_vars=cli_args
+        )
         self.nodes: List['NodeType'] = []
-        self.components: List[Optional[Union['ComponentType', 'ClientType', 'BrokerType', 'RouterType']]] = []
+        self.components: List[
+            Optional[Union['ComponentType', 'ClientType', 'BrokerType', 'RouterType']]
+        ] = []
 
         self._load_components()
 
@@ -66,20 +80,23 @@ class Instance:
             cmp_ip: str = cmp_vars.get('ansible_host', None)
 
             # Getting the executor instance
-            executor: 'ExecutorType' = ExecutorFactory.create_executor(exec_impl=cmp_exec, **cmp_vars)
+            executor: 'ExecutorType' = ExecutorFactory.create_executor(
+                exec_impl=cmp_exec, **cmp_vars
+            )
 
             # Create the Node for current client
-            node: Node = NodeFactory.create_node(hostname=cmp.name, executor=executor, ip=cmp_ip)
+            node: Node = NodeFactory.create_node(
+                hostname=cmp.name, executor=executor, ip=cmp_ip
+            )
             nodes.append(node)
 
             # Now loading variables that are specific to each component
             if cmp_type == 'client':
                 # Add list of clients into component list
-                cmp_list: List[Union[Component, Client, Broker, Router]] = ClientFactory.create_clients(
-                    implementation=cmp_impl,
-                    node=node,
-                    executor=executor,
-                    **cmp_vars
+                cmp_list: List[
+                    Union[Component, Client, Broker, Router]
+                ] = ClientFactory.create_clients(
+                    implementation=cmp_impl, node=node, executor=executor, **cmp_vars
                 )
 
                 for client in cmp_list:
@@ -90,9 +107,7 @@ class Instance:
                 # A service name is expected
                 cmp_svc: str = get_and_remove_key(cmp_vars, 'service')
                 svc = ServiceFactory.create_service(
-                    executor=executor,
-                    service_name=cmp_svc,
-                    **cmp_vars
+                    executor=executor, service_name=cmp_svc, **cmp_vars
                 )
 
                 if cmp_type == 'router':
@@ -118,7 +133,9 @@ class Instance:
         self.nodes = nodes
 
     # TODO: @dlenoch reimplement node logic
-    def new_node(self, hostname: str, executor_impl: str = 'ansible', ip: str = None) -> Node:
+    def new_node(
+        self, hostname: str, executor_impl: str = 'ansible', ip: str = None
+    ) -> Node:
         """Create new node under iQA instance
 
         :param executor_impl:
@@ -134,12 +151,16 @@ class Instance:
         executor: Executor = ExecutorFactory.create_executor(exec_impl=executor_impl)
 
         # Create the Node for current client
-        node: Node = NodeFactory.create_node(hostname=hostname, executor=executor, ip=ip)
+        node: Node = NodeFactory.create_node(
+            hostname=hostname, executor=executor, ip=ip
+        )
         self.nodes.append(node)
         return node
 
-    def new_component(self, component: Union['ComponentType', 'ClientType', 'BrokerType', 'RouterType'])\
-            -> Union['ComponentType', 'ClientType', 'BrokerType', 'RouterType']:
+    def new_component(
+        self,
+        component: Union['ComponentType', 'ClientType', 'BrokerType', 'RouterType'],
+    ) -> Union['ComponentType', 'ClientType', 'BrokerType', 'RouterType']:
         """Create new component in IQA instance
 
         :param component:
@@ -157,8 +178,9 @@ class Instance:
         Get all broker instances on this node
         :return:
         """
-        return [component for component in self.components
-                if isinstance(component, Broker)]
+        return [
+            component for component in self.components if isinstance(component, Broker)
+        ]
 
     @property
     def clients(self) -> List['ClientType']:
@@ -167,19 +189,28 @@ class Instance:
         @TODO
         :return:
         """
-        return [component for component in self.components
-                if isinstance(component, Client)]
+        return [
+            component for component in self.components if isinstance(component, Client)
+        ]
 
-    def get_clients(self, client_type: type, implementation: str = None) -> List['ClientType']:
+    def get_clients(
+        self, client_type: type, implementation: str = ''
+    ) -> List['ClientType']:
         """
         Get all client instances on this node
         @TODO
         :return:
         """
-        return [component for component in self.clients
-                if isinstance(component, client_type) and
-                (implementation is None or
-                 component.implementation == implementation.lower())]
+        component: Client
+        return [
+            component
+            for component in self.clients
+            if isinstance(component, client_type)
+            and (
+                implementation == ''
+                or component.implementation == implementation.lower()
+            )
+        ]
 
     def get_receiver(self, hostname: str) -> Optional['ClientType']:
         """
@@ -217,8 +248,9 @@ class Instance:
         Get all router instances on this node
         :return:
         """
-        return [component for component in self.components
-                if isinstance(component, Router)]
+        return [
+            component for component in self.components if isinstance(component, Router)
+        ]
 
     def get_routers(self, hostname: str = None) -> List['RouterType']:
         """
@@ -226,9 +258,15 @@ class Instance:
         :type hostname: optional hostname
         :return:
         """
-        return [component for component in self.routers
-                if not hostname or (not isinstance(component, Router) and
-                                    component.node.hostname == hostname)]
+        return [
+            component
+            for component in self.routers
+            if not hostname
+            or (
+                not isinstance(component, Router)
+                and component.node.hostname == hostname
+            )
+        ]
 
     def get_brokers(self, hostname: str = None) -> List['BrokerType']:
         """
@@ -236,6 +274,12 @@ class Instance:
         :type hostname: optional hostname
         :return:
         """
-        return [component for component in self.brokers
-                if not hostname or (not isinstance(component, Broker) and
-                                    component.node.hostname == hostname)]
+        return [
+            component
+            for component in self.brokers
+            if not hostname
+            or (
+                not isinstance(component, Broker)
+                and component.node.hostname == hostname
+            )
+        ]

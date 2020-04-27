@@ -4,7 +4,7 @@
 # distributed with this work for additional information
 # regarding copyright ownership.  The ASF licenses this file
 # to you under the Apache License, Version 2.0 (the
-# "License"); you may not use this file except in compliance
+# "License'); you may not use this file except in compliance
 # with the License.  You may obtain a copy of the License at
 #
 #   http://www.apache.org/licenses/LICENSE-2.0
@@ -33,8 +33,8 @@ class DockerUtil(object):
     basic information on images and containers.
     """
 
-    CONTAINER_STATUS_RUNNING: str = "running"
-    CONTAINER_STATUS_EXITED: str = "exited"
+    CONTAINER_STATUS_RUNNING: str = 'running'
+    CONTAINER_STATUS_EXITED: str = 'exited'
 
     def __init__(self, **kwargs) -> None:
         self.docker_host: str = kwargs.get('docker_host', None)
@@ -64,8 +64,10 @@ class DockerUtil(object):
         :return:
         """
         container: Container = self.get_container(name)
-        ip_addr: str = container.attrs['NetworkSettings']['Networks'][network_name]['IPAddress']
-        self._logger.debug("Container: %s - IP Address: %s" % (name, ip_addr))
+        ip_addr: str = container.attrs['NetworkSettings']['Networks'][network_name][
+            'IPAddress'
+        ]
+        self._logger.debug('Container: %s - IP Address: %s' % (name, ip_addr))
         return container.attrs['NetworkSettings']['Networks'][network_name]['IPAddress']
 
     def stop_container(self, name) -> None:

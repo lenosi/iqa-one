@@ -1,18 +1,18 @@
 import logging
 from typing import List
 
-from iqa.abstract.server.broker import Broker
-from iqa.components.abstract.server.server_component import ServerComponent
-from iqa.components.brokers.artemis.artemis_config import ArtemisConfig
-from iqa.components.protocols.amqp import Amqp10
-from iqa.components.protocols.mqtt import Mqtt
-from iqa.components.protocols.stomp import Stomp
-from iqa.components.protocols.openwire import Openwire
-from iqa.components.brokers.artemis.management.jolokia_client import ArtemisJolokiaClient
 from iqa.abstract.destination.address import Address
 from iqa.abstract.destination.queue import Queue
 from iqa.abstract.destination.routing_type import RoutingType
 from iqa.abstract.listener import Listener
+from iqa.abstract.server.broker import Broker
+from iqa.components.abstract.server.server_component import ServerComponent
+from iqa.components.brokers.artemis.artemis_config import ArtemisConfig
+from iqa.components.brokers.artemis.management.jolokia_client import ArtemisJolokiaClient
+from iqa.components.protocols.amqp import AMQP10
+from iqa.components.protocols.mqtt import MQTT
+from iqa.components.protocols.openwire import Openwire
+from iqa.components.protocols.stomp import STOMP
 
 
 class Activemq(ServerComponent, Broker):
@@ -20,7 +20,7 @@ class Activemq(ServerComponent, Broker):
     Apache ActiveMQ has a proven non blocking architecture. It delivers outstanding performance.
     """
 
-    supported_protocols: list = [Amqp10(), Mqtt(), Stomp(), Openwire()]
+    supported_protocols: list = [AMQP10(), MQTT(), STOMP(), Openwire()]
     name: str = 'Activemq'
     implementation: str = 'activemq'
 
@@ -29,9 +29,9 @@ class Activemq(ServerComponent, Broker):
         self._queues: List[Queue] = list()
         self._addresses: List[Address] = list()
         self._addresses_dict: dict = {}
-        self.management_client: ArtemisJolokiaClient = None  # type: ignore
-
         self.config: ArtemisConfig = ArtemisConfig(**kwargs)
+
+        self.management_client: ArtemisJolokiaClient = ArtemisJolokiaClient()  # type: ignore
         self.users: dict = self.config.users
 
     def queues(self, refresh: bool = True) -> List[Queue]:
@@ -68,7 +68,9 @@ class Activemq(ServerComponent, Broker):
         """
         if queue.routing_type == RoutingType.BOTH:
             raise ValueError('Queues can only use ANYCAST or MULTICAST routing type')
-        return self.management_client.create_queue(address.name, queue.name, durable, queue.routing_type.name)
+        return self.management_client.create_queue(
+            address.name, queue.name, durable, queue.routing_type.name
+        )
 
     def delete_queue(self, name: str, remove_consumers: bool = False):
         """
@@ -108,28 +110,38 @@ class Activemq(ServerComponent, Broker):
 
         # If no address found, skip it
         if not addresses_result.data:
-            logging.debug("No addresses available")
+            logging.debug('No addresses available')
         else:
             # Parsing returned addresses
             for addr_info in addresses_result.data:
-                logging.debug("Address found: %s - routingType: %s" % (addr_info['name'], addr_info['routingTypes']))
-                address: Address = Address(name=addr_info['name'],
-                                           routing_type=RoutingType.from_value(addr_info['routingTypes']))
+                logging.debug(
+                    "Address found: %s - routingType: %s"
+                    % (addr_info['name'], addr_info['routingTypes'])
+                )
+                address: Address = Address(
+                    name=addr_info['name'],
+                    routing_type=RoutingType.from_value(addr_info['routingTypes']),
+                )
                 addresses_dict[address.name] = address
                 addresses.append(address)
 
         # If no queues returned
         if not queues_result.data:
-            logging.debug("No queues available")
+            logging.debug('No queues available')
         else:
             # Parsing returned queues
             for queue_info in queues_result.data:
-                logging.debug("Queue found: %s - routingType: %s" % (queue_info['name'], queue_info['routingType']))
-                routing_type: RoutingType = RoutingType.from_value(queue_info['routingType'])
+                logging.debug(
+                    "Queue found: %s - routingType: %s"
+                    % (queue_info['name'], queue_info['routingType'])
+                )
+                routing_type: RoutingType = RoutingType.from_value(
+                    queue_info['routingType']
+                )
                 address = addresses_dict[queue_info['address']]
-                queue: Queue = Queue(name=queue_info['name'],
-                                     routing_type=routing_type,
-                                     address=address)
+                queue: Queue = Queue(
+                    name=queue_info['name'], routing_type=routing_type, address=address
+                )
                 queue.message_count = queue_info['messageCount']
                 address.queues.append(queue)
                 queues.append(queue)
@@ -144,21 +156,24 @@ class Activemq(ServerComponent, Broker):
         Creates a new instance of the Jolokia Client.
         :return:
         """
-        client: ArtemisJolokiaClient = ArtemisJolokiaClient(self.config.instance_name,  # type: ignore
-                                                            self.node.get_ip(),
-                                                            self.config.ports['web'],
-                                                            'admin',
-                                                            self.config.get_user_password('admin'))
+        client: ArtemisJolokiaClient = ArtemisJolokiaClient(
+            self.config.instance_name,  # type: ignore
+            self.node.get_ip(),
+            self.config.ports['web'],
+            'admin',
+            self.config.get_user_password('admin'),
+        )
         return client
 
-    def _get_routing_type(self, routing_type: RoutingType) -> str:
+    @staticmethod
+    def _get_routing_type(routing_type: RoutingType) -> str:
         """
         Returns the routing type str value, based on expected values on the broker.
         :param routing_type:
         :return:
         """
         if routing_type == RoutingType.BOTH:
-            return 'ANYCAST, MULTICAST'
+            return "ANYCAST, MULTICAST"
         return routing_type.name
 
     def get_url(self, port: int = None, listener: Listener = None) -> str:

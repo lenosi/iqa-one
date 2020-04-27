@@ -5,17 +5,20 @@ from iqa.abstract.server.router import Router
 from iqa.system.executor import Executor
 from iqa.system.node.node import Node
 from iqa.system.service.service import Service
-from iqa.components.routers.dispatch.dispatch import Dispatch
 
 if TYPE_CHECKING:
     from iqa.utils.types import RouterType
 
 
 class RouterFactory(object):
-
     @staticmethod
-    def create_router(implementation: str, node: Node, executor: Executor, service_impl: Service, **kwargs)\
-            -> 'RouterType':
+    def create_router(
+        implementation: str,
+        node: Node,
+        executor: Executor,
+        service_impl: Service,
+        **kwargs
+    ) -> 'RouterType':
 
         for router in Router.__subclasses__():
 
@@ -24,8 +27,12 @@ class RouterFactory(object):
                 continue
 
             name: str = '%s-%s-%s' % ('router', router.__name__, node.hostname)
-            return router(name=name, node=node, executor=executor, service=service_impl, **kwargs)
+            return router(
+                name=name, node=node, executor=executor, service=service_impl, **kwargs
+            )
 
-        exception: ValueError = ValueError('Invalid router implementation: %s' % implementation)
+        exception: ValueError = ValueError(
+            'Invalid router implementation: %s' % implementation
+        )
         logging.getLogger(RouterFactory.__module__).error(exception)
         raise exception

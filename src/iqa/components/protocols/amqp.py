@@ -1,22 +1,19 @@
 from iqa.components.abstract.network.protocol.protocol import Protocol
 from iqa.components.abstract.network.transport.tcp import TCP
+from iqa.utils.singleton import Singleton
 
 
-class Amqp(Protocol):
+class _AMQP(Protocol):
+    name: str = 'AMQP Advanced Message Queuing Protocol'
     default_port: int = 5672
-
-    def __init__(self, transport=TCP) -> None:
-        super(Amqp, self).__init__(transport)
-        self.name: str = "AMQP"
+    transport = TCP()
 
 
-class Amqp10(Amqp):
-    def __init__(self, transport=TCP) -> None:
-        super(Amqp10, self).__init__(transport)
-        self.name: str = "AMQP 1.0"
+@Singleton
+class AMQP10(_AMQP):
+    name: str = 'AMQP Advanced Message Queuing Protocol 1.0'
 
 
-class Amqp091(Amqp):
-    def __init__(self, transport=TCP) -> None:
-        super(Amqp091, self).__init__(transport)
-        self.name: str = "AMQP 0.9.1"
+@Singleton
+class AMQP091(_AMQP):
+    name: str = 'AMQP Advanced Message Queuing Protocol 0.9.1'

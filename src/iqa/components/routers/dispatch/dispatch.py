@@ -1,8 +1,8 @@
 from typing import Optional, Union, List
 
 from iqa.abstract.listener import Listener
-from iqa.components.abstract.server.server_component import ServerComponent
 from iqa.abstract.server.router import Router
+from iqa.components.abstract.server.server_component import ServerComponent
 from iqa.system.command.command_base import Command
 from iqa.system.executor.execution import Execution
 from iqa.system.node.node import Node
@@ -21,8 +21,13 @@ class Dispatch(ServerComponent, Router):
     name: str = 'Qpid Dispatch Router'
     implementation: str = 'dispatch'
 
-    def __init__(self, name: str, node: Node, listeners: Optional[List[Listener]] = None, **kwargs)\
-            -> None:  # type: ignore
+    def __init__(
+        self,
+        name: str,
+        node: Node,
+        listeners: Optional[List[Listener]] = None,
+        **kwargs
+    ) -> None:  # type: ignore
         super(Dispatch, self).__init__(name, node, listeners, **kwargs)
 
         self.qdmanage: QDManage = QDManage()
@@ -50,7 +55,6 @@ class Dispatch(ServerComponent, Router):
         Syncing router config from remote to test_suite
         :return:
         """
-        pass
 
     @staticmethod
     def config_dump() -> None:
@@ -93,7 +97,9 @@ class Dispatch(ServerComponent, Router):
         self.user = user
         self.password = password
 
-    def set_ssl_auth(self, pem_file: str = None, key_file: str = None, key_password: str = None) -> None:
+    def set_ssl_auth(
+        self, pem_file: str = None, key_file: str = None, key_password: str = None
+    ) -> None:
         """
         Defines SSL credentials that must be used to communicate with this router instance
         through its main port.

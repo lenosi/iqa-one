@@ -1,10 +1,9 @@
 import logging
+from collections import namedtuple
 from typing import Optional
 
 import proton
-
-from collections import namedtuple
-from proton import Url, SSLDomain
+from proton.reactor import Url, SSLDomain
 from proton.utils import BlockingConnection, SyncRequestResponse
 
 from iqa.components.routers.dispatch.dispatch import Dispatch
@@ -16,31 +15,36 @@ class RouterQuery(object):
     Connections are closed after each query.
     """
 
-    def __init__(self, host: str = "0.0.0.0", port: int = 5672, router: Dispatch = None) -> None:
+    def __init__(
+        self, host: str = '0.0.0.0', port: int = 5672, router: Dispatch = None
+    ) -> None:
 
         self._logger: logging.Logger = logging.getLogger(self.__module__)
         self.port: int = port
         self.host: str = host
         self._router: Optional[Dispatch] = router
         self._connection_options: dict = {
-                'sasl_enabled': False,
-                'ssl_domain': None,
-                'allow_insecure_mechs': True,
-                'user': None,
-                'password': None
+            'sasl_enabled': False,
+            'ssl_domain': None,
+            'allow_insecure_mechs': True,
+            'user': None,
+            'password': None,
         }
 
         if self._router:
             # Enable SASL when credentials provided
-            self._connection_options['sasl_enabled'] = \
+            self._connection_options['sasl_enabled'] = (
                 self._router.has_ssl_keys() or self._router.has_credentials()
+            )
 
             # If SSL certificates provided, use them
             if self._router.has_ssl_keys():
                 ssl_domain: SSLDomain = SSLDomain(SSLDomain.MODE_CLIENT)
-                ssl_domain.set_credentials(self._router.pem_file,
-                                           self._router.key_file,
-                                           self._router.key_password)
+                ssl_domain.set_credentials(
+                    self._router.pem_file,
+                    self._router.key_file,
+                    self._router.key_password,
+                )
                 self._connection_options['ssl_domain'] = ssl_domain
 
             # If User and Password provided
@@ -48,8 +52,7 @@ class RouterQuery(object):
                 self._connection_options['user'] = self._router.user
                 self._connection_options['password'] = self._router.password
 
-    def query(self, entity_type: str = 'org.apache.qpid.dispatch.router.node') \
-            -> list:
+    def query(self, entity_type: str = 'org.apache.qpid.dispatch.router.node') -> list:
         """
         Queries the related router instance, retrieving information for
         the provided Entity Type. The result is an array of a named tuple,
@@ -66,21 +69,27 @@ class RouterQuery(object):
             scheme = 'amqps'
 
         # URL to test
-        url: Url = Url("%s://%s:%s/$management" % (scheme, self.host, self.port))
-        self._logger.info("Querying router at: %s://%s:%s/$management" %
-                          (scheme, self.host, self.port))
+        url: Url = Url('%s://%s:%s/$management' % (scheme, self.host, self.port))
+        self._logger.info(
+            'Querying router at: %s://%s:%s/$management'
+            % (scheme, self.host, self.port)
+        )
 
         # Proton connection
-        self._logger.debug("Connection options: %s" % self._connection_options)
-        connection: BlockingConnection = BlockingConnection(url, **self._connection_options)
+        self._logger.debug('Connection options: %s' % self._connection_options)
+        connection: BlockingConnection = BlockingConnection(
+            url, **self._connection_options
+        )
 
         # Proton sync client
         client: SyncRequestResponse = SyncRequestResponse(connection, url.path)
 
         # Request message object
         request: proton.Message = proton.Message()
-        request.properties = {u'operation': u'QUERY',
-                              u'entityType': u'%s' % entity_type}
+        request.properties = {
+            u'operation': u'QUERY',
+            u'entityType': u'%s' % entity_type,
+        }
         request.body = {u'attributeNames': []}
 
         # Sending the request
@@ -91,10 +100,10 @@ class RouterQuery(object):
 
         # Namedtuple that represents the query response from the router
         # so fields can be read based on their attribute names.
-        RouterQueryResults = namedtuple('RouterQueryResults', response.body["attributeNames"])  # type: ignore
+        RouterQueryResults = namedtuple('RouterQueryResults', response.body['attributeNames'])  # type: ignore
         records: list = []
 
-        for record in response.body["results"]:
+        for record in response.body['results']:
             records.append(RouterQueryResults(*record))
 
         return records
@@ -119,7 +128,9 @@ class RouterQuery(object):
         return self.query(entity_type='org.apache.qpid.dispatch.router.config.autoLink')
 
     def config_linkroute(self) -> list:
-        return self.query(entity_type='org.apache.qpid.dispatch.router.config.linkRoute')
+        return self.query(
+            entity_type='org.apache.qpid.dispatch.router.config.linkRoute'
+        )
 
     def config_exchange(self) -> list:
         return self.query(entity_type='org.apache.qpid.dispatch.router.config.exchange')

@@ -1,5 +1,4 @@
 class User(object):
-
     def __init__(self, username: str, password: str, **kwargs):
         self.username: str = username
         self.password: str = password

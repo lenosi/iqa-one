@@ -43,7 +43,9 @@ class Executor(object):
         command.on_pre_execution(self)
 
         # Delegate execution to concrete Executor
-        self._logger.debug("Executing command with [%s] - %s" % (self.__class__.__name__, command.args))
+        self._logger.debug(
+            'Executing command with [%s] - %s' % (self.__class__.__name__, command.args)
+        )
         execution: Execution = self._execute(command)
 
         # If command is a not a daemon, wait for it
@@ -70,9 +72,9 @@ class ExecutorLocal(Executor):
     Executes a given command locally.
     """
 
-    implementation = "local"
+    implementation = 'local'
 
-    def __init__(self, name: str = "ExecutorLocal", **kwargs) -> None:
+    def __init__(self, name: str = 'ExecutorLocal', **kwargs) -> None:
         super(ExecutorLocal, self).__init__(**kwargs)
         self.name: str = name
 

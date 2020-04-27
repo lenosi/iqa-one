@@ -41,7 +41,9 @@ class TimeoutCallback(threading.Thread):
     called.
     """
 
-    def __init__(self, timeout: float, callback_method: Union[Callable, List[Callable]] = None):
+    def __init__(
+        self, timeout: float, callback_method: Union[Callable, List[Callable]] = None
+    ):
         """
         Timeout must be provided in seconds and callback_method can be either
         a function or a list of functions.
@@ -50,7 +52,9 @@ class TimeoutCallback(threading.Thread):
         """
         threading.Thread.__init__(self)
         self.timeout: float = timeout
-        self.callback_method: Optional[Union[Callable, List[Callable]]] = callback_method
+        self.callback_method: Optional[
+            Union[Callable, List[Callable]]
+        ] = callback_method
         self._interrupted: bool = False
         self._timed_out: bool = False
         self._finished: threading.Event = threading.Event()
@@ -76,7 +80,7 @@ class TimeoutCallback(threading.Thread):
         Starts the timer
         :return:
         """
-        logger.debug("Starting timeout callback [timeout = %d]" % self.timeout)
+        logger.debug('Starting timeout callback [timeout = %d]' % self.timeout)
 
         # Wait till interrupted or timed out
         self._finished.wait(timeout=self.timeout)
@@ -101,8 +105,8 @@ class TimeoutCallback(threading.Thread):
         task before a time out has occurred.
         :return:
         """
-        logger.debug("Interrupt requested")
+        logger.debug('Interrupt requested')
         if not self._timed_out:
-            logger.debug("Processing interrupt request")
+            logger.debug('Processing interrupt request')
             self._interrupted = True
             self._finished.set()

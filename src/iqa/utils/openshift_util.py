@@ -21,14 +21,13 @@
 Utility class to help executing OpenShift standard operations
 """
 import logging
-
 from typing import Any, Callable
 
 from iqa.system.executor import Executor
 from iqa.system.executor.executor_base import Execution, Command
 
 
-class OpenShiftUtil(object):
+class OpenShiftUtil:
     """
     Helper class that helps executing standard operations through the "oc" cli.
     """
@@ -41,6 +40,7 @@ class OpenShiftUtil(object):
         self.url: str = url
         self.token: str = token
 
+    @staticmethod
     def login_first(func):
         """
         Decorator used to enforce a oc login will be issued before another command.
@@ -61,13 +61,25 @@ class OpenShiftUtil(object):
         :param timeout:
         :return: The execution result.
         """
-        cmd_login = Command(args=['oc', 'login', self.url, '--token', '%s' % self.token,
-                                  '--insecure-skip-tls-verify=true'],
-                            timeout=timeout, stderr=True, stdout=True)
+        cmd_login = Command(
+            args=[
+                'oc',
+                'login',
+                self.url,
+                '--token',
+                '%s' % self.token,
+                '--insecure-skip-tls-verify=true',
+            ],
+            timeout=timeout,
+            stderr=True,
+            stdout=True,
+        )
         execution: Execution = self.executor.execute(cmd_login)
         execution.wait()
         if not execution.completed_successfully():
-            self._logger.debug("Login has failed against %s: %s" % (self.url, execution.read_stdout()))
+            self._logger.debug(
+                'Login has failed against %s: %s' % (self.url, execution.read_stdout())
+            )
         return execution
 
     @login_first
@@ -79,11 +91,17 @@ class OpenShiftUtil(object):
         :param deployment:
         :return: The execution result.
         """
-        cmd_scale_up = Command(args=['oc', 'scale', '--replicas=%d' % replicas, 'dc', deployment],
-                               timeout=30, stderr=True, stdout=True)
+        cmd_scale_up = Command(
+            args=['oc', 'scale', '--replicas=%d' % replicas, 'dc', deployment],
+            timeout=30,
+            stderr=True,
+            stdout=True,
+        )
         execution: Execution = self.executor.execute(cmd_scale_up)
         execution.wait()
         if not execution.completed_successfully():
-            self._logger.debug("Scaling deployment %s (replicas: %d) failed: %s"
-                               % (deployment, replicas, execution.read_stderr()))
+            self._logger.debug(
+                'Scaling deployment %s (replicas: %d) failed: %s'
+                % (deployment, replicas, execution.read_stderr())
+            )
         return execution

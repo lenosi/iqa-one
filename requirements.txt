@@ -1,6 +1,6 @@
 requests
 PyYAML
-proton
+cython
 pytest
 ansible
 python-qpid-proton
@@ -10,3 +10,6 @@ optconstruct
 docker
 urllib3
 kubernetes
+tox
+flake8
+mypy

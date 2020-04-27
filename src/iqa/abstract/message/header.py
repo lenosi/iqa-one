@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 
-
 # noinspection PyDunderSlots
 from typing import Optional
 

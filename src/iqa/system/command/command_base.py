@@ -10,8 +10,15 @@ class Command:
     executors, behaving similarly across them.
     """
 
-    def __init__(self, args: list, stdout: bool = False, stderr: bool = False, daemon: bool = False,
-                 timeout: int = 0, encoding: str = "utf-8") -> None:
+    def __init__(
+        self,
+        args: list,
+        stdout: bool = False,
+        stderr: bool = False,
+        daemon: bool = False,
+        timeout: int = 0,
+        encoding: str = 'utf-8',
+    ) -> None:
         """
         Creates an instance of a Command representation that can be passed to
         an Executor instance.

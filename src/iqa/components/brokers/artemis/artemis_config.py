@@ -4,9 +4,9 @@ from typing import Optional, Union
 
 from amqcfg import amqcfg
 
+from iqa.abstract.user import User
 from iqa.components.abstract.server.server_component import ServerComponent
 from iqa.components.brokers.broker_config import BrokerConfiguration
-from iqa.abstract.user import User
 from iqa.system.executor import Executor
 from iqa.system.executor.execution import Execution
 from iqa.system.service import ServiceFakeArtemis
@@ -21,58 +21,59 @@ class ArtemisConfig(BrokerConfiguration):
 
     This class is directly tied to ExternalBroker.
     """
-    DEFAULT_HOME: str = "/opt/jboss-amq-7"
-    DEFAULT_INSTANCE_HOME: str = "/opt/jboss-amq-7-i0"
-    DEFAULT_INSTANCE_NAME: str = "amq"
+
+    DEFAULT_HOME: str = '/opt/jboss-amq-7'
+    DEFAULT_INSTANCE_HOME: str = '/opt/jboss-amq-7-i0'
+    DEFAULT_INSTANCE_NAME: str = 'amq'
     DEFAULT_USERS: dict = {
-        "admin": {
-            "password": "admin",
-            "role": "amq",
-            "key": "/path/to/key",
-            "ticket": "/path/to/ticket"
+        'admin': {
+            'password': 'admin',
+            'role': 'amq',
+            'key': '/path/to/key',
+            'ticket': '/path/to/ticket',
         },
-        "tckuser": {
-            "password": "tckuser",
-            "role": "amq"
+        'tckuser': {
+            'password': 'tckuser',
+            'role': 'amq'
         },
-        "superuser": {
-            "password": "superuser",
-            "role": "amq"
+        'superuser': {
+            'password': 'superuser',
+            'role': 'amq'
         },
-        "administrator": {
-            "password": "administrator",
-            "role": "amq"
+        'administrator': {
+            'password': 'administrator',
+            'role': 'amq'
         },
-        "nobody": {
-            "password": "nobody",
-            "role": "amq"
-        }
+        'nobody': {
+            'password': 'nobody',
+            'role': 'amq'
+        },
     }
     DEFAULT_PORTS: dict = {
-        "openwire": 61616,
-        "amqp": 5672,
-        "mqtt": 1883,
-        "core": 5445,
-        "stomp": 61613,
-        "web": 8161,
-        "jmx": 1099
+        'openwire': 61616,
+        'amqp': 5672,
+        'mqtt': 1883,
+        'core': 5445,
+        'stomp': 61613,
+        'web': 8161,
+        'jmx': 1099,
     }
     DEFAULT_PORT_JMX: int = 1099
     DEFAULT_PORT_WEB: int = 8161
 
-    P_PROFILE_PATH: str = "render/profile_path"
-    P_HOME: str = "artemis_profile/home"
-    P_INSTANCE_NAME: str = "broker_xml/name"
-    P_INSTANCE_HOME: str = "artemis_profile/instance"
-    P_INSTANCE_DIR_ETC: str = "artemis_profile/instance_etc_uri"
-    P_INSTANCE_DIR_DATA: str = "artemis_profile/data_dir"
+    P_PROFILE_PATH: str = 'render/profile_path'
+    P_HOME: str = 'artemis_profile/home'
+    P_INSTANCE_NAME: str = 'broker_xml/name'
+    P_INSTANCE_HOME: str = 'artemis_profile/instance'
+    P_INSTANCE_DIR_ETC: str = 'artemis_profile/instance_etc_uri'
+    P_INSTANCE_DIR_DATA: str = 'artemis_profile/data_dir'
 
-    P_USERS: str = "artemis_users"
-    P_ROLES: str = "artemis_roles"
+    P_USERS: str = 'artemis_users'
+    P_ROLES: str = 'artemis_roles'
 
-    P_PORTS: str = "broker_xml/acceptors"
-    P_WEB_PORT: str = "bootstrap_xml/web/bind/port"
-    P_JMX_PORT: str = "management_xml/connector_port"
+    P_PORTS: str = 'broker_xml/acceptors'
+    P_WEB_PORT: str = 'bootstrap_xml/web/bind/port'
+    P_JMX_PORT: str = 'management_xml/connector_port'
 
     instance_name: Optional[Union[int, str, list, dict]]
     instance_home: Optional[Union[int, str, list, dict]]
@@ -108,17 +109,29 @@ class ArtemisConfig(BrokerConfiguration):
 
     def load_configuration(self) -> None:
         self.home = self._data_getter(self.P_HOME, self.DEFAULT_HOME)
-        self.instance_home = self._data_getter(self.P_INSTANCE_HOME, self.DEFAULT_INSTANCE_HOME)
-        self.instance_name = self._data_getter(self.P_INSTANCE_NAME, self.DEFAULT_INSTANCE_NAME)
+        self.instance_home = self._data_getter(
+            self.P_INSTANCE_HOME, self.DEFAULT_INSTANCE_HOME
+        )
+        self.instance_name = self._data_getter(
+            self.P_INSTANCE_NAME, self.DEFAULT_INSTANCE_NAME
+        )
         self.instance_home_etc = Utils.remove_prefix(
-            self._data_getter(self.P_INSTANCE_DIR_ETC, "artemis_profile/instance_etc_uri"), "file:")
+            self._data_getter(
+                self.P_INSTANCE_DIR_ETC, 'artemis_profile/instance_etc_uri'
+            ),
+            'file:',
+        )
         self.node_config_dir: Union[int, str, list, dict] = self.instance_home_etc
-        self.instance_home_data = self._data_getter(self.P_INSTANCE_DIR_DATA, "artemis_profile/data_dir")
-        self.instance_home_log = posixpath.join(self.instance_home, "log")  # type: ignore
-        self.instance_home_tmp = posixpath.join(self.instance_home, "tmp")  # type: ignore
+        self.instance_home_data = self._data_getter(
+            self.P_INSTANCE_DIR_DATA, 'artemis_profile/data_dir'
+        )
+        self.instance_home_log = posixpath.join(self.instance_home, 'log')  # type: ignore
+        self.instance_home_tmp = posixpath.join(self.instance_home, 'tmp')  # type: ignore
         self.ports = self.assign_ports()
         self.assign_users()
-        self.amqcfg_profile_path = self._data_getter(self.P_PROFILE_PATH, "render/profile_path")
+        self.amqcfg_profile_path = self._data_getter(
+            self.P_PROFILE_PATH, 'render/profile_path'
+        )
         # self.topology = TopologyData(broker_data) or None
 
     def assign_ports(self) -> dict:
@@ -141,7 +154,7 @@ class ArtemisConfig(BrokerConfiguration):
         roles: dict = self._data_getter(self.P_ROLES, None)  # type: ignore
 
         for user in tmp_users:
-            self.users[user] = (User(user, tmp_users[user]))
+            self.users[user] = User(user, tmp_users[user])
 
         for role in roles.keys():
             for user_in_role in roles[role]:
@@ -172,9 +185,11 @@ class ArtemisConfig(BrokerConfiguration):
             amqcfg.LOG.setLevel(logging.WARN)
             if self.LOGGER.level != logging.DEBUG:
                 amqcfg.LOG.setLevel(logging.WARN)
-            amqcfg.generate(profile=yaml_configuration_path,
-                            output_path=self.local_config_dir,
-                            write_profile_data=True)
+            amqcfg.generate(
+                profile=yaml_configuration_path,
+                output_path=self.local_config_dir,
+                write_profile_data=True,
+            )
             execution: Execution = self.copy_configuration_files()
 
             if execution.completed_successfully():
@@ -182,12 +197,17 @@ class ArtemisConfig(BrokerConfiguration):
                 self.load_configuration()
             else:
                 self.LOGGER.error(execution.read_stderr())
-                raise IQAConfigurationException("Unable to copy config files to node.")
+                raise IQAConfigurationException('Unable to copy config files to node.')
         except Exception:
             self.restore_config()
-            raise IQAConfigurationException("Unable to apply new configuration. Original config kept.")
+            raise IQAConfigurationException(
+                'Unable to apply new configuration. Original config kept.'
+            )
         finally:
-            self.LOGGER.info("Configuration from '%s' successfully applied." % yaml_configuration_path)
+            self.LOGGER.info(
+                'Configuration from "%s" successfully applied.'
+                % yaml_configuration_path
+            )
 
         if restart and self.component.service is not None:
             self.component.service.restart(wait_for_messaging=True)

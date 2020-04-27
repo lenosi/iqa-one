@@ -3,7 +3,6 @@ from iqa.components.abstract.server.server_component import ServerComponent
 
 
 class RouterConfiguration(Configuration):
-
     def __init__(self, component: ServerComponent, **kwargs) -> None:
         super(RouterConfiguration, self).__init__(component, **kwargs)
 

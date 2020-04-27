@@ -11,6 +11,7 @@ class Broker(MessagingServer):
     """
     Abstract broker class
     """
+
     supported_protocols: list = []
 
     def __init__(self, **kwargs) -> None:
@@ -20,7 +21,7 @@ class Broker(MessagingServer):
         required_fields: list = ['broker_name', 'broker_path']
         for field in required_fields:
             if field not in kwargs:
-                logging.error("Missing requirement broker parameter: %s" % field)
+                logging.error('Missing requirement broker parameter: %s' % field)
 
         self.broker_name: str = kwargs.get('broker_name', None)
         self.broker_path: str = kwargs.get('broker_path', None)
@@ -42,7 +43,6 @@ class Broker(MessagingServer):
         Must return existing queues
         :return:
         """
-        pass
 
     @abc.abstractmethod
     def addresses(self, refresh: bool = True) -> List[Address]:
@@ -50,4 +50,3 @@ class Broker(MessagingServer):
         Must return existing addresses
         :return:
         """
-        pass

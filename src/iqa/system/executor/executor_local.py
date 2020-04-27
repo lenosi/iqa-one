@@ -11,9 +11,9 @@ class ExecutorLocal(Executor):
     Executes a given command locally.
     """
 
-    implementation = "local"
+    implementation = 'local'
 
-    def __init__(self, name: str = "ExecutorLocal", **kwargs) -> None:
+    def __init__(self, name: str = 'ExecutorLocal', **kwargs) -> None:
         super(ExecutorLocal, self).__init__(**kwargs)
         self.name: str = name
 

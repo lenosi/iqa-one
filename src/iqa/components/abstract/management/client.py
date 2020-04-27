@@ -5,7 +5,6 @@ from iqa.abstract.destination.destination import Destination
 
 
 class ManagementClient(ABC):
-
     def __init__(self) -> None:
         pass
 
@@ -16,7 +15,6 @@ class ManagementClient(ABC):
         :param destination:
         :return:
         """
-        pass
 
     @abc.abstractmethod
     def delete_destination(self, name: str, remove_consumers: bool = False) -> None:
@@ -26,4 +24,3 @@ class ManagementClient(ABC):
         :param remove_consumers:
         :return:
         """
-        pass

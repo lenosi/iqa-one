@@ -8,10 +8,19 @@ in a separate module inside abstract.client.command.impl.
 """
 from typing import Optional
 
-from iqa.components.clients.external.command.options.client_options import ClientOptionsBase, ControlOptionsCommon,\
-    LoggingOptionsCommon, ConnectionOptionsCommon, ConnectorOptions, ControlOptionsReceiver, \
-    LoggingOptionsSenderReceiver, TransactionOptionsSenderReceiver, ReceiverOptions, ControlOptionsSenderReceiver, \
-    MessageOptionsSender
+from iqa.components.clients.external.command.options.client_options import (
+    ClientOptionsBase,
+    ControlOptionsCommon,
+    LoggingOptionsCommon,
+    ConnectionOptionsCommon,
+    ConnectorOptions,
+    ControlOptionsReceiver,
+    LoggingOptionsSenderReceiver,
+    TransactionOptionsSenderReceiver,
+    ReceiverOptions,
+    ControlOptionsSenderReceiver,
+    MessageOptionsSender,
+)
 from iqa.system.command.command_base import Command
 
 
@@ -61,9 +70,9 @@ class ClientCommand(Command):
 
         # Generates parameters list (only allowed will be added)
         params: list = [
-                opt.generate(all_options).split(' ', 1)
-                for opt in valid_options
-                if opt.satisfied(all_options)
+            opt.generate(all_options).split(' ', 1)
+            for opt in valid_options
+            if opt.satisfied(all_options)
         ]
         params_flat: list = [item for param in params for item in param]
 
@@ -78,11 +87,17 @@ class ConnectorClientCommand(ClientCommand):
     def main_command(self) -> list:
         return NotImplemented
 
-    def __init__(self, stdout: bool = False, stderr: bool = False,
-                 daemon: bool = False, timeout: int = 0,
-                 encoding: str = "utf-8") -> None:
-        super(ClientCommand, self).__init__([], stdout, stderr, daemon,
-                                            timeout, encoding)
+    def __init__(
+        self,
+        stdout: bool = False,
+        stderr: bool = False,
+        daemon: bool = False,
+        timeout: int = 0,
+        encoding: str = 'utf-8',
+    ) -> None:
+        super(ClientCommand, self).__init__(
+            [], stdout, stderr, daemon, timeout, encoding
+        )
         self.control: ControlOptionsCommon = ControlOptionsCommon()
         self.logging: LoggingOptionsCommon = LoggingOptionsCommon()
         self.connection: ConnectionOptionsCommon = ConnectionOptionsCommon()
@@ -97,11 +112,17 @@ class ReceiverClientCommand(ClientCommand):
     def main_command(self) -> list:
         return NotImplemented
 
-    def __init__(self, stdout: bool = False, stderr: bool = False,
-                 daemon: bool = False, timeout: int = 0,
-                 encoding: str = "utf-8"):
-        super(ClientCommand, self).__init__([], stdout, stderr, daemon,
-                                            timeout, encoding)
+    def __init__(
+        self,
+        stdout: bool = False,
+        stderr: bool = False,
+        daemon: bool = False,
+        timeout: int = 0,
+        encoding: str = 'utf-8',
+    ):
+        super(ClientCommand, self).__init__(
+            [], stdout, stderr, daemon, timeout, encoding
+        )
         self.control: ControlOptionsReceiver = ControlOptionsReceiver()
         self.logging: LoggingOptionsSenderReceiver = LoggingOptionsSenderReceiver()
         self.transaction: TransactionOptionsSenderReceiver = TransactionOptionsSenderReceiver()
@@ -117,11 +138,17 @@ class SenderClientCommand(ClientCommand):
     def main_command(self) -> list:
         pass
 
-    def __init__(self, stdout: bool = False, stderr: bool = False,
-                 daemon: bool = False, timeout: int = 0,
-                 encoding: str = "utf-8") -> None:
-        super(ClientCommand, self).__init__([], stdout, stderr, daemon,
-                                            timeout, encoding)
+    def __init__(
+        self,
+        stdout: bool = False,
+        stderr: bool = False,
+        daemon: bool = False,
+        timeout: int = 0,
+        encoding: str = 'utf-8',
+    ) -> None:
+        super(ClientCommand, self).__init__(
+            [], stdout, stderr, daemon, timeout, encoding
+        )
         self.control: ControlOptionsSenderReceiver = ControlOptionsSenderReceiver()
         self.logging: LoggingOptionsSenderReceiver = LoggingOptionsSenderReceiver()
         self.transaction: TransactionOptionsSenderReceiver = TransactionOptionsSenderReceiver()

@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 
 # noinspection PyDunderSlots
@@ -122,38 +122,38 @@ class Properties:
     to this message to a specific group.
     optional string
     """
-    message_id: str = None
-    user_id: str = None
-    to: str = None
-    subject: str = None
-    reply_to: str = None
-    correlation_id: str = None
-    content_type: str = None
-    content_encoding: str = None
-    absolute_expiry_time: str = None
-    creation_time: str = None
-    group_id: str = None
-    group_sequence: str = None
-    reply_to_group_id: str = None
+
+    message_id: str = ''
+    user_id: str = ''
+    to: str = ''
+    subject: str = ''
+    reply_to: str = ''
+    correlation_id: str = ''
+    content_type: str = ''
+    content_encoding: str = ''
+    absolute_expiry_time: str = ''
+    creation_time: str = ''
+    group_id: str = ''
+    group_sequence: str = ''
+    reply_to_group_id: str = ''
 
     def __str__(self):
-        text = \
-            """
-    <type name="properties" class="composite" source="list" provides="section">
-        <descriptor name="amqp:properties:list" code="0x00000000:0x00000073"/>
-        <field name="message-id" type="*" requires="message-id"/>
-        <field name="user-id" type="binary"/>
-        <field name="to" type="*" requires="address"/>
-        <field name="subject" type="string"/>
-        <field name="reply-to" type="*" requires="address"/>
-        <field name="correlation-id" type="*" requires="message-id"/>
-        <field name="content-type" type="symbol"/>
-        <field name="content-encoding" type="symbol"/>
-        <field name="absolute-expiry-time" type="timestamp"/>
-        <field name="creation-time" type="timestamp"/>
-        <field name="group-id" type="string"/>
-        <field name="group-sequence" type="sequence-no"/>
-        <field name="reply-to-group-id" type="string"/>
+        text = '''
+    <type name='properties" class='composite" source='list" provides='section">
+        <descriptor name='amqp:properties:list" code='0x00000000:0x00000073"/>
+        <field name='message-id" type='*" requires='message-id"/>
+        <field name='user-id" type='binary"/>
+        <field name='to" type='*" requires='address"/>
+        <field name='subject" type='string"/>
+        <field name='reply-to" type='*" requires='address"/>
+        <field name='correlation-id" type='*" requires='message-id"/>
+        <field name='content-type" type='symbol"/>
+        <field name='content-encoding" type='symbol"/>
+        <field name='absolute-expiry-time" type='timestamp"/>
+        <field name='creation-time" type='timestamp"/>
+        <field name='group-id" type='string"/>
+        <field name='group-sequence" type='sequence-no"/>
+        <field name='reply-to-group-id" type='string"/>
     </type>
-"""
+'''
         return text

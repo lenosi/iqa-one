@@ -1,6 +1,6 @@
+from iqa.abstract.client.receiver import Receiver
 from iqa.abstract.listener import Listener
 from iqa.components.clients.core.client import CoreMessagingClient
-from iqa.abstract.client.receiver import Receiver
 from iqa.system.node.node import Node
 
 

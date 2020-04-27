@@ -32,7 +32,9 @@ class ExecutorKubernetes(Executor):
         super(ExecutorKubernetes, self).__init__(**kwargs)
 
         # Kubernetes config file - defaults to $HOME/.kube/config
-        self.config: str = kwargs.get('executor_kubernetes_config', os.environ['HOME'] + os.sep + '.kube/config')
+        self.config: str = kwargs.get(
+            'executor_kubernetes_config', os.environ['HOME'] + os.sep + '.kube/config'
+        )
 
         # Namespace to use for querying PODs
         self.namespace: str = kwargs.get('executor_kubernetes_namespace', 'default')

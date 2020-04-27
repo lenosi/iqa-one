@@ -4,10 +4,9 @@ Defines mandatory options and configuration that can be applied to all test suit
 
 import atexit
 import os
-
-from _pytest.config.argparsing import Parser, OptionGroup
 from logging import Logger
 
+from _pytest.config.argparsing import Parser, OptionGroup
 from _pytest.python import Function
 
 from iqa.instance.instance import Instance
@@ -28,36 +27,46 @@ log: Logger = get_logger(__name__)
 
 def pytest_addoption(parser: Parser) -> None:
     """Add options to control ansible."""
-    log.debug("pytest_addoption() called")
+    log.debug('pytest_addoption() called')
 
     group: OptionGroup = parser.getgroup('pytest-iqa')
-    group.addoption('--inventory',
-                    action='store',
-                    dest='inventory',
-                    required=True,
-                    metavar='INVENTORY',
-                    help='Inventory file to use')
+    group.addoption(
+        '--inventory',
+        action='store',
+        dest='inventory',
+        required=True,
+        metavar='INVENTORY',
+        help='Inventory file to use',
+    )
 
     # Default values for pytest.ini files (if absent)
-    parser.addini('log_level',
-                  default='WARNING',
-                  type=None,
-                  help='logging level used by the logging module')
+    parser.addini(
+        'log_level',
+        default='WARNING',
+        type=None,
+        help='logging level used by the logging module',
+    )
 
-    parser.addini('log_format',
-                  default=DEFAULT_LOG_FORMAT,
-                  type=None,
-                  help='log format as used by the logging module.')
+    parser.addini(
+        'log_format',
+        default=DEFAULT_LOG_FORMAT,
+        type=None,
+        help='log format as used by the logging module.',
+    )
 
-    parser.addini('log_date_format',
-                  default=DEFAULT_LOG_DATE_FORMAT,
-                  type=None,
-                  help='log date format as used by the logging module.')
+    parser.addini(
+        'log_date_format',
+        default=DEFAULT_LOG_DATE_FORMAT,
+        type=None,
+        help='log date format as used by the logging module.',
+    )
 
-    parser.addini('log_cli',
-                  default=True,
-                  type='bool',
-                  help='enable log display during test run (also known as "live logging").')
+    parser.addini(
+        'log_cli',
+        default=True,
+        type='bool',
+        help='enable log display during test run (also known as "live logging").',
+    )
 
 
 def cleanup_files() -> None:
@@ -86,17 +95,21 @@ def pytest_configure(config) -> None:
     # would become: router_0: 1.1.1.1 and router_1: 2.2.2.2
     new_options: dict = dict()
     for (key, value) in options.items():
-        if type(value) != list:
+        if not isinstance(value, list):
             continue
         for n in range(len(value)):
             new_options.update({'%s_%d' % (key, n): str(value[n])})
 
     options.update(new_options)
-    options = {key: str(value) for (key, value) in options.items() if key not in os.environ}
+    options = {
+        key: str(value) for (key, value) in options.items() if key not in os.environ
+    }
     os.environ.update(options)
 
     # Loading the inventory
-    iqa: Instance = Instance(inventory=config.getvalue('inventory'), cli_args=config.option.__dict__)
+    iqa: Instance = Instance(
+        inventory=config.getvalue('inventory'), cli_args=config.option.__dict__
+    )
 
     # Adjusting clients timeout
     for client in iqa.clients:
@@ -111,7 +124,7 @@ def pytest_configure(config) -> None:
 def pytest_runtest_call(item: Function) -> None:
     """
     Hook that runs before each test method and can iterate through
-    parametrized items adding a generic "param:<argname>":"<argvalue>"
+    parametrized items adding a generic "param:<argname>':"<argvalue>"
     to the user_properties dictionary.
 
     When generating a junit xml, these params will be added as "<property>"

@@ -1,10 +1,10 @@
 from __future__ import annotations
-from abc import ABC, abstractmethod
 
 import logging
 import subprocess
 import tempfile
 import threading
+from abc import ABC, abstractmethod
 from typing import IO, Optional, Union, TYPE_CHECKING
 
 from iqa.system.command.command_base import Command
@@ -26,7 +26,6 @@ class ExecutionException(Exception):
     """
     Exception thrown if a given Execution instance could be created
     """
-    pass
 
 
 class Execution(ABC):
@@ -36,7 +35,9 @@ class Execution(ABC):
     who generated the Execution instance.
     """
 
-    def __init__(self, command: Command, executor: Executor, modified_args: list = None, env=None) -> None:
+    def __init__(
+        self, command: Command, executor: Executor, modified_args: list = None, env=None
+    ) -> None:
         """
         Instance is initialized with the command that was effectively
         executed and the Executor instance that produced this new object.
@@ -89,7 +90,7 @@ class Execution(ABC):
         Returns True if execution is still running and False otherwise.
         :return:
         """
-        raise NotImplementedError()
+        raise NotImplementedError
 
     @abstractmethod
     def completed_successfully(self) -> bool:
@@ -97,11 +98,11 @@ class Execution(ABC):
         Returns True if execution is done and no errors observed or False otherwise.
         :return:
         """
-        raise NotImplementedError()
+        raise NotImplementedError
 
     @abstractmethod
     def on_timeout(self) -> None:
-        raise NotImplementedError()
+        raise NotImplementedError
 
     @abstractmethod
     def terminate(self) -> None:
@@ -121,7 +122,7 @@ class Execution(ABC):
         :type lines: bool
         :return: Stdout content as str if lines is False, or as a list
         """
-        raise NotImplementedError()
+        raise NotImplementedError
 
     @abstractmethod
     def read_stderr(self, lines: bool = False) -> Optional[Union[str, list]]:
@@ -133,7 +134,7 @@ class Execution(ABC):
         :type lines: bool
         :return: Stderr content as str if lines is False, or as a list
        """
-        raise NotImplementedError()
+        raise NotImplementedError
 
     def _on_timeout(self) -> None:
         """
@@ -157,7 +158,8 @@ class Execution(ABC):
         if not self.is_running():
             return
 
-        logger.debug("Interrupting execution")
+        logger.debug('Interrupting execution')
+
         self.terminate()
         self.interrupted = True
         self.cancel_timer()
@@ -178,7 +180,9 @@ class ExecutionProcess(Execution):
     Executors that want to run a given command as a Process must use this Execution strategy.
     """
 
-    def __init__(self, command: Command, executor: Executor, modified_args: list = None, env=None) -> None:
+    def __init__(
+        self, command: Command, executor: Executor, modified_args: list = None, env=None
+    ) -> None:
         """
         Instance is initialized with the command that was effectively
         executed and the Executor instance that produced this new object.
@@ -190,13 +194,17 @@ class ExecutionProcess(Execution):
 
         # Prepare stdout handler
         if command.stdout:
-            self.fh_stdout: Union[IO[str], int] = tempfile.TemporaryFile(mode="w+t", encoding=command.encoding)
+            self.fh_stdout: Union[IO[str], int] = tempfile.TemporaryFile(
+                mode='w+t', encoding=command.encoding
+            )
         else:
             self.fh_stdout = subprocess.DEVNULL
 
         # Prepare stderr handler
         if command.stderr:
-            self.fh_stderr: Union[IO[str], int] = tempfile.TemporaryFile(mode="w+t", encoding=command.encoding)
+            self.fh_stderr: Union[IO[str], int] = tempfile.TemporaryFile(
+                mode='w+t', encoding=command.encoding
+            )
         else:
             self.fh_stderr = subprocess.DEVNULL
 
@@ -205,7 +213,9 @@ class ExecutionProcess(Execution):
         self._timeout: Optional[TimeoutCallback] = None
 
         # Initializes the super class which will invoke the run method
-        super(ExecutionProcess, self).__init__(command=command, executor=executor, modified_args=modified_args, env=env)
+        super(ExecutionProcess, self).__init__(
+            command=command, executor=executor, modified_args=modified_args, env=env
+        )
 
     def _run(self) -> None:
         """
@@ -221,9 +231,14 @@ class ExecutionProcess(Execution):
             :return:
             """
             try:
-                self._process = Process(self.args, stdout=self.fh_stdout, stderr=self.fh_stderr, env=self.env)
+                self._process = Process(
+                    self.args,
+                    stdout=self.fh_stdout,
+                    stderr=self.fh_stderr,
+                    env=self.env,
+                )
             except Exception as ex:
-                logger.error("Error executing process", ex)
+                logger.error('Error executing process', ex)
                 self.cancel_timer()
                 self.failure = True
                 raise ExecutionException(ex)
@@ -232,7 +247,7 @@ class ExecutionProcess(Execution):
             while self._process.poll() is None:
                 pass
 
-            logger.debug("Process has terminated")
+            logger.debug('Process has terminated')
             self.cancel_timer()
 
         # Execute process in a thread, so we can interrupt the timeout callback
@@ -260,8 +275,9 @@ class ExecutionProcess(Execution):
         Forces a given Process to terminate.
         :return:
         """
-        logger.debug("Terminating execution - PID: %s - CMD: %s" %
-                     (self._process.pid, self.args))
+        logger.debug(
+            'Terminating execution - PID: %s - CMD: %s' % (self._process.pid, self.args)
+        )
         self._process.terminate()
 
     def wait(self) -> None:
@@ -279,8 +295,10 @@ class ExecutionProcess(Execution):
         that it has timed out.
         :return:
         """
-        logger.debug("Execution timed out after %d - PID: %s - CMD: %s"
-                     % (self.command.timeout, self._process.pid, self.args))
+        logger.debug(
+            "Execution timed out after %d - PID: %s - CMD: %s"
+            % (self.command.timeout, self._process.pid, self.args)
+        )
         self.terminate()
 
     def read_stdout(self, lines: bool = False) -> Optional[Union[str, list]]:

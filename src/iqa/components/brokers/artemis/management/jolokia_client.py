@@ -34,7 +34,9 @@ class ArtemisJolokiaClientResult(Exception):
 
         # If no jolokia_response provided
         if not jolokia_response:
-            logging.getLogger().warning("Invalid Jolokia response => %s" % jolokia_response)
+            logging.getLogger().warning(
+                'Invalid Jolokia response => %s' % jolokia_response
+            )
             res.error = 'Invalid Jolokia Response'
             return res
 
@@ -43,13 +45,14 @@ class ArtemisJolokiaClientResult(Exception):
         try:
             json_response = jolokia_response.json()
         except ValueError:
-            logging.getLogger().exception("Invalid JSON returned")
+            logging.getLogger().exception('Invalid JSON returned')
 
         if 'error' in json_response:
             res.error = json_response['error']
             res.error_type = json_response['error_type']
-            logging.getLogger().debug("Jolokia error_type = '%s' - error = '%s'"
-                                      % (res.error_type, res.error))
+            logging.getLogger().debug(
+                'Jolokia error_type = "%s" - error = "%s"' % (res.error_type, res.error)
+            )
             return res
 
         # At this point, response looks positive
@@ -71,7 +74,9 @@ class ArtemisJolokiaClient(object):
     Provides a generic mechanism to query Jolokia API exposed by ActiveMQ Artemis.
     """
 
-    def __init__(self, broker_name: str, ip: Optional[str], port: str, user: str, password: str) -> None:
+    def __init__(
+        self, broker_name: str, ip: Optional[str], port: str, user: str, password: str
+    ) -> None:
         # Internal only
         self._ip: Optional[str] = ip
         self._port: str = port
@@ -80,13 +85,15 @@ class ArtemisJolokiaClient(object):
 
         # Request info (generic)
         self.type: str = 'exec'
-        self.mbean: str = "org.apache.activemq.artemis:broker=\"%s\"" % broker_name
+        self.mbean: str = 'org.apache.activemq.artemis:broker="%s"' % broker_name
 
         # Must be defined by concrete requests
         self.operation: Optional[str] = None
         self.arguments: Optional[list] = None
 
-    def list_queues(self, queue_name: str = '', exact: bool = False) -> ArtemisJolokiaClientResult:
+    def list_queues(
+        self, queue_name: str = '', exact: bool = False
+    ) -> ArtemisJolokiaClientResult:
         """
         Calls listQueues operation and returns queues matching filtering arguments
         through the data property of the returned object.
@@ -96,16 +103,20 @@ class ArtemisJolokiaClient(object):
         :return:
         """
         request: ArtemisJolokiaClient = copy.copy(self)
-        request.operation = "listQueues(java.lang.String,int,int)"
-        filter_operation: str = 'CONTAINS' if not exact else 'EQUALS'
-        request.arguments = ['{"field": "NAME", "operation": "%s", "value": "%s"}'
-                             % (filter_operation, queue_name),
-                             1,
-                             100]
+        request.operation = 'listQueues(java.lang.String,int,int)'
+        filter_operation: str = '"CONTAINS" if not exact else "EQUALS"'
+        request.arguments = [
+            '{"field": "NAME", "operation": "%s", "value": "%s"}'
+            % (filter_operation, queue_name),
+            1,
+            100,
+        ]
 
         return self._get_all_pages(request, 1)
 
-    def list_addresses(self, address_name: str = '', exact: bool = False) -> ArtemisJolokiaClientResult:
+    def list_addresses(
+        self, address_name: str = '', exact: bool = False
+    ) -> ArtemisJolokiaClientResult:
         """
         Calls listAddresses operation and returns addresses matching filtering arguments
         through the data property of the returned object.
@@ -114,14 +125,19 @@ class ArtemisJolokiaClient(object):
         :return:
         """
         request: ArtemisJolokiaClient = copy.copy(self)
-        request.operation = "listAddresses(java.lang.String,int,int)"
-        filter_operation: str = 'CONTAINS' if not exact else 'EQUALS'
-        request.arguments = ['{"field": "NAME", "operation": "%s", "value": "%s"}' % (filter_operation, address_name),
-                             1,
-                             100]
+        request.operation = 'listAddresses(java.lang.String,int,int)'
+        filter_operation: str = '"CONTAINS" if not exact else "EQUALS"'
+        request.arguments = [
+            '{"field": "NAME", "operation": "%s", "value": "%s"}'
+            % (filter_operation, address_name),
+            1,
+            100,
+        ]
         return self._get_all_pages(request, 1)
 
-    def delete_address(self, name: str, force: bool = False) -> ArtemisJolokiaClientResult:
+    def delete_address(
+        self, name: str, force: bool = False
+    ) -> ArtemisJolokiaClientResult:
         """
         Deletes the given address.
         :param name: Address name
@@ -129,11 +145,13 @@ class ArtemisJolokiaClient(object):
         :return:
         """
         request: ArtemisJolokiaClient = copy.copy(self)
-        request.operation = "deleteAddress(java.lang.String,boolean)"
+        request.operation = 'deleteAddress(java.lang.String,boolean)'
         request.arguments = [name, force]
         return self._execute(request)
 
-    def delete_queue(self, name: str, remove_consumers: bool = False) -> ArtemisJolokiaClientResult:
+    def delete_queue(
+        self, name: str, remove_consumers: bool = False
+    ) -> ArtemisJolokiaClientResult:
         """
         Deletes the given queue.
         :param name: Queue name
@@ -141,11 +159,13 @@ class ArtemisJolokiaClient(object):
         :return:
         """
         request: ArtemisJolokiaClient = copy.copy(self)
-        request.operation = "destroyQueue(java.lang.String,boolean)"
+        request.operation = 'destroyQueue(java.lang.String,boolean)'
         request.arguments = [name, remove_consumers]
         return self._execute(request)
 
-    def create_address(self, name: str, routing_type: str = 'ANYCAST') -> ArtemisJolokiaClientResult:
+    def create_address(
+        self, name: str, routing_type: str = 'ANYCAST'
+    ) -> ArtemisJolokiaClientResult:
         """
         Creates a new address
         :param name:
@@ -153,12 +173,17 @@ class ArtemisJolokiaClient(object):
         :return:
         """
         request: ArtemisJolokiaClient = copy.copy(self)
-        request.operation = "createAddress(java.lang.String,java.lang.String)"
+        request.operation = 'createAddress(java.lang.String,java.lang.String)'
         request.arguments = [name, routing_type]
         return self._execute(request)
 
-    def create_queue(self, address_name: str, queue_name: str, durable: bool = True,
-                     routing_type: str = 'ANYCAST') -> ArtemisJolokiaClientResult:
+    def create_queue(
+        self,
+        address_name: str,
+        queue_name: str,
+        durable: bool = True,
+        routing_type: str = 'ANYCAST',
+    ) -> ArtemisJolokiaClientResult:
         """
         Creates a new queue nested to the provided Address
         :param address_name:
@@ -168,7 +193,9 @@ class ArtemisJolokiaClient(object):
         :return:
         """
         request: ArtemisJolokiaClient = copy.copy(self)
-        request.operation = "createQueue(java.lang.String,java.lang.String,boolean,java.lang.String)"
+        request.operation = (
+            "createQueue(java.lang.String,java.lang.String,boolean,java.lang.String)"
+        )
         request.arguments = [address_name, queue_name, durable, routing_type]
         return self._execute(request)
 
@@ -192,19 +219,26 @@ class ArtemisJolokiaClient(object):
         json_request = request.to_json()
 
         # Debug info
-        logging.getLogger().info("Posting to Jolokia API at: http://%s:%s/console/jolokia" % (self._ip, self._port))
-        logging.getLogger().debug("Request => %s" % json_request)
+        logging.getLogger().info(
+            "Posting to Jolokia API at: http://%s:%s/console/jolokia"
+            % (self._ip, self._port)
+        )
+        logging.getLogger().debug('Request => %s' % json_request)
 
         # Calling the Jolokia API
         try:
-            response = requests.post('http://%s:%s/console/jolokia' % (self._ip, self._port),
-                                     json=json_request,
-                                     auth=(self._user, self._password))
+            response = requests.post(
+                'http://%s:%s/console/jolokia' % (self._ip, self._port),
+                json=json_request,
+                auth=(self._user, self._password),
+            )
             return ArtemisJolokiaClientResult.from_jolokia_response(response)
         except RequestException as ex:
             return ArtemisJolokiaClientResult.from_exception(ex)
 
-    def _get_all_pages(self, request, page_arg_index: int) -> ArtemisJolokiaClientResult:
+    def _get_all_pages(
+        self, request, page_arg_index: int
+    ) -> ArtemisJolokiaClientResult:
         """
         Common private method to retrieve paged results from Jolokia API.
         :param request:
@@ -226,7 +260,7 @@ class ArtemisJolokiaClient(object):
             json_res = result.response.json()
 
             # Expect 'value' key to be present
-            if 'value' not in json_res:
+            if "value" not in json_res:
                 break
 
             # Returned value must have count and data

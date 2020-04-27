@@ -1,14 +1,14 @@
-from iqa.abstract.listener import Listener
-from iqa.components.protocols.amqp import Amqp10
-from iqa.components.abstract.component import Component
 from iqa.abstract.client.messaging_client import MessagingClient
+from iqa.abstract.listener import Listener
+from iqa.components.abstract.component import Component
+from iqa.components.protocols.amqp import AMQP10
 from iqa.system.node.node import Node
 
 
 class CoreMessagingClient(Component, MessagingClient):
     """Internal core Proton mapping client."""
 
-    supported_protocols: list = [Amqp10()]
+    supported_protocols: list = [AMQP10()]
     implementation: str = 'core'
     version: str = '0.1'
 
@@ -23,6 +23,8 @@ class CoreMessagingClient(Component, MessagingClient):
 
     def set_url(self, url: str) -> None:
         pass
+
+
 #
 # # -*- coding: utf-8 -*-
 #
@@ -92,7 +94,7 @@ class CoreMessagingClient(Component, MessagingClient):
 # class Sender(Client):
 #     """Most basic example clients capable of sending messages."""
 #
-#     def __init__(self, hostname="localhost", address="test_queue", count=1, messages=None, blocking=False):
+#     def __init__(self, hostname='localhost', address='test_queue', count=1, messages=None, blocking=False):
 #         """ # TODO jstejska: Description
 #
 #         :param hostname: hostname of the physical node with routers/brokers/receiver
@@ -140,7 +142,7 @@ class CoreMessagingClient(Component, MessagingClient):
 #
 #
 # class Receiver(Client):
-#     def __init__(self, hostname="localhost", address="test_queue", expected=1, blocking=True):
+#     def __init__(self, hostname='localhost', address='test_queue', expected=1, blocking=True):
 #         """ # TODO jstejska: Description
 #
 #

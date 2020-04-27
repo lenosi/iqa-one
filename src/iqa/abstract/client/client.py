@@ -21,7 +21,6 @@ class Client(ABC):
 
         :return: String
         """
-        pass
 
     @property
     @abstractmethod
@@ -30,7 +29,6 @@ class Client(ABC):
 
         :return: String
         """
-        pass
 
     @property
     @abstractmethod
@@ -39,7 +37,6 @@ class Client(ABC):
 
         :return: List
         """
-        pass
 
     @abstractmethod
     def set_url(self, url: str) -> None:
@@ -56,7 +53,6 @@ class Client(ABC):
         :return:
         :rtype:
         """
-        pass
 
     @property
     def implementation(self):

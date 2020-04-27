@@ -1,20 +1,21 @@
 import abc
 
-from iqa.components.abstract.management.client import ManagementClient
 from iqa.abstract.destination.address import Address
 from iqa.abstract.destination.destination import Destination
 from iqa.abstract.destination.queue import Queue
+from iqa.components.abstract.management.client import ManagementClient
 
 
 class ManagementBroker(ManagementClient):
-
     def __init__(self) -> None:
         super(ManagementBroker, self).__init__()
 
     def create_destination(self, destination: Destination) -> Destination:  # Address
         pass
 
-    def delete_destination(self, name: str, remove_consumers: bool = False) -> None:  # Address
+    def delete_destination(
+        self, name: str, remove_consumers: bool = False
+    ) -> None:  # Address
         pass
 
     @abc.abstractmethod
@@ -24,10 +25,11 @@ class ManagementBroker(ManagementClient):
         :param address:
         :return:
         """
-        pass
 
     @abc.abstractmethod
-    def create_queue(self, queue: Queue, address: Address, durable: bool = True) -> Queue:
+    def create_queue(
+        self, queue: Queue, address: Address, durable: bool = True
+    ) -> Queue:
         """
         Creates a queue using its name and specialized type, nested to the given address.
         :param queue:
@@ -44,7 +46,6 @@ class ManagementBroker(ManagementClient):
         :param force:
         :return:
         """
-        pass
 
     @abc.abstractmethod
     def delete_queue(self, name: str, remove_consumers: bool = False) -> None:
@@ -54,4 +55,3 @@ class ManagementBroker(ManagementClient):
         :param remove_consumers:
         :return:
         """
-        pass

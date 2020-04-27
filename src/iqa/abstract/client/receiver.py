@@ -12,10 +12,9 @@ class Receiver(MessagingClient):
 
     def receive(self) -> None:
         """Method for receiving messages.
-        :param message: Received message to be stored
-        :type message: iqa.iqa.abstract.message.Message
         """
         recv_messages: list = self._receive()
+
         if self.message_buffer:
             self.messages.extend(recv_messages)  # multiple Messages
 

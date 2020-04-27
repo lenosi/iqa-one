@@ -2,14 +2,17 @@ from iqa.abstract.server.broker import Broker
 from iqa.system.executor import Executor
 from iqa.system.node.node import Node
 from iqa.system.service.service import Service
-from iqa.components.brokers.activemq.activemq import Activemq
-from iqa.components.brokers.artemis.artemis import Artemis
 
 
 class BrokerFactory(object):
-
     @staticmethod
-    def create_broker(implementation: str, node: Node, executor: Executor, service_impl: Service, **kwargs):
+    def create_broker(
+        implementation: str,
+        node: Node,
+        executor: Executor,
+        service_impl: Service,
+        **kwargs
+    ):
 
         for broker in Broker.__subclasses__():
 

@@ -29,7 +29,7 @@ class Process(subprocess.Popen):
         try:
             super(Process, self).__init__(args, **kwargs)  # type: ignore
         except TypeError or ValueError or OSError or subprocess.SubprocessError:
-            self._logger.warning("Unable to execute command: %s" % args, exc_info=True)
+            self._logger.warning('Unable to execute command: %s' % args, exc_info=True)
             # traceback.print_tb(tb=ex)
 
     def is_running(self) -> bool:
@@ -59,5 +59,8 @@ class Process(subprocess.Popen):
 
         # If not terminated after all attempts, kill process
         if self.returncode is None:
-            self._logger.debug("Process still running [pid: %s] - %s - Sending a kill signal." % (self.pid, self.args))
+            self._logger.debug(
+                'Process still running [pid: %s] - %s - Sending a kill signal.'
+                % (self.pid, self.args)
+            )
             self.kill()

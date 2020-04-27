@@ -1,9 +1,9 @@
 from typing import Optional
 
-from iqa.components.abstract.component import Component
-from iqa.components.clients.external.command.client_command import ClientCommand
 from iqa.abstract.client.messaging_client import MessagingClient
 from iqa.abstract.listener import Listener
+from iqa.components.abstract.component import Component
+from iqa.components.clients.external.command.client_command import ClientCommand
 from iqa.system.executor.execution import Execution
 from iqa.system.node.node import Node
 
@@ -37,7 +37,9 @@ class ClientExternal(Component, MessagingClient):
         Creates a new command instance based on concrete implementation.
         :return:
         """
-        self._command = self._new_command(stdout=True, timeout=ClientExternal.TIMEOUT, daemon=True)
+        self._command = self._new_command(
+            stdout=True, timeout=ClientExternal.TIMEOUT, daemon=True
+        )
 
     def get_url(self) -> Optional[str]:
         return self._url
@@ -51,9 +53,14 @@ class ClientExternal(Component, MessagingClient):
         """
         self._set_url(url)
 
-    def _new_command(self, stdout: bool = False, stderr: bool = False,
-                     daemon: bool = False, timeout: int = 0,
-                     encoding: str = "utf-8") -> ClientCommand:
+    def _new_command(
+        self,
+        stdout: bool = False,
+        stderr: bool = False,
+        daemon: bool = False,
+        timeout: int = 0,
+        encoding: str = 'utf-8',
+    ) -> ClientCommand:
         """
         Must return a ClientCommand implementation for the command that is related
         with the concrete client.
@@ -83,8 +90,14 @@ class ClientExternal(Component, MessagingClient):
         """
         raise NotImplementedError
 
-    def set_ssl_auth(self, pem_file: str = None, key_file: str = None, keystore: str = None,
-                     keystore_pass: str = None, keystore_alias: str = None):
+    def set_ssl_auth(
+        self,
+        pem_file: str = None,
+        key_file: str = None,
+        keystore: str = None,
+        keystore_pass: str = None,
+        keystore_alias: str = None,
+    ):
         """
         Allows implementing clients to use the SSL credentials according to each implementing model.
         :param pem_file:

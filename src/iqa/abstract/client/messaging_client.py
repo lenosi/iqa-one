@@ -1,9 +1,9 @@
 from abc import abstractmethod
 from typing import Optional
 
-from iqa.abstract.message.message import Message
 from iqa.abstract.client.client import Client
 from iqa.abstract.listener import Listener
+from iqa.abstract.message.message import Message
 
 
 class MessagingClient(Client):

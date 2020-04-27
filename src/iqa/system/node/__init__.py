@@ -1,5 +1,4 @@
 import logging
-
 from typing import TYPE_CHECKING
 
 from iqa.system.executor.executor_ansible import ExecutorAnsible
@@ -13,11 +12,12 @@ if TYPE_CHECKING:
 
 
 class NodeFactory(object):
-
     logger: logging.Logger = logging.getLogger(__name__)
 
     @staticmethod
-    def create_node(hostname: str, executor: 'ExecutorType', ip: str = None, **kwargs) -> 'NodeType':
+    def create_node(
+        hostname: str, executor: 'ExecutorType', ip: str = None, **kwargs
+    ) -> 'NodeType':
         """
         Creates a Node object based on provided arguments.
         :param hostname:
@@ -34,5 +34,8 @@ class NodeFactory(object):
         else:
             new_node = NodeLocal(hostname, executor, ip)
 
-        NodeFactory.logger.info("Creating %s [hostname=%s, ip=%s]" % (new_node.__class__.__name__, hostname, ip))
+        NodeFactory.logger.info(
+            'Creating %s [hostname=%s, ip=%s]'
+            % (new_node.__class__.__name__, hostname, ip)
+        )
         return new_node

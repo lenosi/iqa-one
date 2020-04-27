@@ -2,22 +2,22 @@ import logging
 import os
 import tempfile
 import threading
-import urllib3
+from typing import IO
 
+import urllib3
 from kubernetes import config, client
 from kubernetes.client import Configuration, CoreV1Api
 from kubernetes.client.apis import core_v1_api
 from kubernetes.stream import stream
 from kubernetes.stream.ws_client import WSClient
 
-from typing import IO
 
-# Logger for ExecutionKubernetes
 from iqa.system.command.command_base import Command
-from iqa.system.executor.executor_base import Execution
 from iqa.system.executor.execution import ExecutionException
+from iqa.system.executor.executor_base import Execution
 from iqa.system.executor.executor_kubernetes import ExecutorKubernetes
 
+# Logger for ExecutionKubernetes
 logger: logging.Logger = logging.getLogger(__name__)
 urllib3.disable_warnings()
 
@@ -28,7 +28,13 @@ class ExecutionKubernetes(Execution):
     Executors that want to run a given command through the Kubernetes Client API must use this Execution strategy.
     """
 
-    def __init__(self, command: Command, executor: ExecutorKubernetes, modified_args: list = None, env=None) -> None:
+    def __init__(
+        self,
+        command: Command,
+        executor: ExecutorKubernetes,
+        modified_args: list = None,
+        env=None,
+    ) -> None:
         """
         Instance is initialized with the command that was effectively
         executed and the Executor instance that produced this new object.
@@ -44,9 +50,13 @@ class ExecutionKubernetes(Execution):
         self.executor: ExecutorKubernetes = executor
 
         if command.stdout:
-            self.fh_stdout = tempfile.TemporaryFile(mode="w+t", encoding=command.encoding)
+            self.fh_stdout = tempfile.TemporaryFile(
+                mode='w+t', encoding=command.encoding
+            )
         if command.stderr:
-            self.fh_stderr = tempfile.TemporaryFile(mode="w+t", encoding=command.encoding)
+            self.fh_stderr = tempfile.TemporaryFile(
+                mode='w+t', encoding=command.encoding
+            )
 
         # Set the config and get Api instance
         client_config: Configuration = client.Configuration()
@@ -56,13 +66,15 @@ class ExecutionKubernetes(Execution):
 
         # If a token has been provided use it
         if executor.token:
-            client_config.api_key = {"authorization": "Bearer " + executor.token}
+            client_config.api_key = {'authorization': 'Bearer' + executor.token}
 
         # Loading kubernetes config when config and context provided
         if executor.config and executor.context:
-            config.load_kube_config(config_file=executor.config,
-                                    client_configuration=client_config,
-                                    context=executor.context)
+            config.load_kube_config(
+                config_file=executor.config,
+                client_configuration=client_config,
+                context=executor.context,
+            )
 
         # Kubernetes API instance
         self.api: CoreV1Api = core_v1_api.CoreV1Api(client.ApiClient(client_config))
@@ -71,8 +83,9 @@ class ExecutionKubernetes(Execution):
         self.response: WSClient
 
         # Initializes the super class which will invoke the run method
-        super(ExecutionKubernetes, self).__init__(command=command, executor=executor,
-                                                  modified_args=modified_args, env=env)
+        super(ExecutionKubernetes, self).__init__(
+            command=command, executor=executor, modified_args=modified_args, env=env
+        )
 
     def _run(self) -> None:
         """
@@ -86,45 +99,50 @@ class ExecutionKubernetes(Execution):
 
     def _run_as_thread(self) -> None:
         """
-        Method triggered by Thread that is meant to effectively execute the command using Kubernetes
-        Client API.
+        Method triggered by Thread that is meant to effectively execute the command using Kubernetes Client API.
+
         If an error has occurred or the WSClient (self.response) is no longer opened,
         the process is considered as done and if a TimeoutCallback has been set, then it will be canceled.
         :return:
         """
         try:
-            logger.debug("Retrieving PODs")
-            pods = self.api.list_namespaced_pod(self.executor.namespace,
-                                                label_selector=self.executor.selector)
+            logger.debug('Retrieving PODs')
+            pods = self.api.list_namespaced_pod(
+                self.executor.namespace, label_selector=self.executor.selector
+            )
 
             # If no pods found, throw error
             if not pods or not pods.items:
-                raise ExecutionException('No PODs found using provided selector: %s' % self.executor.selector)
+                raise ExecutionException(
+                    'No PODs found using provided selector: %s' % self.executor.selector
+                )
 
             pod = pods.items[0]
             pod_name = pod.metadata.name
 
-            logger.info("Executing command on POD: %s" % pod_name)
-            self.response = stream(self.api.connect_post_namespaced_pod_exec,
-                                   pod_name,
-                                   self.executor.namespace,
-                                   command=self.args,
-                                   stderr=self.command.stderr,
-                                   stdout=self.command.stdout,
-                                   stdin=False,
-                                   tty=False,
-                                   _preload_content=False)
+            logger.info('Executing command on POD: %s' % pod_name)
+            self.response = stream(
+                self.api.connect_post_namespaced_pod_exec,
+                pod_name,
+                self.executor.namespace,
+                command=self.args,
+                stderr=self.command.stderr,
+                stdout=self.command.stdout,
+                stdin=False,
+                tty=False,
+                _preload_content=False,
+            )
         except Exception as ex:
-            logger.error("Error executing kubernetes command", ex)
+            logger.error('Error executing kubernetes command', ex)
             self.cancel_timer()
             self.failure: bool = True
-            raise ExecutionException("Error invoking Kubernetes API") from ex
+            raise ExecutionException('Error invoking Kubernetes API') from ex
 
         # Thread must wait till process is complete
         while self.response.is_open():
             pass
 
-        logging.debug("Process has terminated")
+        logging.debug('Process has terminated')
         self.cancel_timer()
 
     def wait(self) -> None:
@@ -157,7 +175,9 @@ class ExecutionKubernetes(Execution):
         - No failure identified
         :return:
         """
-        return not any([self.is_running(), self.timed_out, self.interrupted, self.failure])
+        return not any(
+            [self.is_running(), self.timed_out, self.interrupted, self.failure]
+        )
 
     def on_timeout(self) -> None:
         """

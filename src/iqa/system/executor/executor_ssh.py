@@ -18,26 +18,34 @@ class ExecutorSsh(Executor):
 
     implementation = 'ssh'
 
-    def __init__(self, user: str, hostname: str, port: str = "22",
-                 ssl_private_key: str = None, name: str = "ExecutorSsh", **kwargs) -> None:
+    def __init__(
+        self,
+        user: str,
+        hostname: str,
+        port: str = '22',
+        ssl_private_key: str = None,
+        name: str = 'ExecutorSsh',
+        **kwargs
+    ) -> None:
         super(ExecutorSsh, self).__init__()
         self.hostname: str = kwargs.get('executor_hostname', hostname)
         self.port: str = kwargs.get('executor_port', port)
         self.user: str = kwargs.get('executor_user', user)
         self.name: str = kwargs.get('executor_name', name)
-        self.ssl_private_key: str = kwargs.get('executor_ssl_private_key', ssl_private_key)
+        self.ssl_private_key: str = kwargs.get(
+            'executor_ssl_private_key', ssl_private_key
+        )
 
     def _execute(self, command) -> ExecutionProcess:
         ssh_args: list = ['ssh', '-p', '%s' % self.port]
 
         # If an SSL private key given, use it
-        if self.ssl_private_key is not None \
-                and os.path.isfile(self.ssl_private_key):
-            self._logger.debug("Using SSL Private Key - %s" % self.ssl_private_key)
+        if self.ssl_private_key is not None and os.path.isfile(self.ssl_private_key):
+            self._logger.debug('Using SSL Private Key - %s' % self.ssl_private_key)
             ssh_args += ['-i', self.ssl_private_key]
 
         # if not self.stricthostkeychecking:
-        #     self._logger.debug("Using StrictHostKeyChecking no")
+        #     self._logger.debug('Using StrictHostKeyChecking no')
         #     ssh_args += ['-o', '"StrictHostKeyChecking no"']
 
         ssh_args += ['%s@%s' % (self.user, self.hostname)]
