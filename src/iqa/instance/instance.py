@@ -1,6 +1,7 @@
 """
 IQA instance which is populated based on an ansible compatible inventory file.
 """
+import logging
 from typing import List, Optional, Union, TYPE_CHECKING
 
 from iqa.abstract.client.client import Client
@@ -16,7 +17,8 @@ from iqa.system.executor.executor_base import Executor
 from iqa.system.node import NodeFactory
 from iqa.system.node.node import Node
 from iqa.system.service import ServiceFactory
-from iqa.utils.singleton import Singleton
+
+logger = logging.getLogger(__name__)
 
 if TYPE_CHECKING:
     from iqa.utils.types import (
@@ -31,7 +33,6 @@ if TYPE_CHECKING:
     )
 
 
-@Singleton
 class Instance:
     """IQA helper class
 
@@ -39,6 +40,7 @@ class Instance:
     """
 
     def __init__(self, inventory: str = '', cli_args: dict = None) -> None:
+        self._logger: logging.Logger = logging.getLogger(self.__class__.__module__)
         self.inventory: str = inventory
         self._inv_mgr: AnsibleInventory = AnsibleInventory(
             inventory=self.inventory, extra_vars=cli_args
@@ -132,7 +134,7 @@ class Instance:
 
         self.nodes = nodes
 
-    # TODO: @dlenoch reimplement node logic
+    # TODO: @dlenoch re-implement node logic
     def new_node(
         self, hostname: str, executor_impl: str = 'ansible', ip: str = None
     ) -> Node:

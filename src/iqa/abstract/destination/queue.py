@@ -14,4 +14,4 @@ class Queue:
 
     @property
     def fqqn(self) -> str:
-        return "%s::%s' % (self.address.name, self.name)
+        return '%s::%s' % (self.address.name, self.name)

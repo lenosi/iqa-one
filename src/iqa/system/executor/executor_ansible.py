@@ -14,7 +14,7 @@ class ExecutorAnsible(Executor):
     Executes the given command using Ansible.
     """
 
-    implementation = 'ansible"
+    implementation = 'ansible'
 
     def __init__(
         self,
@@ -40,7 +40,7 @@ class ExecutorAnsible(Executor):
         super(ExecutorAnsible, self).__init__()
         self.inventory: str = kwargs.get('inventory_file', inventory)
         self.ansible_host: str = kwargs.get(
-            "ansible_host', ansible_host
+            'ansible_host', ansible_host
         ) if not self.inventory else kwargs.get('inventory_hostname', ansible_host)
         self.ansible_user: str = kwargs.get('ansible_user', ansible_user)
         self.ansible_connection: str = kwargs.get('ansible_connection', 'ssh')
@@ -70,10 +70,10 @@ class ExecutorAnsible(Executor):
         if isinstance(command, CommandAnsible):
             self._logger.debug('Using Ansible module: %s' % command.ansible_module)
             module = command.ansible_module
-        ansible_args += ['-m', module, "-a']
+        ansible_args += ['-m', module, '-a']
 
         # Appending command as a literal string
-        ansible_args.append('%s' % " ".join(command.args))
+        ansible_args.append('%s' % ' '.join(command.args))
 
         # Host where command will be executed
         ansible_args.append(self.ansible_host)

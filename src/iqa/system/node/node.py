@@ -3,6 +3,8 @@ Interface for Node element. A node holds a running messaging component and it
 must provide some basic behaviors, like ping, get_ip and execute command.
 """
 import abc
+import logging
+
 from typing import Optional, TYPE_CHECKING
 
 from iqa.system.command.command_base import Command
@@ -12,16 +14,19 @@ if TYPE_CHECKING:
     from iqa.utils.types import ExecutorType
 
 
-class Node:
+class Node(abc.ABC):
     """Node abstract component"""
 
     def __init__(
-        self, hostname: str, executor: 'ExecutorType', name: str = None, ip: str = None
+        self, hostname: str, executor: 'ExecutorType', name: str = None, ip: str = ''
     ) -> None:
+        logging.getLogger().info('Initialization of Node: %s' % self.hostname)
         self.hostname: str = hostname
         self.name: str = name if name else hostname
         self.executor: ExecutorType = executor
         self.ip: Optional[str] = ip
+
+        self._get_ip()
 
     def execute(self, command: Command) -> Execution:
         """Execute command using Node's executor"""
@@ -29,8 +34,8 @@ class Node:
 
     @abc.abstractmethod
     def ping(self) -> bool:
-        pass
+        NotImplementedError
 
     @abc.abstractmethod
-    def get_ip(self) -> Optional[str]:
-        pass
+    def _get_ip(self) -> str:
+        NotImplementedError

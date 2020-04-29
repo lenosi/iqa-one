@@ -11,7 +11,7 @@ class RoutingType(Enum):
     BOTH: auto = auto()
 
     @staticmethod
-    def from_value(value: str) -> "RoutingType':
+    def from_value(value: str) -> 'RoutingType':
         if not value:
             return RoutingType.ANYCAST
 

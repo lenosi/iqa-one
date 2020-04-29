@@ -173,7 +173,7 @@ class Activemq(ServerComponent, Broker):
         :return:
         """
         if routing_type == RoutingType.BOTH:
-            return "ANYCAST, MULTICAST"
+            return 'ANYCAST, MULTICAST'
         return routing_type.name
 
     def get_url(self, port: int = None, listener: Listener = None) -> str:

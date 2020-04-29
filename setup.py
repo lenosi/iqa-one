@@ -12,8 +12,8 @@ setup(
     package_dir={'': 'src'},
     license='Apache 2.0',
     description='Messaging testing project',
-    setup_requires=['pytest-runner'],
-    tests_require=['pytest', 'mock', 'pytest-mock', 'tox', 'flake8'],
+    setup_requires=['pytest-runner', 'flake8'],
+    tests_require=['pytest', 'pytest-docker', 'mock', 'pytest-mock', 'tox', ],
     install_require=[
         'requests',
         'PyYAML',

@@ -20,19 +20,17 @@ class ExecutorContainer(Executor):
 
     def __init__(
         self,
-        container_name: str = None,
-        container_user: str = None,
         name: str = 'ExecutorContainer',
-        **kwargs
+        container_name: str = '',
+        user: str = ''
     ):
         super(ExecutorContainer, self).__init__()
-        self.container_name: str = kwargs.get('inventory_hostname', container_name)
-        self.name: str = kwargs.get('executor_name', name)
-        self.user: str = kwargs.get('executor_docker_user', container_user)
-        self.docker_host: Optional[str] = kwargs.get('executor_docker_host')
-        self.docker_network: Optional[str] = kwargs.get('executor_docker_network')
+        self.container_name: str = container_name
+        self.name: str = name
+        self.user: str = user
+        self.docker_host: str = ''
 
-    def _execute(self, command: Command) -> ExecutionProcess:
+    def _execute(self, command: Command, user: str = '') -> ExecutionProcess:
 
         docker_args: list = ['docker']
 
@@ -43,7 +41,9 @@ class ExecutorContainer(Executor):
         else:
             docker_args.append('exec')
 
-        if self.user:
+        if user:
+            docker_args += ['-u', user]
+        elif self.user:
             docker_args += ['-u', self.user]
 
         docker_args.append(self.container_name)

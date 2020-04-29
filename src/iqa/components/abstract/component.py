@@ -3,7 +3,7 @@ from inspect import signature
 from iqa.system.node.node import Node
 
 
-class Component(object):
+class Component:
     """
     Main class that represents a abstract component.
     """

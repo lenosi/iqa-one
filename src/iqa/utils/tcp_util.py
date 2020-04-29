@@ -45,6 +45,6 @@ class TcpUtil(object):
             return True
         except OSError or ValueError:
             logging.getLogger(__name__).debug(
-                "%s:%s is_tcp_port_available failed' % (host, port), exc_info=True
+                '%s:%s is_tcp_port_available failed' % (host, port), exc_info=True
             )
             return False

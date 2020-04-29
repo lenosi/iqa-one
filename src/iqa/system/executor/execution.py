@@ -296,7 +296,7 @@ class ExecutionProcess(Execution):
         :return:
         """
         logger.debug(
-            "Execution timed out after %d - PID: %s - CMD: %s"
+            'Execution timed out after %d - PID: %s - CMD: %s'
             % (self.command.timeout, self._process.pid, self.args)
         )
         self.terminate()
