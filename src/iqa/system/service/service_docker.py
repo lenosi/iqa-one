@@ -10,7 +10,7 @@ from iqa.system.command.command_container import CommandContainer
 from iqa.system.executor import ExecutorAnsible, ExecutorContainer
 from iqa.system.executor.execution import Execution
 from iqa.system.service.service import Service, ServiceStatus
-from iqa.utils.docker_util import DockerUtil
+from iqa.utils.docker_util import get_container
 
 
 class ServiceDocker(Service):
@@ -25,7 +25,6 @@ class ServiceDocker(Service):
     def __init__(self, name: str, executor: ExecutorContainer) -> None:
         super().__init__(name, executor)
         self.docker_host: Optional[str] = executor.docker_host
-        self.docker_util: DockerUtil = DockerUtil(docker_host=executor.docker_host)
 
     class ServiceDockerState(Enum):
         STARTED = ('start', 'started')
@@ -43,7 +42,7 @@ class ServiceDocker(Service):
         :rtype: ServiceStatus
         """
         try:
-            container = self.docker_util.get_container(self.name)
+            container = get_container(name=self.name)
             if not container:
                 ServiceDocker._logger.debug('Service: %s - Status: UNKNOWN' % self.name)
                 return ServiceStatus.UNKNOWN

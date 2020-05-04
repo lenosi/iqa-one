@@ -8,14 +8,14 @@ from iqa.system.service.service_docker import ServiceDocker
 class TestServiceDocker:
 
     @pytest.fixture
-    def service(self) -> ServiceDocker:
+    def service(self, docker_services) -> ServiceDocker:
         executor: ExecutorContainer = ExecutorContainer(
             name='Docker executor',
-            container_name='artemis'
+            container_name='sshd-container'
         )
 
         service: ServiceDocker = ServiceDocker(
-            name='artemis',
+            name='sshd-container',
             executor=executor
         )
 

@@ -3,7 +3,7 @@ services:
   sshd-container:
     container_name: sshd-container
     build:
-      context: ../../devel/images/centos8-init-sshd
+      context: ../devel/images/centos8-init-sshd
     image: 'iqa/centos8-sshd'
     privileged: true # Reason for this is SystemD inside
     ports:

@@ -20,9 +20,9 @@ class ExecutorSsh(Executor):
 
     def __init__(
         self,
-        user: str,
         hostname: str,
         port: str = '22',
+        user: str = 'root',
         ssl_private_key: str = None,
         name: str = 'ExecutorSsh',
         **kwargs

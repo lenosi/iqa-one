@@ -2,6 +2,7 @@ requests
 PyYAML
 cython
 pytest
+pytest-docker
 ansible
 python-qpid-proton
 amqcfg
