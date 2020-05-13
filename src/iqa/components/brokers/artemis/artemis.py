@@ -188,7 +188,7 @@ class Artemis(ServerComponent, Broker):
         """
         client = ArtemisJolokiaClient(
             self.configuration.instance_name,  # type: ignore
-            self.node.get_ip(),
+            self.node.ip,
             self.configuration.ports['web'],
             'admin',
             self.configuration.get_user_password('admin'),
