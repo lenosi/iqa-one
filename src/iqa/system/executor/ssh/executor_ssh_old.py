@@ -1,14 +1,14 @@
 import os
 
-from .execution import ExecutionProcess
-from .executor_base import Executor
+from iqa.system.executor.localhost.execution_local import ExecutionProcess
+from iqa.system.executor.executor import Executor
 
 """
 Runs a command using SSH CLI.
 """
 
 
-class ExecutorSsh(Executor):
+class ExecutorSshOld(Executor):
     """
     Executor that runs Command instances via SSH CLI, based on provided
     configuration (user, hostname and port).
@@ -27,7 +27,7 @@ class ExecutorSsh(Executor):
         name: str = 'ExecutorSsh',
         **kwargs
     ) -> None:
-        super(ExecutorSsh, self).__init__()
+        super(ExecutorSshOld, self).__init__()
         self.hostname: str = kwargs.get('executor_hostname', hostname)
         self.port: str = kwargs.get('executor_port', port)
         self.user: str = kwargs.get('executor_user', user)

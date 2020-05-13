@@ -9,7 +9,7 @@ import yaml
 
 from iqa.system.command.command_ansible import CommandAnsible
 from iqa.system.command.command_base import Command
-from iqa.system.executor.execution import Execution
+from iqa.system.executor import Execution
 from iqa.system.node import NodeAnsible, NodeLocal
 from iqa.system.node.node_docker import NodeDocker
 from iqa.utils.iqa_exceptions import IQAConfigurationException

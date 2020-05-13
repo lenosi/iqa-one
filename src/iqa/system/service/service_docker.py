@@ -7,8 +7,8 @@ from docker.errors import APIError, NotFound
 from iqa.system.command.command_ansible import CommandAnsible
 from iqa.system.command.command_base import Command
 from iqa.system.command.command_container import CommandContainer
-from iqa.system.executor import ExecutorAnsible, ExecutorContainer
-from iqa.system.executor.execution import Execution
+from iqa.system.executor import ExecutorAnsible, ExecutorDocker
+from iqa.system.executor import Execution
 from iqa.system.service.service import Service, ServiceStatus
 from iqa.utils.docker_util import get_container
 
@@ -22,7 +22,7 @@ class ServiceDocker(Service):
 
     _logger: logging.Logger = logging.getLogger(__name__)
 
-    def __init__(self, name: str, executor: ExecutorContainer) -> None:
+    def __init__(self, name: str, executor: ExecutorDocker) -> None:
         super().__init__(name, executor)
         self.docker_host: Optional[str] = executor.docker_host
 
@@ -118,7 +118,7 @@ class ServiceDocker(Service):
                 stdout=True,
                 timeout=self.TIMEOUT,
             )
-        elif isinstance(self.executor, ExecutorContainer):
+        elif isinstance(self.executor, ExecutorDocker):
             state = service_state.system_state
             return CommandContainer(
                 [], docker_command=state, stdout=True, timeout=self.TIMEOUT

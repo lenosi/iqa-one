@@ -8,7 +8,7 @@ from typing.re import Pattern
 from iqa.system.command.command_ansible import CommandAnsible
 from iqa.system.command.command_base import Command
 from iqa.system.executor import Executor, ExecutorAnsible
-from iqa.system.executor.execution import Execution
+from iqa.system.executor import Execution
 from iqa.system.service.service import Service, ServiceStatus
 
 

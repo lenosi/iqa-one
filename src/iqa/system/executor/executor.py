@@ -1,18 +1,17 @@
 import logging
+from abc import ABC
 
 from iqa.system.command.command_base import Command
-from iqa.system.executor.execution import ExecutionProcess, Execution
+from iqa.system.executor.execution import Execution
 
-"""
-Defines the generic Executor class, which is responsible for
-running a given Command instance similarly across different
-implementations.
-"""
+logger = logging.getLogger(__name__)
 
 
-class Executor(object):
+class Executor(ABC):
     """
-    Abstract and generic definition of a Command executor.
+    Defines the generic Executor class, which is responsible for
+    running a given Command instance similarly across different
+    implementations.
     """
 
     def __init__(self, **kwargs) -> None:
@@ -64,19 +63,4 @@ class Executor(object):
         :param command:
         :return:
         """
-        raise NotImplementedError()
-
-
-class ExecutorLocal(Executor):
-    """
-    Executes a given command locally.
-    """
-
-    implementation = 'local'
-
-    def __init__(self, name: str = 'ExecutorLocal', **kwargs) -> None:
-        super(ExecutorLocal, self).__init__(**kwargs)
-        self.name: str = name
-
-    def _execute(self, command) -> ExecutionProcess:
-        return ExecutionProcess(command, self)
+        raise NotImplementedError

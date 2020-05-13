@@ -3,7 +3,7 @@ from enum import Enum
 from typing import Optional
 
 from iqa.system.executor import Executor
-from iqa.system.executor.execution import Execution
+from iqa.system.executor import Execution
 
 
 class ServiceStatus(Enum):

@@ -1,11 +1,11 @@
 import logging
 from typing import TYPE_CHECKING
 
-from iqa.system.executor.executor_ansible import ExecutorAnsible
-from iqa.system.executor.executor_container import ExecutorContainer
+from iqa.system.executor.ansible.executor_ansible import ExecutorAnsible
+from iqa.system.executor.docker.executor_docker import ExecutorDocker
 from iqa.system.node.node_ansible import NodeAnsible
 from iqa.system.node.node_docker import NodeDocker
-from iqa.system.node.node_local import NodeLocal
+from iqa.system.node.node_localhost import NodeLocal
 
 if TYPE_CHECKING:
     from iqa.utils.types import ExecutorType, NodeType
@@ -29,7 +29,7 @@ class NodeFactory(object):
         new_node: 'NodeType'
         if isinstance(executor, ExecutorAnsible):
             new_node = NodeAnsible(hostname, executor, ip)
-        elif isinstance(executor, ExecutorContainer):
+        elif isinstance(executor, ExecutorDocker):
             new_node = NodeDocker(hostname, executor, ip)
         else:
             new_node = NodeLocal(hostname, executor, ip)

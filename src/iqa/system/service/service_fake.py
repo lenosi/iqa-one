@@ -2,7 +2,7 @@ import abc
 from typing import Optional
 
 from iqa.system.executor import Executor
-from iqa.system.executor.execution import Execution
+from iqa.system.executor import Execution
 from .service import Service, ServiceStatus
 
 

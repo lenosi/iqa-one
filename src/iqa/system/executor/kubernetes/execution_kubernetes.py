@@ -13,9 +13,9 @@ from kubernetes.stream.ws_client import WSClient
 
 
 from iqa.system.command.command_base import Command
-from iqa.system.executor.execution import ExecutionException
-from iqa.system.executor.executor_base import Execution
-from iqa.system.executor.executor_kubernetes import ExecutorKubernetes
+from iqa.system.executor import ExecutionException
+from iqa.system.executor import Execution
+from iqa.system.executor.kubernetes.executor_kubernetes import ExecutorKubernetes
 
 # Logger for ExecutionKubernetes
 logger: logging.Logger = logging.getLogger(__name__)

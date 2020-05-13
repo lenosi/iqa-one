@@ -10,10 +10,10 @@ from typing.re import Pattern
 from iqa.system.command.command_ansible import CommandAnsible
 from iqa.system.command.command_base import Command
 from iqa.system.executor import Executor, ExecutorAnsible
-from iqa.system.executor.execution import Execution
+from iqa.system.executor import Execution
 from iqa.system.service.service import ServiceStatus
 from iqa.system.service.service_fake import ServiceFake
-from iqa.utils.tcp_util import TcpUtil
+from iqa.utils.tcp_util import is_tcp_port_available
 
 
 class ServiceFakeArtemis(ServiceFake):
@@ -133,7 +133,7 @@ class ServiceFakeArtemis(ServiceFake):
                     % ServiceFakeArtemis.MAX_ATTEMPTS
                 )
 
-            if TcpUtil.is_tcp_port_available(int(port), host):
+            if is_tcp_port_available(int(port), host):
                 return True
 
             time.sleep(ServiceFakeArtemis.DELAY)

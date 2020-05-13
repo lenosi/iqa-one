@@ -4,7 +4,7 @@ from iqa.system.command.command_base import Command
 class CommandContainer(Command):
     """
     Simple extension of the Command class that can be used along with the
-    ExecutorContainer in which this command can also provide the docker
+    ExecutorDocker in which this command can also provide the docker
     command to use (instead of default: exec).
     """
 

@@ -24,7 +24,7 @@ import logging
 from typing import Any, Callable
 
 from iqa.system.executor import Executor
-from iqa.system.executor.executor_base import Execution, Command
+from iqa.system.executor import Execution, Command
 
 
 class OpenShiftUtil:

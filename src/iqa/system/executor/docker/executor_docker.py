@@ -1,9 +1,7 @@
-from typing import Optional
-
-from .execution import ExecutionProcess
-from .executor_base import Executor
-from ..command.command_base import Command
-from ..command.command_container import CommandContainer
+from iqa.system.executor.localhost.execution_local import ExecutionProcess
+from iqa.system.executor.executor import Executor
+from iqa.system.command.command_base import Command
+from iqa.system.command.command_container import CommandContainer
 
 """
 Executor instance that runs a given Command instance using
@@ -11,7 +9,7 @@ Docker CLI against a pre-defined container (by name or id).
 """
 
 
-class ExecutorContainer(Executor):
+class ExecutorDocker(Executor):
     """
     Executor that runs Command instances in a Docker container.
     """
@@ -20,11 +18,11 @@ class ExecutorContainer(Executor):
 
     def __init__(
         self,
-        name: str = 'ExecutorContainer',
+        name: str = 'ExecutorDocker',
         container_name: str = '',
         user: str = ''
     ):
-        super(ExecutorContainer, self).__init__()
+        super(ExecutorDocker, self).__init__()
         self.container_name: str = container_name
         self.name: str = name
         self.user: str = user

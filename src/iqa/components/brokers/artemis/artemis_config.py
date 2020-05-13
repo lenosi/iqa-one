@@ -8,7 +8,7 @@ from iqa.abstract.user import User
 from iqa.components.abstract.server.server_component import ServerComponent
 from iqa.components.brokers.broker_config import BrokerConfiguration
 from iqa.system.executor import Executor
-from iqa.system.executor.execution import Execution
+from iqa.system.executor import Execution
 from iqa.system.service import ServiceFakeArtemis
 from iqa.utils.iqa_exceptions import IQAConfigurationException
 from iqa.utils.utils import Utils

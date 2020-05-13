@@ -9,7 +9,7 @@ class _Attribute:
 
     def get_config(self) -> Optional[str]:
         """Get in config format"""
-        return "    %s: %s\n' % (self.name, self.value) if self.value else None
+        return '    %s: %s\n' % (self.name, self.value) if self.value else None
 
     def __str__(self) -> str:
         return self.value
@@ -30,7 +30,7 @@ class _Section:
                     val = value.value
                     if val is not None:
                         sec += '    %s: %s\n' % (value.name, val)
-        sec += '}"
+        sec += '}'
         return sec
 
     def __str__(self) -> str:
@@ -38,7 +38,7 @@ class _Section:
 
     def __getattribute__(self, name: str) -> str:
         value = object.__getattribute__(self, name)
-        if hasattr(value, "__get__'):
+        if hasattr(value, '__get__'):
             value = value.__get__(self, self.__class__)
         return value
 
@@ -48,7 +48,7 @@ class _Section:
         except AttributeError:
             pass
         else:
-            if hasattr(obj, "__set__'):
+            if hasattr(obj, '__set__'):
                 return obj.__set__(self, value)
         return object.__setattr__(self, name, value)
 
@@ -63,7 +63,7 @@ class Config(list):
         self.append(section)
 
     def get_config(self) -> str:
-        conf: str = '"
+        conf: str = ''
         i: int = 0
         num_sections: int = len(self)
         for section in self:
@@ -75,7 +75,7 @@ class Config(list):
                         tmp_val: str = attr.value
                         if tmp_val is not None:
                             conf += '    %s: %s\n' % (attr.name, tmp_val)
-            conf += '}\n"
+            conf += '}\n'
             if i < num_sections:
-                conf += '\n"
+                conf += '\n'
         return conf

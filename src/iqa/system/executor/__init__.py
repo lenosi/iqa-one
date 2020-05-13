@@ -1,41 +1,38 @@
-from .executor_ansible import ExecutorAnsible
-from .executor_base import Executor
-from .executor_container import ExecutorContainer
-from .executor_kubernetes import ExecutorKubernetes
-from .executor_local import ExecutorLocal
-from .executor_ssh import ExecutorSsh
+import logging
+from typing import Any
+
+from iqa.system.executor.ansible import *
+from iqa.system.executor.asyncssh import *
+from iqa.system.executor.docker import *
+from iqa.system.executor.kubernetes import *
+from iqa.system.executor.localhost import *
+from iqa.system.executor.ssh import *
+from iqa.system.executor.execution import Execution
+from iqa.system.executor.executor import Executor
+from iqa.utils.types import ExecutorType
+from iqa.utils.utils import get_subclasses
+
+logger = logging.getLogger(__name__)
 
 
-class ExecutorFactory(object):
+def create_executor(implementation: str, **kwargs) -> ExecutorType:
     """
-    Loops through all implementations of the Executor class
-    and returns an instance of the executor initialized from kwargs.
+        Loops through all implementations of the Executor class
+        and returns an instance of the executor initialized from kwargs.
+
+    Args:
+        implementation:
+        **kwargs:
+
+    Returns:
+
     """
-
-    @staticmethod
-    def create_executor(exec_impl: str = 'ansible', **kwargs):
-
-        for exec_class in Executor.__subclasses__():
-            if exec_class.implementation != exec_impl:
-                continue
-
-            return exec_class(**kwargs)
-
-        raise ValueError('Invalid Executor implementation given: %s' % exec_impl)
-
-
-class ExecutorFactory2(object):
-    @staticmethod
-    def create_executor(impl: str, **kwargs) -> Executor:
-        if impl == ExecutorLocal.implementation:
-            return ExecutorLocal()
-        elif impl == ExecutorSsh.implementation:
-            return ExecutorSsh(**kwargs)
-        elif impl == ExecutorContainer.implementation:
-            return ExecutorContainer(**kwargs)
-        elif impl == ExecutorAnsible.implementation:
-            return ExecutorAnsible(**kwargs)
-        elif impl == ExecutorKubernetes.implementation:
-            return ExecutorKubernetes(**kwargs)
-        else:
-            raise ValueError('Invalid executor implementation')
+    try:
+        ex: Any = get_subclasses(
+            given_name=implementation,
+            in_class=Executor,
+            in_class_property='implementation'
+        )
+        return ex(**kwargs)  # type: ExecutorType
+    except ValueError:
+        logger.error('Implementation of "%s" executor was not found!' % implementation)

@@ -2,8 +2,8 @@ import logging
 from typing import Optional, TYPE_CHECKING
 
 from iqa.system.command.command_base import Command
-from iqa.system.executor import ExecutorAnsible, ExecutorContainer
-from iqa.system.executor.execution import Execution
+from iqa.system.executor import ExecutorAnsible, ExecutorDocker
+from iqa.system.executor import Execution
 from iqa.system.service.service import Service
 from .service_artemis import ServiceFakeArtemis
 from .service_docker import ServiceDocker
@@ -52,7 +52,7 @@ class ServiceFactory(object):
                 return ServiceSystemInit(name=service_name, executor=executor)
         else:
             container_name: Optional[str] = None
-            if isinstance(executor, ExecutorContainer):
+            if isinstance(executor, ExecutorDocker):
                 container_name = executor.container_name
             elif (
                 isinstance(executor, ExecutorAnsible)

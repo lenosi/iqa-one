@@ -8,7 +8,7 @@ import logging
 from typing import Optional, TYPE_CHECKING
 
 from iqa.system.command.command_base import Command
-from iqa.system.executor.execution import Execution
+from iqa.system.executor import Execution
 from iqa.utils.ping import ping
 
 if TYPE_CHECKING:

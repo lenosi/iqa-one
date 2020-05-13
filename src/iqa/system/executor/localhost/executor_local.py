@@ -1,5 +1,5 @@
-from .execution import Execution
-from .executor_base import Executor
+from iqa.system.executor import Execution
+from iqa.system.executor import Executor
 
 """
 Runs a local command using SSH CLI.
