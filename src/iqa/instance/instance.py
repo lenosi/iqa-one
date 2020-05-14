@@ -12,8 +12,8 @@ from iqa.components.brokers import BrokerFactory
 from iqa.components.clients.external import ClientFactory
 from iqa.components.routers import RouterFactory
 from iqa.system.ansible.ansible_inventory import AnsibleInventory
-from iqa.system.executor import ExecutorFactory
-from iqa.system.executor.executor_base import Executor
+from iqa.system.executor import create_executor
+from iqa.system.executor import Executor
 from iqa.system.node import NodeFactory
 from iqa.system.node.node import Node
 from iqa.system.service import ServiceFactory
@@ -82,7 +82,7 @@ class Instance:
             cmp_ip: str = cmp_vars.get('ansible_host', None)
 
             # Getting the executor instance
-            executor: 'ExecutorType' = ExecutorFactory.create_executor(
+            executor: 'ExecutorType' = create_executor(
                 exec_impl=cmp_exec, **cmp_vars
             )
 
@@ -150,7 +150,7 @@ class Instance:
         :return:
         :rtype:
         """
-        executor: Executor = ExecutorFactory.create_executor(exec_impl=executor_impl)
+        executor: Executor = create_executor(implementation=executor_impl)
 
         # Create the Node for current client
         node: Node = NodeFactory.create_node(
@@ -221,7 +221,8 @@ class Instance:
         :return: the receiver implementation running on given host
                  or None otherwise.
         """
-        receiver: Optional['ClientType']
+        # receiver: Optional['ClientType']
+        receiver: Component
         for receiver in self.get_clients(client_type=ReceiverSubtype):
             if not isinstance(receiver, Client):
                 if receiver.node.hostname == hostname:

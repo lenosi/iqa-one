@@ -32,7 +32,7 @@ class ExecutorSsh(Executor):
 
     async def new_session(self):
         session = await asyncssh.connect(
-            ip=self.ip,
+            host=self.ip,
             username=self.user,
             password=self.password,
             known_hosts=None,

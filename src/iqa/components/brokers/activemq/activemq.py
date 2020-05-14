@@ -158,7 +158,7 @@ class Activemq(ServerComponent, Broker):
         """
         client: ArtemisJolokiaClient = ArtemisJolokiaClient(
             self.config.instance_name,  # type: ignore
-            self.node.get_ip(),
+            self.node.ip,
             self.config.ports['web'],
             'admin',
             self.config.get_user_password('admin'),

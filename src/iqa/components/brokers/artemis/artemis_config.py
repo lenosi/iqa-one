@@ -11,7 +11,7 @@ from iqa.system.executor import Executor
 from iqa.system.executor import Execution
 from iqa.system.service import ServiceFakeArtemis
 from iqa.utils.iqa_exceptions import IQAConfigurationException
-from iqa.utils.utils import Utils
+from iqa.utils.utils import remove_prefix
 
 
 class ArtemisConfig(BrokerConfiguration):
@@ -115,7 +115,7 @@ class ArtemisConfig(BrokerConfiguration):
         self.instance_name = self._data_getter(
             self.P_INSTANCE_NAME, self.DEFAULT_INSTANCE_NAME
         )
-        self.instance_home_etc = Utils.remove_prefix(
+        self.instance_home_etc = remove_prefix(
             self._data_getter(
                 self.P_INSTANCE_DIR_ETC, 'artemis_profile/instance_etc_uri'
             ),

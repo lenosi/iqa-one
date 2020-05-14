@@ -21,6 +21,7 @@ class Client(ABC):
 
         :return: String
         """
+        raise NotImplementedError
 
     @property
     @abstractmethod
@@ -29,6 +30,7 @@ class Client(ABC):
 
         :return: String
         """
+        raise NotImplementedError
 
     @property
     @abstractmethod
@@ -37,14 +39,15 @@ class Client(ABC):
 
         :return: List
         """
+        raise NotImplementedError
 
     @abstractmethod
     def set_url(self, url: str) -> None:
-        pass
+        raise NotImplementedError
 
     @abstractmethod
     def set_endpoint(self, listener: Listener) -> None:
-        pass
+        raise NotImplementedError
 
     @abstractmethod
     def connect(self):
@@ -56,4 +59,4 @@ class Client(ABC):
 
     @property
     def implementation(self):
-        return NotImplementedError
+        raise NotImplementedError

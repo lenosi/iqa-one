@@ -25,7 +25,7 @@ class ClientOptionsBase(object):
         List must be composed of OptionAbstract objects.
         :return:
         """
-        raise NotImplementedError()
+        raise NotImplementedError
 
     @staticmethod
     def option_mapper() -> dict:
