@@ -1,6 +1,6 @@
 from typing import List
 
-from iqa.system.executor.execution import Execution
+from iqa.system.executor import Execution
 from iqa.system.command.command_base import Command
 from iqa.abstract.message.message import Message
 from iqa.components.clients.external.java.receiver import ReceiverJava

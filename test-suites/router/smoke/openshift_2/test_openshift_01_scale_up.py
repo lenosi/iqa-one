@@ -3,7 +3,7 @@ from typing import Tuple
 from iqa.components.routers.dispatch.dispatch import Dispatch
 from iqa.components.routers.dispatch.management.query import RouterQuery
 from iqa.instance.instance import Instance
-from iqa.system.executor.execution import Execution
+from iqa.system.executor import Execution
 from iqa.utils.openshift_util import OpenShiftUtil
 
 MESH_SIZE: int = 3
