@@ -1,11 +1,21 @@
-from abc import ABC
-from typing import Optional, Any
+from abc import ABC, abstractmethod
+from typing import Any
 
 
 class Protocol(ABC):
     """Protocol abstraction"""
 
-    name: str = NotImplementedError
-    default_port: Optional[int] = NotImplementedError
-    transport: Any = NotImplementedError
+    @abstractmethod
+    @property
+    def name(self) -> str:
+        raise NotImplementedError
 
+    @abstractmethod
+    @property
+    def default_port(self) -> int:
+        raise NotImplementedError
+
+    @abstractmethod
+    @property
+    def transport(self) -> Any:
+        raise NotImplementedError
