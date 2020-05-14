@@ -3,7 +3,7 @@ import logging
 
 from iqa.system.node.node import Node
 from iqa.system.node.node_docker import NodeDocker
-from iqa.system.executor.executor_container import ExecutorContainer
+from iqa.system.executor.docker.executor_docker import ExecutorDocker
 
 
 logging.basicConfig(level=logging.DEBUG)
@@ -14,7 +14,7 @@ class TestNodeDocker:
     @pytest.fixture
     def node(self, docker_services) -> Node:
 
-        executor: ExecutorContainer = ExecutorContainer(
+        executor: ExecutorDocker = ExecutorDocker(
             name="Docker executor",
             container_name='sshd-container'
         )
