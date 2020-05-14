@@ -1,6 +1,6 @@
 import pytest
 
-from iqa.system.executor.executor_container import ExecutorContainer
+from iqa.system.executor.docker.executor_docker import ExecutorDocker
 from iqa.system.service.service import ServiceStatus
 from iqa.system.service.service_docker import ServiceDocker
 
@@ -9,7 +9,7 @@ class TestServiceDocker:
 
     @pytest.fixture
     def service(self, docker_services) -> ServiceDocker:
-        executor: ExecutorContainer = ExecutorContainer(
+        executor: ExecutorDocker = ExecutorDocker(
             name='Docker executor',
             container_name='sshd-container'
         )
