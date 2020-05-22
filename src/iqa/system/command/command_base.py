@@ -1,10 +1,10 @@
 """
 Provides representation for Commands that can be executed against
-Executor instances.
+ExecutorBase instances.
 """
 
 
-class Command:
+class CommandBase:
     """
     Represents a command that can be executed against different
     executors, behaving similarly across them.
@@ -21,7 +21,7 @@ class Command:
     ) -> None:
         """
         Creates an instance of a Command representation that can be passed to
-        an Executor instance.
+        an ExecutorBase instance.
         :param args: List of arguments that compose the command to be executed
         :param stdout: If True stdout will be available at the
         resulting Execution instance.

@@ -1,7 +1,7 @@
 import logging
 from typing import Optional, TYPE_CHECKING
 
-from iqa.system.command.command_base import Command
+from iqa.system.command.command_base import CommandBase
 from iqa.system.executor import ExecutorAnsible, ExecutorDocker
 from iqa.system.executor import ExecutionBase
 from iqa.system.service.service import Service
@@ -35,7 +35,7 @@ class ServiceFactory(object):
         if service_name:
             # Validate if systemd is available
             svc_cmd_exec: ExecutionBase = executor.execute(
-                Command(['pidof', 'systemd'], stdout=True, timeout=30)
+                CommandBase(['pidof', 'systemd'], stdout=True, timeout=30)
             )
             if svc_cmd_exec.completed_successfully():
                 # Create ServiceSystemD

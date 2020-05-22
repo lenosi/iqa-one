@@ -1,7 +1,7 @@
-from iqa.system.command.command_base import Command
+from iqa.system.command.command_base import CommandBase
 
 
-class CommandAnsible(Command):
+class CommandBaseAnsible(CommandBase):
     """
     Simple extension of the Command class that can be used along with the
     ExecutorAnsible in which this command can also provide the ansible
@@ -20,7 +20,7 @@ class CommandAnsible(Command):
         timeout: int = 0,
         encoding: str = 'utf-8',
     ) -> None:
-        super(CommandAnsible, self).__init__(
+        super(CommandBaseAnsible, self).__init__(
             [ansible_args], stdout, stderr, daemon, timeout, encoding
         )
         self.ansible_module: str = ansible_module

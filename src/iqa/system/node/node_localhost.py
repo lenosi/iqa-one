@@ -6,7 +6,7 @@ import logging
 import re
 from typing import Union
 
-from iqa.system.command.command_base import Command
+from iqa.system.command.command_base import CommandBase
 from iqa.system.executor import ExecutorBase
 from iqa.system.executor import ExecutionBase
 from iqa.system.node.node import Node
@@ -21,14 +21,14 @@ class NodeLocal(Node):
 
     def ping(self) -> bool:
         """Send ping to node"""
-        cmd_ping: Command = Command([], stdout=True, timeout=20)
+        cmd_ping: CommandBase = CommandBase([], stdout=True, timeout=20)
 
         # If unable to determine host address, then do not perform ping
         if self.get_ip() is None:
             return False
         cmd_ping.args = ['ping', '-c', '1', self.get_ip()]
 
-        execution: Execution = self.executor.execute(cmd_ping)
+        execution: ExecutionBase = self.executor.execute(cmd_ping)
 
         # True if completed with exit code 0 and stdout has some data
         return execution.completed_successfully() and bool(execution.read_stdout())
@@ -38,8 +38,8 @@ class NodeLocal(Node):
         if self.ip is not None:
             return self.ip
 
-        cmd_ip: Command = Command(['host', 'addr', 'list'], stdout=True, timeout=10)
-        execution: Execution = self.execute(cmd_ip)
+        cmd_ip: CommandBase = CommandBase(['host', 'addr', 'list'], stdout=True, timeout=10)
+        execution: ExecutionBase = self.execute(cmd_ip)
 
         # If execution failed, skip it
         if not execution.completed_successfully():

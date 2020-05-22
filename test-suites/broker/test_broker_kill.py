@@ -3,7 +3,7 @@ from proton.handlers import MessagingHandler
 from proton.reactor import Container
 import time
 from iqa.components.brokers.artemis.artemis import Artemis
-from iqa.system.command.command_base import Command
+from iqa.system.command.command_base import CommandBase
 from iqa.system.executor import Execution
 
 
@@ -35,7 +35,7 @@ def test_node_ip(master1: Artemis, slave1: Artemis, slave2: Artemis) -> None:
     # Client01.start(master1.lister('test_listener'))
     # Client01.send(address=broker2.address('abcd') msg=message)
 
-    cmd: Command = Command(['killall', 'java'])
+    cmd: CommandBase = CommandBase(['killall', 'java'])
     execution: Execution = master1.node.execute(cmd)
     assert True if execution.get_ecode() == 0 else False
 

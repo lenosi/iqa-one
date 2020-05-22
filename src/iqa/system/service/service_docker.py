@@ -4,9 +4,9 @@ from typing import Optional
 
 from docker.errors import APIError, NotFound
 
-from iqa.system.command.command_ansible import CommandAnsible
-from iqa.system.command.command_base import Command
-from iqa.system.command.command_container import CommandContainer
+from iqa.system.command.command_ansible import CommandBaseAnsible
+from iqa.system.command.command_base import CommandBase
+from iqa.system.command.command_container import CommandBaseContainer
 from iqa.system.executor import ExecutorAnsible, ExecutorDocker
 from iqa.system.executor import ExecutionBase
 from iqa.system.service.service import Service, ServiceStatus
@@ -90,7 +90,7 @@ class ServiceDocker(Service):
         """
         return None
 
-    def _create_command(self, service_state: ServiceDockerState) -> Command:
+    def _create_command(self, service_state: ServiceDockerState) -> CommandBase:
         """
         Creates a Command instance based on executor type and state
         that is specific to each type of command.
@@ -111,7 +111,7 @@ class ServiceDocker(Service):
             docker_host_opt = (
                 'docker_host=%s' % self.docker_host if self.docker_host else ""
             )
-            return CommandAnsible(
+            return CommandBaseAnsible(
                 'name=%s state=%s restart=%s %s'
                 % (self.name, state, restart, docker_host_opt),
                 ansible_module='docker_container',
@@ -120,8 +120,8 @@ class ServiceDocker(Service):
             )
         elif isinstance(self.executor, ExecutorDocker):
             state = service_state.system_state
-            return CommandContainer(
+            return CommandBaseContainer(
                 [], docker_command=state, stdout=True, timeout=self.TIMEOUT
             )
         else:
-            return Command([])
+            return CommandBase([])

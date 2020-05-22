@@ -2,7 +2,7 @@ import logging
 from typing import TYPE_CHECKING
 
 from iqa.abstract.server.router import Router
-from iqa.system.executor import Executor
+from iqa.system.executor import ExecutorBase
 from iqa.system.node.node import Node
 from iqa.system.service.service import Service
 
@@ -15,7 +15,7 @@ class RouterFactory(object):
     def create_router(
         implementation: str,
         node: Node,
-        executor: Executor,
+        executor: ExecutorBase,
         service_impl: Service,
         **kwargs
     ) -> 'RouterType':

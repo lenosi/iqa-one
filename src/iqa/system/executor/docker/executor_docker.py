@@ -1,7 +1,7 @@
 from iqa.system.executor.localhost.execution_local import ExecutionProcess
 from iqa.system.executor.executor import ExecutorBase
-from iqa.system.command.command_base import Command
-from iqa.system.command.command_container import CommandContainer
+from iqa.system.command.command_base import CommandBase
+from iqa.system.command.command_container import CommandBaseContainer
 
 """
 Executor instance that runs a given Command instance using
@@ -28,11 +28,11 @@ class ExecutorDocker(ExecutorBase):
         self.user: str = user
         self.docker_host: str = ''
 
-    def _execute(self, command: Command, user: str = '') -> ExecutionProcess:
+    def _execute(self, command: CommandBase, user: str = '') -> ExecutionProcess:
 
         docker_args: list = ['docker']
 
-        if isinstance(command, CommandContainer):
+        if isinstance(command, CommandBaseContainer):
             # Logging docker command to use
             self._logger.debug('Using docker command: %s' % command.docker_command)
             docker_args.append(command.docker_command)

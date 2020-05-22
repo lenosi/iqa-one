@@ -2,7 +2,7 @@ import logging
 from abc import ABC, abstractmethod
 from typing import Optional, Union
 
-from iqa.system.command.command_base import Command
+from iqa.system.command.command_base import CommandBase
 from iqa.utils.timeout import TimeoutCallback
 
 logger = logging.getLogger(__name__)
@@ -28,7 +28,7 @@ class ExecutionBase(ABC):
     """
 
     def __init__(
-            self, command: Command, modified_args: list = None, env=None
+            self, command: CommandBase, modified_args: list = None, env=None
     ) -> None:
         """
         Instance is initialized with the command that was effectively
@@ -37,7 +37,7 @@ class ExecutionBase(ABC):
         :param modified_args:
         :param env:
         """
-        self.command: Command = command
+        self.command: CommandBase = command
         self.env: dict = env
 
         # Flags to control whether execution timed out or was interrupted by user

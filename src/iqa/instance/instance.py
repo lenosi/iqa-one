@@ -13,7 +13,7 @@ from iqa.components.clients.external import ClientFactory
 from iqa.components.routers import RouterFactory
 from iqa.system.ansible.ansible_inventory import AnsibleInventory
 from iqa.system.executor import create_executor
-from iqa.system.executor import Executor
+from iqa.system.executor import ExecutorBase
 from iqa.system.node import NodeFactory
 from iqa.system.node.node import Node
 from iqa.system.service import ServiceFactory
@@ -150,7 +150,7 @@ class Instance:
         :return:
         :rtype:
         """
-        executor: Executor = create_executor(implementation=executor_impl)
+        executor: ExecutorBase = create_executor(implementation=executor_impl)
 
         # Create the Node for current client
         node: Node = NodeFactory.create_node(

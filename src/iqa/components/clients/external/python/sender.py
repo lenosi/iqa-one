@@ -1,6 +1,6 @@
 from iqa.abstract.client.sender import Sender
 from iqa.abstract.message.message import Message
-from iqa.components.clients.external.command.client_command import ClientCommand
+from iqa.components.clients.external.command.client_command import ClientCommandBase
 from iqa.components.clients.external.python.client import ClientPython
 from iqa.components.clients.external.python.command.python_commands import (
     PythonSenderClientCommand,
@@ -41,7 +41,7 @@ class SenderPython(ClientPython, Sender):
         daemon: bool = True,
         timeout: int = ClientPython.TIMEOUT,
         encoding: str = 'utf-8',
-    ) -> ClientCommand:
+    ) -> ClientCommandBase:
         return PythonSenderClientCommand(
             stdout=stdout,
             stderr=stderr,

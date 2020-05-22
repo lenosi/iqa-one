@@ -12,7 +12,7 @@ from kubernetes.stream import stream
 from kubernetes.stream.ws_client import WSClient
 
 
-from iqa.system.command.command_base import Command
+from iqa.system.command.command_base import CommandBase
 from iqa.system.executor import ExecutionException
 from iqa.system.executor import Execution
 from iqa.system.executor.kubernetes.executor_kubernetes import ExecutorKubernetes
@@ -30,7 +30,7 @@ class ExecutionKubernetes(Execution):
 
     def __init__(
         self,
-        command: Command,
+        command: CommandBase,
         executor: ExecutorKubernetes,
         modified_args: list = None,
         env=None,

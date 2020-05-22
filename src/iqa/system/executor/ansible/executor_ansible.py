@@ -1,5 +1,5 @@
-from iqa.system.command.command_ansible import CommandAnsible
-from iqa.system.command.command_base import Command
+from iqa.system.command.command_ansible import CommandBaseAnsible
+from iqa.system.command.command_base import CommandBase
 from iqa.system.executor.executor import ExecutorBase
 from iqa.system.executor.localhost.execution_local import ExecutionProcess
 """
@@ -47,7 +47,7 @@ class ExecutorAnsible(ExecutorBase):
         self.name: str = kwargs.get('executor_name', name)
         self.docker_host: str = kwargs.get('executor_docker_host', None)
 
-    def _execute(self, command: Command) -> ExecutionProcess:
+    def _execute(self, command: CommandBase) -> ExecutionProcess:
 
         ansible_args: list = ['ansible']
 
@@ -66,7 +66,7 @@ class ExecutorAnsible(ExecutorBase):
 
         # If given command is an instance of CommandAnsible
         # the module is read from it
-        if isinstance(command, CommandAnsible):
+        if isinstance(command, CommandBaseAnsible):
             self._logger.debug('Using Ansible module: %s' % command.ansible_module)
             module = command.ansible_module
         ansible_args += ['-m', module, '-a']

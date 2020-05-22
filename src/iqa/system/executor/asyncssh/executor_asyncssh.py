@@ -6,7 +6,7 @@ from typing import re
 import asyncssh
 from asyncssh import DisconnectError
 
-from iqa.system.command.command_base import Command
+from iqa.system.command.command_base import CommandBase
 from iqa.system.executor.executor import ExecutorBase
 from iqa.system.executor.execution import ExecutionBase
 
@@ -169,7 +169,7 @@ class ExecutorAsyncSsh(ExecutorBase):
         """Async Context Manager"""
         await self.disconnect()
 
-    async def _execute(self, command: Command) -> ExecutionBase:
+    async def _execute(self, command: CommandBase) -> ExecutionBase:
         cmd = ' '.join(command.args)
         execution = await self._send_command(cmd)
         return execution

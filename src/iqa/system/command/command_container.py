@@ -1,7 +1,7 @@
-from iqa.system.command.command_base import Command
+from iqa.system.command.command_base import CommandBase
 
 
-class CommandContainer(Command):
+class CommandBaseContainer(CommandBase):
     """
     Simple extension of the Command class that can be used along with the
     ExecutorDocker in which this command can also provide the docker
@@ -18,7 +18,7 @@ class CommandContainer(Command):
         timeout: int = 0,
         encoding: str = 'utf-8',
     ) -> None:
-        super(CommandContainer, self).__init__(
+        super(CommandBaseContainer, self).__init__(
             args, stdout, stderr, daemon, timeout, encoding
         )
         self.docker_command: str = docker_command

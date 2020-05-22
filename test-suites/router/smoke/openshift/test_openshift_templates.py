@@ -1,7 +1,7 @@
 from typing import List
 
-from iqa.system.executor import Execution
-from iqa.system.command.command_base import Command
+from iqa.system.executor import ExecutionBase
+from iqa.system.command.command_base import CommandBase
 from iqa.abstract.message.message import Message
 from iqa.components.clients.external.java.receiver import ReceiverJava
 from iqa.components.clients.external.java.sender import SenderJava
@@ -38,8 +38,8 @@ def test_scale_up_router(router: Dispatch) -> None:
     :param router:
     :return:
     """
-    cmd_scale_up: Command = Command(args=['oc', 'scale', '--replicas=%d' % MESH_SIZE, 'dc', 'amq-interconnect'],
-                                    timeout=TIMEOUT, stderr=True, stdout=True)
+    cmd_scale_up: CommandBase = CommandBase(args=['oc', 'scale', '--replicas=%d' % MESH_SIZE, 'dc', 'amq-interconnect'],
+                                            timeout=TIMEOUT, stderr=True, stdout=True)
     execution: Execution = router.node.execute(cmd_scale_up)
     execution.wait()
 
@@ -133,7 +133,7 @@ def test_scale_down_router(router: Dispatch) -> None:
     :param router:
     :return:
     """
-    cmd_scale_up: Command = Command(args=['oc', 'scale', '--replicas=1', 'dc', 'amq-interconnect'], timeout=TIMEOUT)
+    cmd_scale_up: CommandBase = CommandBase(args=['oc', 'scale', '--replicas=1', 'dc', 'amq-interconnect'], timeout=TIMEOUT)
     execution: Execution = router.node.execute(cmd_scale_up)
     execution.wait()
 

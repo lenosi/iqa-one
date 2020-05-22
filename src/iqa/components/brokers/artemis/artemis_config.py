@@ -7,8 +7,8 @@ from amqcfg import amqcfg
 from iqa.abstract.user import User
 from iqa.components.abstract.server.server_component import ServerComponent
 from iqa.components.brokers.broker_config import BrokerConfiguration
-from iqa.system.executor import Executor
-from iqa.system.executor import Execution
+from iqa.system.executor import ExecutorBase
+from iqa.system.executor import ExecutionBase
 from iqa.system.service import ServiceFakeArtemis
 from iqa.utils.iqa_exceptions import IQAConfigurationException
 from iqa.utils.utils import remove_prefix
@@ -178,7 +178,7 @@ class ArtemisConfig(BrokerConfiguration):
 
     def apply_config(self, yaml_configuration_path: str, restart: bool = True):
         # self.store_configuration()
-        self.component.service = ServiceFakeArtemis(None, Executor())
+        self.component.service = ServiceFakeArtemis(None, ExecutorBase())
 
         try:
             # Todo hacky way to turn off debug logging from amqcfg module
@@ -190,7 +190,7 @@ class ArtemisConfig(BrokerConfiguration):
                 output_path=self.local_config_dir,
                 write_profile_data=True,
             )
-            execution: Execution = self.copy_configuration_files()
+            execution: ExecutionBase = self.copy_configuration_files()
 
             if execution.completed_successfully():
                 self.load_configuration_yaml(yaml_configuration_path)

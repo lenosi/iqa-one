@@ -21,10 +21,10 @@ from iqa.components.clients.external.command.options.client_options import (
     ControlOptionsSenderReceiver,
     MessageOptionsSender,
 )
-from iqa.system.command.command_base import Command
+from iqa.system.command.command_base import CommandBase
 
 
-class ClientCommand(Command):
+class ClientCommandBase(CommandBase):
     """
     Base abstraction class for external clients commands. It encapsulates the
     args property and getter generates a new list based on ClientCommand's
@@ -79,7 +79,7 @@ class ClientCommand(Command):
         return self.main_command() + params_flat
 
 
-class ConnectorClientCommand(ClientCommand):
+class ConnectorClientCommand(ClientCommandBase):
     """
     Abstract implementation of common Connector client options.
     """
@@ -95,7 +95,7 @@ class ConnectorClientCommand(ClientCommand):
         timeout: int = 0,
         encoding: str = 'utf-8',
     ) -> None:
-        super(ClientCommand, self).__init__(
+        super(ClientCommandBase, self).__init__(
             [], stdout, stderr, daemon, timeout, encoding
         )
         self.control: ControlOptionsCommon = ControlOptionsCommon()
@@ -104,7 +104,7 @@ class ConnectorClientCommand(ClientCommand):
         self.connector: ConnectorOptions = ConnectorOptions()
 
 
-class ReceiverClientCommand(ClientCommand):
+class ReceiverClientCommand(ClientCommandBase):
     """
     Abstract implementation of common Receiver client options.
     """
@@ -120,7 +120,7 @@ class ReceiverClientCommand(ClientCommand):
         timeout: int = 0,
         encoding: str = 'utf-8',
     ):
-        super(ClientCommand, self).__init__(
+        super(ClientCommandBase, self).__init__(
             [], stdout, stderr, daemon, timeout, encoding
         )
         self.control: ControlOptionsReceiver = ControlOptionsReceiver()
@@ -130,7 +130,7 @@ class ReceiverClientCommand(ClientCommand):
         self.receiver: ReceiverOptions = ReceiverOptions()
 
 
-class SenderClientCommand(ClientCommand):
+class SenderClientCommand(ClientCommandBase):
     """
         Abstract implementation of common Sender client options.
     """
@@ -146,7 +146,7 @@ class SenderClientCommand(ClientCommand):
         timeout: int = 0,
         encoding: str = 'utf-8',
     ) -> None:
-        super(ClientCommand, self).__init__(
+        super(ClientCommandBase, self).__init__(
             [], stdout, stderr, daemon, timeout, encoding
         )
         self.control: ControlOptionsSenderReceiver = ControlOptionsSenderReceiver()

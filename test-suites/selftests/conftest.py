@@ -17,11 +17,11 @@ from iqa.components.routers.dispatch.dispatch import Dispatch
 
 from iqa.instance.instance import Instance
 
-from iqa.system.executor import Executor
+from iqa.system.executor import ExecutorBase
 from iqa.system.node.node import Node
 from iqa.system.service import Service
 
-from iqa.pytest.fixtures import iqa as pytest_iqa
+from pytest_iqa_instance.fixtures import iqa as pytest_iqa
 
 
 ############################
@@ -139,7 +139,7 @@ amq7: Artemis = iqa_instance.new_component(component=artemis_component)
 artemis: Artemis = iqa_instance.new_component(component=artemis_component)
 
 dispatch_node: Node = iqa_instance.new_node(hostname='ic01')
-dispatch_service: Service = Service(name='dispatch_service', executor=Executor())
+dispatch_service: Service = Service(name='dispatch_service', executor=ExecutorBase())
 dispatch_component: Dispatch = Dispatch(name='disp', node=dispatch_node, service=dispatch_service)
 dispatch: Dispatch = iqa_instance.new_component(component=dispatch_component)
 

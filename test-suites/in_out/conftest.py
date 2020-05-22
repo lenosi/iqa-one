@@ -7,7 +7,7 @@ from iqa.components.routers.dispatch.dispatch import Dispatch
 from iqa.components.clients.core.receiver import ReceiverCore
 from iqa.components.clients.core.sender import SenderCore
 from iqa.instance.instance import Instance
-from iqa.system.executor import Executor
+from iqa.system.executor import ExecutorBase
 from iqa.system.node.node import Node
 from iqa.system.service import Service
 
@@ -82,7 +82,7 @@ def pytest_generate_tests(metafunc: Metafunc) -> None:
 ########################
 client_node: Node = iqa_instance.new_node(hostname='ic01')
 
-executor: Executor = Executor()
+executor: ExecutorBase = ExecutorBase()
 
 dispatch_service: Service = Service(name='dispatch_service', executor=executor)
 

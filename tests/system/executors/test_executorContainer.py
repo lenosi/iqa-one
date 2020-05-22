@@ -2,7 +2,7 @@ import pytest
 
 from iqa.system.executor.docker.executor_docker import ExecutorDocker
 from iqa.system.executor import ExecutionBase
-from iqa.system.command.command_base import Command
+from iqa.system.command.command_base import CommandBase
 
 
 class TestExecutorContainer:
@@ -17,7 +17,7 @@ class TestExecutorContainer:
 
     def test_execute(self, executor: ExecutorDocker) -> None:
 
-        cmd: Command = Command(args=["whoami"])
+        cmd: CommandBase = CommandBase(args=["whoami"])
 
         execution: ExecutionBase = executor.execute(cmd)
 

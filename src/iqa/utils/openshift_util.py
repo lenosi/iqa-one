@@ -23,8 +23,9 @@ Utility class to help executing OpenShift standard operations
 import logging
 from typing import Any, Callable
 
-from iqa.system.executor import Executor
-from iqa.system.executor import Execution, Command
+from iqa.system.executor import ExecutorBase
+from iqa.system.executor import ExecutionBase
+from iqa.system.command.command_base import CommandBase
 
 
 class OpenShiftUtil:
@@ -34,9 +35,9 @@ class OpenShiftUtil:
 
     TIMEOUT: int = 30
 
-    def __init__(self, executor: Executor, url: str, token: str) -> None:
+    def __init__(self, executor: ExecutorBase, url: str, token: str) -> None:
         self._logger: logging.Logger = logging.getLogger(self.__class__.__module__)
-        self.executor: Executor = executor
+        self.executor: ExecutorBase = executor
         self.url: str = url
         self.token: str = token
 
@@ -54,14 +55,14 @@ class OpenShiftUtil:
 
         return wrap
 
-    def login(self, timeout=TIMEOUT) -> Execution:
+    def login(self, timeout=TIMEOUT) -> ExecutionBase:
         """
         Log in to the defined OpenShift URL using the related token.
         It waits for a max of "timeout" seconds before timing out.
         :param timeout:
         :return: The execution result.
         """
-        cmd_login = Command(
+        cmd_login = CommandBase(
             args=[
                 'oc',
                 'login',
@@ -74,7 +75,7 @@ class OpenShiftUtil:
             stderr=True,
             stdout=True,
         )
-        execution: Execution = self.executor.execute(cmd_login)
+        execution: ExecutionBase = self.executor.execute(cmd_login)
         execution.wait()
         if not execution.completed_successfully():
             self._logger.debug(
@@ -83,7 +84,7 @@ class OpenShiftUtil:
         return execution
 
     @login_first
-    def scale(self, replicas: int, deployment: str) -> Execution:
+    def scale(self, replicas: int, deployment: str) -> ExecutionBase:
         """
         Perform oc scale, setting the number of replicas provided for the given deployment name.
         It enforces that the "oc login" is executed first.
@@ -91,13 +92,13 @@ class OpenShiftUtil:
         :param deployment:
         :return: The execution result.
         """
-        cmd_scale_up = Command(
+        cmd_scale_up = CommandBase(
             args=['oc', 'scale', '--replicas=%d' % replicas, 'dc', deployment],
             timeout=30,
             stderr=True,
             stdout=True,
         )
-        execution: Execution = self.executor.execute(cmd_scale_up)
+        execution: ExecutionBase = self.executor.execute(cmd_scale_up)
         execution.wait()
         if not execution.completed_successfully():
             self._logger.debug(

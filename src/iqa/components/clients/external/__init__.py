@@ -1,7 +1,7 @@
 import logging
 
 from iqa.components.clients.external.client_external import ClientExternal
-from iqa.system.executor import Executor
+from iqa.system.executor import ExecutorBase
 from iqa.system.node.node import Node
 
 
@@ -11,7 +11,7 @@ class ClientFactory(object):
 
     @staticmethod
     def create_clients(
-        implementation: str, node: Node, executor: Executor, **kwargs
+        implementation: str, node: Node, executor: ExecutorBase, **kwargs
     ) -> list:
         for cl in ClientExternal.__subclasses__():
 

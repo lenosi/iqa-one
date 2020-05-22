@@ -7,9 +7,9 @@ from typing import Union, Optional
 import dpath.util
 import yaml
 
-from iqa.system.command.command_ansible import CommandAnsible
-from iqa.system.command.command_base import Command
-from iqa.system.executor import Execution
+from iqa.system.command.command_ansible import CommandBaseAnsible
+from iqa.system.command.command_base import CommandBase
+from iqa.system.executor import ExecutionBase
 from iqa.system.node import NodeAnsible, NodeLocal
 from iqa.system.node.node_docker import NodeDocker
 from iqa.utils.iqa_exceptions import IQAConfigurationException
@@ -116,10 +116,10 @@ class Configuration(object):
     def restore_config(self) -> None:
         self.apply_config(self.original_config_file)
 
-    def copy_configuration_files(self) -> Execution:
-        cmd_copy_files: Command = Command(args=[])
+    def copy_configuration_files(self) -> ExecutionBase:
+        cmd_copy_files: CommandBase = CommandBase(args=[])
         if isinstance(self.component.node, NodeAnsible):
-            cmd_copy_files = CommandAnsible(
+            cmd_copy_files = CommandBaseAnsible(
                 ansible_module='synchronize',
                 ansible_args='src=%s dest=%s'
                 % (self.local_config_dir, self.node_config_dir),
@@ -128,7 +128,7 @@ class Configuration(object):
                 timeout=20,
             )
         elif isinstance(self.component.node, NodeLocal):
-            cmd_copy_files = Command([], stdout=True, timeout=20)
+            cmd_copy_files = CommandBase([], stdout=True, timeout=20)
         elif isinstance(self.component.node, NodeDocker):
             raise IQAConfigurationException(
                 'Unable to change configuration on docker node'

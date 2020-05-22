@@ -1,5 +1,5 @@
 from iqa.abstract.server.broker import Broker
-from iqa.system.executor import Executor
+from iqa.system.executor import ExecutorBase
 from iqa.system.node.node import Node
 from iqa.system.service.service import Service
 
@@ -9,7 +9,7 @@ class BrokerFactory(object):
     def create_broker(
         implementation: str,
         node: Node,
-        executor: Executor,
+        executor: ExecutorBase,
         service_impl: Service,
         **kwargs
     ):

@@ -5,8 +5,8 @@ from typing import Union, Optional
 
 from typing.re import Pattern
 
-from iqa.system.command.command_ansible import CommandAnsible
-from iqa.system.command.command_base import Command
+from iqa.system.command.command_ansible import CommandBaseAnsible
+from iqa.system.command.command_base import CommandBase
 from iqa.system.executor import ExecutorBase, ExecutorAnsible, ExecutionBase
 from iqa.system.service.service import Service, ServiceStatus
 
@@ -47,7 +47,7 @@ class ServiceSystemD(Service):
         # (dead)
 
         # On RHEL7> service is automatically redirected to systemctl
-        cmd_status: Command = Command(
+        cmd_status: CommandBase = CommandBase(
             ['systemctl', '--no-pager', 'status', self.name],
             stdout=True,
             timeout=self.TIMEOUT,
@@ -106,7 +106,7 @@ class ServiceSystemD(Service):
         """
         if isinstance(self.executor, ExecutorAnsible):
             state = service_state.ansible_state
-            return CommandAnsible(
+            return CommandBaseAnsible(
                 'name=%s state=%s' % (self.name, state),
                 ansible_module='systemd',
                 stdout=True,
@@ -114,7 +114,7 @@ class ServiceSystemD(Service):
             )
         else:
             state = service_state.system_state
-            return Command(
+            return CommandBase(
                 ['systemctl', '--no-pager', state, self.name],
                 stdout=True,
                 timeout=self.TIMEOUT,

@@ -3,8 +3,8 @@ from typing import Optional
 from iqa.abstract.client.messaging_client import MessagingClient
 from iqa.abstract.listener import Listener
 from iqa.components.abstract.component import Component
-from iqa.components.clients.external.command.client_command import ClientCommand
-from iqa.system.executor import Execution
+from iqa.components.clients.external.command.client_command import ClientCommandBase
+from iqa.system.executor import ExecutionBase
 from iqa.system.node.node import Node
 
 
@@ -19,8 +19,8 @@ class ClientExternal(Component, MessagingClient):
 
     def __init__(self, name: str, node: Node, **kwargs) -> None:
         super(ClientExternal, self).__init__(name, node)
-        self.execution: Optional[Execution] = None
-        self._command: ClientCommand = ClientCommand([])
+        self.execution: Optional[ExecutionBase] = None
+        self._command: ClientCommandBase = ClientCommandBase([])
         self._url: Optional[str] = None
         self.reset_command()
 
@@ -29,7 +29,7 @@ class ClientExternal(Component, MessagingClient):
             self.call_if_all_arguments_in_kwargs(func, **kwargs)
 
     @property
-    def command(self) -> ClientCommand:
+    def command(self) -> ClientCommandBase:
         return self._command
 
     def reset_command(self) -> None:
@@ -60,7 +60,7 @@ class ClientExternal(Component, MessagingClient):
         daemon: bool = False,
         timeout: int = 0,
         encoding: str = 'utf-8',
-    ) -> ClientCommand:
+    ) -> ClientCommandBase:
         """
         Must return a ClientCommand implementation for the command that is related
         with the concrete client.

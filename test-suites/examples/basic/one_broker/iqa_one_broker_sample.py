@@ -9,7 +9,7 @@ import time
 from iqa.system.service.service import ServiceStatus
 from iqa.abstract.server.broker import Broker
 from iqa.components.abstract.server.server_component import ServerComponent
-from iqa.utils.tcp_util import TcpUtil
+from iqa.utils.tcp_util import is_tcp_port_available
 from iqa.instance.instance import Instance
 
 DELAY: int = 10
@@ -64,7 +64,7 @@ for broker in iqa.brokers:  # type: (ServerComponent, Broker)
             if attempt == MAX_ATTEMPTS-1:
                 print("     broker is not reachable after %d attempts" % MAX_ATTEMPTS)
 
-            if TcpUtil.is_tcp_port_available(broker.web_port, host=broker.node.get_ip()):
+            if is_tcp_port_available(broker.web_port, host=broker.node.get_ip()):
                 break
 
             time.sleep(DELAY)

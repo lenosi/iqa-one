@@ -6,7 +6,7 @@ import logging
 import re
 from typing import Union
 
-from iqa.system.command.command_ansible import CommandAnsible
+from iqa.system.command.command_ansible import CommandBaseAnsible
 from iqa.system.executor import ExecutorBase, ExecutionBase
 from iqa.system.node.node import Node
 
@@ -20,7 +20,7 @@ class NodeAnsible(Node):
 
     def ping(self) -> bool:
         """Send ping to Ansible node"""
-        cmd_ping: CommandAnsible = CommandAnsible(
+        cmd_ping: CommandBaseAnsible = CommandBaseAnsible(
             ansible_module='ping', stdout=True, timeout=20
         )
         execution: ExecutionBase = self.executor.execute(cmd_ping)
@@ -33,7 +33,7 @@ class NodeAnsible(Node):
         if self.ip:
             return self.ip
 
-        cmd_ping: CommandAnsible = CommandAnsible(
+        cmd_ping: CommandBaseAnsible = CommandBaseAnsible(
             ansible_module='setup',
             ansible_args='filter=ansible_default_ipv4',
             stdout=True,

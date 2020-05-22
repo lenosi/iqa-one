@@ -1,6 +1,6 @@
 from iqa.abstract.listener import Listener
 from iqa.components.clients.external import ClientExternal
-from iqa.components.clients.external.command.client_command import ClientCommand
+from iqa.components.clients.external.command.client_command import ClientCommandBase
 from iqa.components.protocols.amqp import AMQP10
 from iqa.system.node.node import Node
 
@@ -22,7 +22,7 @@ class ClientNodeJS(ClientExternal):
         daemon: bool = False,
         timeout: int = 0,
         encoding: str = 'utf-8',
-    ) -> ClientCommand:
+    ) -> ClientCommandBase:
         pass
 
     def _set_url(self, url: str):

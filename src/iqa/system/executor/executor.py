@@ -1,7 +1,7 @@
 import logging
 from abc import ABC, abstractmethod
 
-from iqa.system.command.command_base import Command
+from iqa.system.command.command_base import CommandBase
 from iqa.system.executor.execution import ExecutionBase
 
 logger = logging.getLogger(__name__)
@@ -18,7 +18,7 @@ class ExecutorBase(ABC):
     def __init__(self, **kwargs) -> None:
         self._logger: logging.Logger = logging.getLogger(self.__class__.__module__)
 
-    def execute(self, command: Command) -> ExecutionBase:
+    def execute(self, command: CommandBase) -> ExecutionBase:
         """
         Executes the given command differently based on
         concrete implementation of this generic Executor.
@@ -49,7 +49,7 @@ class ExecutorBase(ABC):
         return execution
 
     @abstractmethod
-    def _execute(self, command: Command) -> ExecutionBase:
+    def _execute(self, command: CommandBase) -> ExecutionBase:
         """
         Abstract method that must be implemented by child classes.
         :param command:

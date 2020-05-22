@@ -4,7 +4,7 @@ import tempfile
 import threading
 from typing import Union, Optional, IO
 
-from iqa.system.command.command_base import Command
+from iqa.system.command.command_base import CommandBase
 from iqa.system.executor.execution import ExecutionBase, ExecutionException
 from iqa.system.executor.executor import ExecutorBase
 
@@ -21,7 +21,7 @@ class ExecutionProcess(ExecutionBase):
     """
 
     def __init__(
-        self, command: Command, executor: ExecutorBase, modified_args: list = None, env=None
+        self, command: CommandBase, executor: ExecutorBase, modified_args: list = None, env=None
     ) -> None:
         """
         Instance is initialized with the command that was effectively

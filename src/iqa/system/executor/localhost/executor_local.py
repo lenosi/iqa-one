@@ -1,12 +1,12 @@
 from iqa.system.executor import Execution
-from iqa.system.executor import Executor
+from iqa.system.executor import ExecutorBase
 
 """
 Runs a local command using SSH CLI.
 """
 
 
-class ExecutorLocal(Executor):
+class ExecutorLocal(ExecutorBase):
     """
     Executes a given command locally.
     """

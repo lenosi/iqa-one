@@ -1,10 +1,10 @@
 import os
 
-from iqa.system.command.command_base import Command
-from iqa.system.executor import Executor
+from iqa.system.command.command_base import CommandBase
+from iqa.system.executor import ExecutorBase
 
 
-class ExecutorKubernetes(Executor):
+class ExecutorKubernetes(ExecutorBase):
     """
     Executor that can be used to run Commands in a Pod running on a Kubernetes cluster.
     This Executor uses the ExecutionKubernetes to run commands through the Kubernetes Client API.
@@ -65,7 +65,7 @@ class ExecutorKubernetes(Executor):
     def implementation(self) -> str:
         return 'kubernetes'
 
-    def _execute(self, command: Command):
+    def _execute(self, command: CommandBase):
         from iqa.system.executor.kubernetes.execution_kubernetes import ExecutionKubernetes
 
         return ExecutionKubernetes(command, self)

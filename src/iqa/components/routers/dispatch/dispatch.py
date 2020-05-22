@@ -3,8 +3,8 @@ from typing import Optional, Union, List
 from iqa.abstract.listener import Listener
 from iqa.abstract.server.router import Router
 from iqa.components.abstract.server.server_component import ServerComponent
-from iqa.system.command.command_base import Command
-from iqa.system.executor import Execution
+from iqa.system.command.command_base import CommandBase
+from iqa.system.executor import ExecutionBase
 from iqa.system.node.node import Node
 from iqa.utils.types import ManagementClientSubtype
 from .config import Config
@@ -82,8 +82,8 @@ class Dispatch(ServerComponent, Router):
         if self._version:
             return self._version
         else:
-            cmd = Command(['qdrouterd', '-v'], stdout=True)
-            cmd_exec: Execution = self.node.execute(cmd)
+            cmd = CommandBase(['qdrouterd', '-v'], stdout=True)
+            cmd_exec: ExecutionBase = self.node.execute(cmd)
             return cmd_exec.read_stdout(lines=False)
 
     def set_credentials(self, user: str = None, password: str = None) -> None:
