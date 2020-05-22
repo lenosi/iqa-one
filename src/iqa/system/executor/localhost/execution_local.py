@@ -5,8 +5,8 @@ import threading
 from typing import Union, Optional, IO
 
 from iqa.system.command.command_base import Command
-from iqa.system.executor.execution import Execution, ExecutionException
-from iqa.system.executor.executor import Executor
+from iqa.system.executor.execution import ExecutionBase, ExecutionException
+from iqa.system.executor.executor import ExecutorBase
 
 from iqa.utils.process import Process
 from iqa.utils.timeout import TimeoutCallback
@@ -14,14 +14,14 @@ from iqa.utils.timeout import TimeoutCallback
 logger: logging.Logger = logging.getLogger(__name__)
 
 
-class ExecutionProcess(Execution):
+class ExecutionProcess(ExecutionBase):
     """
     Represents a command Execution that is performed by a Process (subprocess.Popen child).
     Executors that want to run a given command as a Process must use this Execution strategy.
     """
 
     def __init__(
-        self, command: Command, executor: Executor, modified_args: list = None, env=None
+        self, command: Command, executor: ExecutorBase, modified_args: list = None, env=None
     ) -> None:
         """
         Instance is initialized with the command that was effectively

@@ -7,7 +7,7 @@ from iqa.abstract.server.broker import Broker
 from iqa.abstract.server.router import Router
 from iqa.components.abstract.component import Component
 from iqa.components.abstract.management.client import ManagementClient
-from iqa.system.executor import Executor
+from iqa.system.executor.executor import ExecutorBase
 from iqa.system.node.node import Node
 
 BrokerSubtype = TypeVar('BrokerSubtype', bound=Broker)
@@ -19,8 +19,8 @@ ClientType = Union[ClientSubtype, Client]
 ComponentSubtype = TypeVar('ComponentSubtype', bound=Component)
 ComponentType = Union[ComponentSubtype, Component]
 
-ExecutorSubtype = TypeVar('ExecutorSubtype', bound=Executor)
-ExecutorType = Union[ExecutorSubtype, Executor]
+ExecutorSubtype = TypeVar('ExecutorSubtype', bound=ExecutorBase)
+ExecutorType = Union[ExecutorSubtype, ExecutorBase]
 
 ManagementClientSubtype = TypeVar('ManagementClientSubtype', bound=ManagementClient)
 ManagementClientType = Union[ManagementClientSubtype, ManagementClient]

@@ -30,7 +30,7 @@ async def wait_host_port(host, port, duration=5, delay=0.1):
     """Repeatedly try if a port on a host is open until duration seconds passed
 
     Args:
-        host: host ip address or hostname
+        host: host host address or hostname
         port: port number
         duration: Total duration in seconds to wait
         delay: delay in seconds between each try

@@ -8,7 +8,7 @@ import logging
 from typing import Optional, TYPE_CHECKING
 
 from iqa.system.command.command_base import Command
-from iqa.system.executor import Execution
+from iqa.system.executor import ExecutionBase
 from iqa.utils.ping import ping
 
 if TYPE_CHECKING:
@@ -31,7 +31,7 @@ class Node(abc.ABC):
         self._get_ip()
         self._is_reachable()
 
-    def execute(self, command: Command) -> Execution:
+    def execute(self, command: Command) -> ExecutionBase:
         """Execute command using Node's executor"""
         return self.executor.execute(command)
 

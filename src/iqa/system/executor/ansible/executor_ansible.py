@@ -1,6 +1,6 @@
 from iqa.system.command.command_ansible import CommandAnsible
 from iqa.system.command.command_base import Command
-from iqa.system.executor.executor import Executor
+from iqa.system.executor.executor import ExecutorBase
 from iqa.system.executor.localhost.execution_local import ExecutionProcess
 """
 Executor implementation that uses the "ansible" CLI to
@@ -8,7 +8,7 @@ run the given Command instance on the target host.
 """
 
 
-class ExecutorAnsible(Executor):
+class ExecutorAnsible(ExecutorBase):
     """
     Executes the given command using Ansible.
     """
@@ -26,7 +26,7 @@ class ExecutorAnsible(Executor):
     ) -> None:
         """
         Initializes the ExecutorAnsible instance based on provided arguments.
-        When an inventory is provided, the 'ansible_host' can be an ip address or any
+        When an inventory is provided, the 'ansible_host' can be an host address or any
         ansible name (machine or group) within the inventory. If an inventory is not
         provided, then 'ansible_host' must be a valid IP Address or Hostname.
         :param ansible_host:

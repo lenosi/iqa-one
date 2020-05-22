@@ -1,14 +1,14 @@
 import os
 
 from iqa.system.executor.localhost.execution_local import ExecutionProcess
-from iqa.system.executor.executor import Executor
+from iqa.system.executor.executor import ExecutorBase
 
 """
 Runs a command using SSH CLI.
 """
 
 
-class ExecutorSshOld(Executor):
+class ExecutorSshOld(ExecutorBase):
     """
     Executor that runs Command instances via SSH CLI, based on provided
     configuration (user, hostname and port).

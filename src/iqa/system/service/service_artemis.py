@@ -9,8 +9,7 @@ from typing.re import Pattern
 
 from iqa.system.command.command_ansible import CommandAnsible
 from iqa.system.command.command_base import Command
-from iqa.system.executor import Executor, ExecutorAnsible
-from iqa.system.executor import Execution
+from iqa.system.executor import ExecutorBase, ExecutionBase, ExecutorAnsible
 from iqa.system.service.service import ServiceStatus
 from iqa.system.service.service_fake import ServiceFake
 from iqa.utils.tcp_util import is_tcp_port_available
@@ -26,7 +25,7 @@ class ServiceFakeArtemis(ServiceFake):
 
     _logger: logging.Logger = logging.getLogger(__name__)
 
-    def __init__(self, name: Optional[str], executor: Executor, **kwargs):
+    def __init__(self, name: Optional[str], executor: ExecutorBase, **kwargs):
         super().__init__(name, executor)
         self.name: Optional[str] = 'artemis-service'
 
@@ -65,7 +64,7 @@ class ServiceFakeArtemis(ServiceFake):
             stdout=True,
             timeout=self.TIMEOUT,
         )
-        execution: Execution = self.executor.execute(cmd_status)
+        execution: ExecutionBase = self.executor.execute(cmd_status)
 
         service_output: Optional[Union[str, list]] = execution.read_stdout()
 
@@ -89,26 +88,26 @@ class ServiceFakeArtemis(ServiceFake):
         ServiceFakeArtemis._logger.debug('Service: %s - Status: UNKNOWN' % self.name)
         return ServiceStatus.UNKNOWN
 
-    def start(self, wait_for_messaging=False) -> Execution:
-        execution: Execution = self.executor.execute(
+    def start(self, wait_for_messaging=False) -> ExecutionBase:
+        execution: ExecutionBase = self.executor.execute(
             self._create_command(self.ServiceSystemState.STARTED)
         )
         self._wait_for_messaging(wait_for_messaging)
         return execution
 
-    def stop(self) -> Execution:
+    def stop(self) -> ExecutionBase:
         return self.executor.execute(
             self._create_command(self.ServiceSystemState.STOPPED)
         )
 
-    def enable(self) -> Execution:
+    def enable(self) -> ExecutionBase:
         return NotImplemented
 
-    def disable(self) -> Execution:
+    def disable(self) -> ExecutionBase:
         return NotImplemented
 
-    def restart(self, wait_for_messaging=False) -> Execution:
-        execution: Execution = self.executor.execute(
+    def restart(self, wait_for_messaging=False) -> ExecutionBase:
+        execution: ExecutionBase = self.executor.execute(
             self._create_command(self.ServiceSystemState.RESTARTED)
         )
         self._wait_for_messaging(wait_for_messaging)

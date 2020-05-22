@@ -7,15 +7,14 @@ import re
 from typing import Union
 
 from iqa.system.command.command_ansible import CommandAnsible
-from iqa.system.executor import Executor
-from iqa.system.executor import Execution
+from iqa.system.executor import ExecutorBase, ExecutionBase
 from iqa.system.node.node import Node
 
 
 class NodeAnsible(Node):
     """Ansible implementation for Node interface."""
 
-    def __init__(self, hostname: str, executor: Executor, ip: str = None) -> None:
+    def __init__(self, hostname: str, executor: ExecutorBase, ip: str = None) -> None:
         super(NodeAnsible, self).__init__(hostname, executor, ip)
         logging.getLogger().info('Initialization of NodeAnsible: %s' % self.hostname)
 
@@ -24,13 +23,13 @@ class NodeAnsible(Node):
         cmd_ping: CommandAnsible = CommandAnsible(
             ansible_module='ping', stdout=True, timeout=20
         )
-        execution: Execution = self.executor.execute(cmd_ping)
+        execution: ExecutionBase = self.executor.execute(cmd_ping)
 
         # True if completed with exit code 0 and stdout has some data
         return execution.completed_successfully() and bool(execution.read_stdout())
 
     def get_ip(self):
-        """Get ip of Ansible node"""
+        """Get host of Ansible node"""
         if self.ip:
             return self.ip
 
@@ -41,7 +40,7 @@ class NodeAnsible(Node):
             stderr=True,
             timeout=20,
         )
-        execution: Execution = self.executor.execute(cmd_ping)
+        execution: ExecutionBase = self.executor.execute(cmd_ping)
         execution.wait()
 
         if not execution.completed_successfully() or not execution.read_stdout():

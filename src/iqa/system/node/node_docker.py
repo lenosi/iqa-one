@@ -45,7 +45,7 @@ class NodeDocker(Node):
 
     def _get_container(self, timeout=3.0, pause=0.5, docker_host: str = ''):
         """Get Container instance"""
-        logger.debug('Retrieving %s container\'s ip of %s docker host.' % (self.hostname, self.docker_network))
+        logger.debug('Retrieving %s container\'s host of %s docker host.' % (self.hostname, self.docker_network))
         ref = default_timer()
         now = ref
         while (now - ref) < timeout:
@@ -65,8 +65,8 @@ class NodeDocker(Node):
         raise Exception("Timeout reached while waiting on!")
 
     def _get_ip(self) -> None:
-        """Get ip of Docker node"""
-        logger.debug('Retrieving %s container\'s ip for network: %s' % (self.hostname, self.docker_network))
+        """Get host of Docker node"""
+        logger.debug('Retrieving %s container\'s host for network: %s' % (self.hostname, self.docker_network))
         try:
             self.ip: str = get_container_ip(
                 container=self.container,
@@ -74,5 +74,5 @@ class NodeDocker(Node):
             )
         except Exception or APIError or NotFound:
             logger.info(
-                'Unable to get container ip for: %s' % self.hostname
+                'Unable to get container host for: %s' % self.hostname
             )

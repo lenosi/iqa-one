@@ -2,8 +2,8 @@ from abc import ABC, abstractmethod
 from enum import Enum
 from typing import Optional
 
-from iqa.system.executor import Executor
-from iqa.system.executor import Execution
+from iqa.system.executor import ExecutorBase
+from iqa.system.executor import ExecutionBase
 
 
 class ServiceStatus(Enum):
@@ -20,9 +20,9 @@ class Service(ABC):
 
     TIMEOUT: int = 30
 
-    def __init__(self, name: Optional[str], executor: Executor) -> None:
+    def __init__(self, name: Optional[str], executor: ExecutorBase) -> None:
         self.name: Optional[str] = name
-        self.executor: Executor = executor
+        self.executor: ExecutorBase = executor
 
     @abstractmethod
     def status(self) -> ServiceStatus:
@@ -34,21 +34,21 @@ class Service(ABC):
         return NotImplemented
 
     @abstractmethod
-    def start(self) -> Execution:
+    def start(self) -> ExecutionBase:
         return NotImplemented
 
     @abstractmethod
-    def stop(self) -> Execution:
+    def stop(self) -> ExecutionBase:
         return NotImplemented
 
     @abstractmethod
-    def restart(self) -> Execution:
+    def restart(self) -> ExecutionBase:
         return NotImplemented
 
     @abstractmethod
-    def enable(self) -> Optional[Execution]:
+    def enable(self) -> Optional[ExecutionBase]:
         return NotImplemented
 
     @abstractmethod
-    def disable(self) -> Optional[Execution]:
+    def disable(self) -> Optional[ExecutionBase]:
         return NotImplemented

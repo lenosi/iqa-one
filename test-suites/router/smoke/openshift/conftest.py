@@ -4,14 +4,14 @@ from _pytest.python import Metafunc
 
 def pytest_addoption(parser: Parser) -> None:
     """
-    This particular suite requires that the router1 ip address is informed,
+    This particular suite requires that the router1 host address is informed,
     as it is used internally in the related inventory files.
 
     :param parser:
     :return:
     """
     # Router 1 IP is a mandatory argument
-    parser.addoption("--router1-ip", action="store", required=True,
+    parser.addoption("--router1-host", action="store", required=True,
                      help="Openshift cluster IP where router is deployed")
 
 

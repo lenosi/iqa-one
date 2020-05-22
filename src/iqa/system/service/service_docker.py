@@ -8,7 +8,7 @@ from iqa.system.command.command_ansible import CommandAnsible
 from iqa.system.command.command_base import Command
 from iqa.system.command.command_container import CommandContainer
 from iqa.system.executor import ExecutorAnsible, ExecutorDocker
-from iqa.system.executor import Execution
+from iqa.system.executor import ExecutionBase
 from iqa.system.service.service import Service, ServiceStatus
 from iqa.utils.docker_util import get_container
 
@@ -61,29 +61,29 @@ class ServiceDocker(Service):
 
         return ServiceStatus.UNKNOWN
 
-    def start(self) -> Execution:
+    def start(self) -> ExecutionBase:
         return self.executor.execute(
             self._create_command(self.ServiceDockerState.STARTED)
         )
 
-    def stop(self) -> Execution:
+    def stop(self) -> ExecutionBase:
         return self.executor.execute(
             self._create_command(self.ServiceDockerState.STOPPED)
         )
 
-    def restart(self) -> Execution:
+    def restart(self) -> ExecutionBase:
         return self.executor.execute(
             self._create_command(self.ServiceDockerState.RESTARTED)
         )
 
-    def enable(self) -> Optional[Execution]:
+    def enable(self) -> Optional[ExecutionBase]:
         """
         Simply ignore it (not applicable to containers)
         :return:
         """
         return None
 
-    def disable(self) -> Optional[Execution]:
+    def disable(self) -> Optional[ExecutionBase]:
         """
         Simply ignore it (not applicable to containers)
         :return:

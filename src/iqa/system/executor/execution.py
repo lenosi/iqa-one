@@ -20,7 +20,7 @@ class ExecutionException(Exception):
     """
 
 
-class Execution(ABC):
+class ExecutionBase(ABC):
     """
     Represents the execution of a process that has been started by an Executor instance.
     It wraps the command that was triggered as well as the executor

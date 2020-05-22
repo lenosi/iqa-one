@@ -1,7 +1,7 @@
 import pytest
 
 from iqa.system.executor.docker.executor_docker import ExecutorDocker
-from iqa.system.executor import Execution
+from iqa.system.executor import ExecutionBase
 from iqa.system.command.command_base import Command
 
 
@@ -19,6 +19,6 @@ class TestExecutorContainer:
 
         cmd: Command = Command(args=["whoami"])
 
-        execution: Execution = executor.execute(cmd)
+        execution: ExecutionBase = executor.execute(cmd)
 
         assert execution.completed_successfully()

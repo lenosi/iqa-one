@@ -1,5 +1,5 @@
 from iqa.system.executor.localhost.execution_local import ExecutionProcess
-from iqa.system.executor.executor import Executor
+from iqa.system.executor.executor import ExecutorBase
 from iqa.system.command.command_base import Command
 from iqa.system.command.command_container import CommandContainer
 
@@ -9,7 +9,7 @@ Docker CLI against a pre-defined container (by name or id).
 """
 
 
-class ExecutorDocker(Executor):
+class ExecutorDocker(ExecutorBase):
     """
     Executor that runs Command instances in a Docker container.
     """

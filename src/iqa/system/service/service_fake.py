@@ -1,8 +1,8 @@
 import abc
 from typing import Optional
 
-from iqa.system.executor import Executor
-from iqa.system.executor import Execution
+from iqa.system.executor import ExecutorBase
+from iqa.system.executor import ExecutionBase
 from .service import Service, ServiceStatus
 
 
@@ -13,10 +13,10 @@ class ServiceFake(Service):
 
     TIMEOUT: int = 30
 
-    def __init__(self, name: Optional[str], executor: Executor):
+    def __init__(self, name: Optional[str], executor: ExecutorBase):
         super().__init__(name, executor)
         self.name: Optional[str] = name
-        self.executor: Executor = executor
+        self.executor: ExecutorBase = executor
 
     @abc.abstractmethod
     def status(self) -> ServiceStatus:
@@ -28,21 +28,21 @@ class ServiceFake(Service):
         return NotImplemented
 
     @abc.abstractmethod
-    def start(self, wait_for_messaging: bool = False) -> Execution:
+    def start(self, wait_for_messaging: bool = False) -> ExecutionBase:
         return NotImplemented
 
     @abc.abstractmethod
-    def stop(self) -> Execution:
+    def stop(self) -> ExecutionBase:
         return NotImplemented
 
     @abc.abstractmethod
-    def restart(self, wait_for_messaging: bool = False) -> Execution:
+    def restart(self, wait_for_messaging: bool = False) -> ExecutionBase:
         return NotImplemented
 
     @abc.abstractmethod
-    def enable(self) -> Execution:
+    def enable(self) -> ExecutionBase:
         return NotImplemented
 
     @abc.abstractmethod
-    def disable(self) -> Execution:
+    def disable(self) -> ExecutionBase:
         return NotImplemented

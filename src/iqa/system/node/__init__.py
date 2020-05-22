@@ -35,7 +35,7 @@ class NodeFactory(object):
             new_node = NodeLocal(hostname, executor, ip)
 
         NodeFactory.logger.info(
-            'Creating %s [hostname=%s, ip=%s]'
+            'Creating %s [hostname=%s, host=%s]'
             % (new_node.__class__.__name__, hostname, ip)
         )
         return new_node

@@ -27,7 +27,7 @@ clients: list = [
 
 def pytest_addoption(parser: Parser) -> None:
     """
-    This particular suite requires that the router1 ip address is informed,
+    This particular suite requires that the router1 host address is informed,
     as it is used internally in the related inventory files.
 
     :param parser:

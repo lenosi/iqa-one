@@ -1,33 +1,24 @@
 import logging
-from abc import ABC
+from abc import ABC, abstractmethod
 
 from iqa.system.command.command_base import Command
-from iqa.system.executor.execution import Execution
+from iqa.system.executor.execution import ExecutionBase
 
 logger = logging.getLogger(__name__)
 
 
-class Executor(ABC):
+class ExecutorBase(ABC):
     """
     Defines the generic Executor class, which is responsible for
     running a given Command instance similarly across different
     implementations.
     """
+    name = NotImplementedError
 
     def __init__(self, **kwargs) -> None:
         self._logger: logging.Logger = logging.getLogger(self.__class__.__module__)
-        self.name: str
 
-    @property
-    def implementation(self):
-        """
-        This property must be defined in each concrete class that can be
-        instantiated according to the implementation name.
-        :return:
-        """
-        raise NotImplementedError
-
-    def execute(self, command: Command) -> Execution:
+    def execute(self, command: Command) -> ExecutionBase:
         """
         Executes the given command differently based on
         concrete implementation of this generic Executor.
@@ -45,7 +36,7 @@ class Executor(ABC):
         self._logger.debug(
             'Executing command with [%s] - %s' % (self.__class__.__name__, command.args)
         )
-        execution: Execution = self._execute(command)
+        execution: ExecutionBase = self._execute(command)
 
         # If command is a not a daemon, wait for it
         if not command.daemon:
@@ -57,7 +48,8 @@ class Executor(ABC):
         # returning execution
         return execution
 
-    def _execute(self, command: Command) -> Execution:
+    @abstractmethod
+    def _execute(self, command: Command) -> ExecutionBase:
         """
         Abstract method that must be implemented by child classes.
         :param command:

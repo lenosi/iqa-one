@@ -166,7 +166,7 @@ def validate_mesh_size(router: RouterType, new_size: int) -> None:
     time.sleep(WAIT_ROUTER_MESH_SECS)
 
     # Query nodes in topology
-    query: RouterQuery = RouterQuery(host=router.node.ip, port=router.port, router=router)
+    query: RouterQuery = RouterQuery(host=router.node.host, port=router.port, router=router)
     node_list: list = query.node()
     logging.debug("List of nodes: %s" % node_list)
 

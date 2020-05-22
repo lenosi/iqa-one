@@ -7,8 +7,8 @@ from iqa.system.executor.docker import *
 from iqa.system.executor.kubernetes import *
 from iqa.system.executor.localhost import *
 from iqa.system.executor.ssh import *
-from iqa.system.executor.execution import Execution
-from iqa.system.executor.executor import Executor
+from iqa.system.executor.execution import ExecutionBase
+from iqa.system.executor.executor import ExecutorBase
 from iqa.utils.types import ExecutorType
 from iqa.utils.utils import get_subclasses
 
@@ -30,7 +30,7 @@ def create_executor(implementation: str, **kwargs) -> ExecutorType:
     try:
         ex: Any = get_subclasses(
             given_name=implementation,
-            in_class=Executor,
+            in_class=ExecutorBase,
             in_class_property='implementation'
         )
         return ex(**kwargs)  # type: ExecutorType

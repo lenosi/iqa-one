@@ -3,7 +3,7 @@ from typing import Optional, TYPE_CHECKING
 
 from iqa.system.command.command_base import Command
 from iqa.system.executor import ExecutorAnsible, ExecutorDocker
-from iqa.system.executor import Execution
+from iqa.system.executor import ExecutionBase
 from iqa.system.service.service import Service
 from .service_artemis import ServiceFakeArtemis
 from .service_docker import ServiceDocker
@@ -34,7 +34,7 @@ class ServiceFactory(object):
     ) -> Service:
         if service_name:
             # Validate if systemd is available
-            svc_cmd_exec: Execution = executor.execute(
+            svc_cmd_exec: ExecutionBase = executor.execute(
                 Command(['pidof', 'systemd'], stdout=True, timeout=30)
             )
             if svc_cmd_exec.completed_successfully():

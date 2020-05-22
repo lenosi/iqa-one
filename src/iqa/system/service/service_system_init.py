@@ -7,8 +7,8 @@ from typing.re import Pattern
 
 from iqa.system.command.command_ansible import CommandAnsible
 from iqa.system.command.command_base import Command
-from iqa.system.executor import Executor, ExecutorAnsible
-from iqa.system.executor import Execution
+from iqa.system.executor import ExecutorBase, ExecutorAnsible
+from iqa.system.executor import ExecutionBase
 from iqa.system.service.service import Service, ServiceStatus
 
 
@@ -19,7 +19,7 @@ class ServiceSystemInit(Service):
 
     _logger: logging.Logger = logging.getLogger(__name__)
 
-    def __init__(self, name: str, executor: Executor):
+    def __init__(self, name: str, executor: ExecutorBase):
         super().__init__(name, executor)
 
     class ServiceSystemState(Enum):
@@ -51,7 +51,7 @@ class ServiceSystemInit(Service):
         cmd_status: Command = Command(
             ['service', self.name, 'status'], stdout=True, timeout=self.TIMEOUT
         )
-        execution: Execution = self.executor.execute(cmd_status)
+        execution: ExecutionBase = self.executor.execute(cmd_status)
 
         service_output: Optional[Union[str, list]] = execution.read_stdout()
 
@@ -71,27 +71,27 @@ class ServiceSystemInit(Service):
         ServiceSystemInit._logger.debug('Service: %s - Status: UNKNOWN' % self.name)
         return ServiceStatus.UNKNOWN
 
-    def start(self) -> Execution:
+    def start(self) -> ExecutionBase:
         return self.executor.execute(
             self._create_command(self.ServiceSystemState.STARTED)
         )
 
-    def stop(self) -> Execution:
+    def stop(self) -> ExecutionBase:
         return self.executor.execute(
             self._create_command(self.ServiceSystemState.STOPPED)
         )
 
-    def restart(self) -> Execution:
+    def restart(self) -> ExecutionBase:
         return self.executor.execute(
             self._create_command(self.ServiceSystemState.RESTARTED)
         )
 
-    def enable(self) -> Execution:
+    def enable(self) -> ExecutionBase:
         return self.executor.execute(
             self._create_command(self.ServiceSystemState.ENABLED)
         )
 
-    def disable(self) -> Execution:
+    def disable(self) -> ExecutionBase:
         return self.executor.execute(
             self._create_command(self.ServiceSystemState.DISABLED)
         )
