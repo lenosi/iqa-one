@@ -1,90 +1,61 @@
-import nest_asyncio
-
 import logging
 import sys
 
 import asyncssh
 import pytest
 
-from iqa.system.executor.asyncssh import ExecutorAsyncSsh, ExecutionAsyncSsh
+from iqa.system.executor.asyncssh import ConnectionAsyncSsh
 from iqa.system.node import NodeDocker
-
-from asyncio.events import AbstractEventLoop
 
 from iqa.utils.tcp_util import wait_host_port
 
 
-async def run_client(ip):
-    await wait_host_port(ip, port=22)
-    async with asyncssh.connect(
-            ip,
-            username='root',
-            password='SomeSecretPassword0987',
-            known_hosts=None,
-            client_keys=None
-            # client_keys=[key]
-            ) as conn:
-        result = await conn.run('ls', check=True)
-        print(result.stdout, end='')
-
-
 class TestExecutorSsh:
-
-    # @pytest.fixture
-    # def executor(self, node: NodeDocker) -> ExecutorSshOld:
-    #     executor: ExecutorSshOld = ExecutorSshOld(
-    #         name="Docker executor",
-    #         hostname=node.host,
-    #         ssl_private_key="../../devel/images/centos8-init-sshd/identity"
-    #     )
-    #     return executor
-    #
-    # @pytest.fixture
-    # async def executor(self, node: NodeDocker) -> ExecutorAsyncSsh:
-    #     executor: ExecutorAsyncSsh = ExecutorAsyncSsh(
-    #         name="Docker executor",
-    #         user='root',
-    #         host=node.ip,
-    #         password='SomeSecretPassword0987',
-    #         known_hosts=None,
-    #         client_keys=None
-    #     )
-    #     return executor
-
     @pytest.mark.asyncio
-    async def test_evloop(self, event_loop: AbstractEventLoop, node: NodeDocker):
-        # await asyncio.sleep(0, loop=event_loop)
+    async def test_asyncssh_connection(self, node: NodeDocker):
+        await wait_host_port(node.ip, port=22)
 
-        nest_asyncio.apply()
         try:
-            event_loop.run_until_complete(run_client(ip=node.ip))
-        except (OSError, asyncssh.Error) as exc:
-            sys.exit('SSH connection failed: ' + str(exc))
-        logging.basicConfig(level=logging.DEBUG)
-
-    @pytest.mark.asyncio
-    async def test_asyncssh_session(self, event_loop: AbstractEventLoop, node: NodeDocker):
-        # session = await executor.new_session()
-
-        async def task():
-            executor: ExecutorAsyncSsh = ExecutorAsyncSsh(
-                name="Docker executor",
-                user='root',
+            c = ConnectionAsyncSsh(
                 host=node.ip,
+                port=22,
+                username='root',
                 password='SomeSecretPassword0987',
                 known_hosts=None,
                 client_keys=None
             )
-            session = await executor._send_command('ls')
-            logging.debug(session)
+            await c.connect()
+            await c.disconnect()
+        except (OSError, asyncssh.Error) as exc:
+            sys.exit('SSH connection failed: ' + str(exc))
 
-        event_loop.run_until_complete(task())
-        assert True
-    #
-    # def test_execute(self, executor: ExecutorSshOld, event_loop: AbstractEventLoop) -> None:
-    #     cmd: Command = Command(args=["whoami"], stdout=True)
-    #
-    #     execution: Execution = executor.execute(cmd)
-    #     execution.wait()
-    #     assert execution.completed_successfully()
-    #     assert execution.read_stdout().rstrip().lstrip() == "root"
+    @pytest.mark.asyncio
+    async def test_command(self, node: NodeDocker):
+        await wait_host_port(node.ip, port=22)
+        con = ConnectionAsyncSsh(
+            host=node.ip,
+            port=22,
+            username='root',
+            password='SomeSecretPassword0987',
+            known_hosts=None,
+            client_keys=None
+        )
+        await con.connect()
+        result = await con.run('echo "Hello World!"')
+        await con.disconnect()
+        print(result.stdout, end='')
+
+    @pytest.mark.asyncio
+    async def test_session(self, node: NodeDocker):
+        await wait_host_port(node.ip, port=22)
+        con = ConnectionAsyncSsh(
+            host=node.ip,
+            port=22,
+            username='root',
+            password='SomeSecretPassword0987',
+            known_hosts=None,
+            client_keys=None
+        )
+        await con.connect()
+        session = await con.new_session()
+        await con.disconnect()
