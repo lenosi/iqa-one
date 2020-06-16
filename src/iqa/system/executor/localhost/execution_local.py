@@ -49,7 +49,7 @@ class ExecutionProcess(ExecutionBase):
             self.fh_stderr = subprocess.DEVNULL
 
         # Subprocess instance
-        self._process: Process = None  # type: ignore
+        self._process: Optional[Process] = None  # type: ignore
         self._timeout: Optional[TimeoutCallback] = None
 
         # Initializes the super class which will invoke the run method

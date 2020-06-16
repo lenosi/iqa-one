@@ -12,7 +12,7 @@ from iqa.system.command.command_base import CommandBase
 from iqa.system.executor import ExecutionBase
 from iqa.system.node import NodeAnsible, NodeLocal
 from iqa.system.node.node_docker import NodeDocker
-from iqa.utils.iqa_exceptions import IQAConfigurationException
+from iqa.utils.exceptions import IQAConfigurationException
 
 LOGGER: logging.Logger = logging.getLogger(__name__)
 

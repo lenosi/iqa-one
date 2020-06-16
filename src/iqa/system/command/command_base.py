@@ -13,11 +13,11 @@ class CommandBase:
     def __init__(
         self,
         args: list,
-        stdout: bool = False,
-        stderr: bool = False,
-        daemon: bool = False,
+        stdout: bool = True,
+        stderr: bool = True,
         timeout: int = 0,
         encoding: str = 'utf-8',
+        wait_for: bool = False
     ) -> None:
         """
         Creates an instance of a Command representation that can be passed to
@@ -27,9 +27,6 @@ class CommandBase:
         resulting Execution instance.
         :param stderr: If True stderr will be available at the
         resulting Execution instance.
-        :param daemon: If True process is executed without blocking
-        current thread. When running as a daemon it is important to cancel
-        the execution timer when a timeout value is provided.
         :param timeout: If a positive number provided, the process
         will be terminated on timeout and the registered timeout
         callbacks will be invoked.
@@ -38,9 +35,9 @@ class CommandBase:
         self._args: list = args
         self.stdout: bool = stdout
         self.stderr: bool = stderr
-        self.daemon: bool = daemon
         self.timeout: int = timeout
         self.encoding: str = encoding
+        self.wait_for: bool = wait_for
 
         self._timeout_callbacks: list = []
         self._interrupt_callbacks: list = []
@@ -54,6 +51,9 @@ class CommandBase:
     @args.setter
     def args(self, args):
         self._args = args
+
+    def __str__(self):
+        return " ".join(self.args)
 
     def add_timeout_callback(self, callback_method) -> None:
         """
@@ -100,7 +100,7 @@ class CommandBase:
         """
         self._post_exec_hooks.append(post_exec_hook_method)
 
-    def on_timeout(self, execution) -> None:
+    async def on_timeout(self, execution) -> None:
         """
         Called by the Execution in case it times out. This method
         will call all registered timeout callbacks.
@@ -110,7 +110,7 @@ class CommandBase:
         for timeout_callback in self._timeout_callbacks:
             timeout_callback(execution)
 
-    def on_interrupt(self, execution) -> None:
+    async def on_interrupt(self, execution) -> None:
         """
         Called by the Execution instance in case it gets interrupted.
         Once interrupted, this method will call all registered
@@ -121,7 +121,7 @@ class CommandBase:
         for interrupt_callback in self._interrupt_callbacks:
             interrupt_callback(execution)
 
-    def on_pre_execution(self, executor) -> None:
+    async def on_pre_execution(self, executor) -> None:
         """
         This is called internally by the Executor when the execute()
         method is invoked, prior to creating the Execution instance.
@@ -132,7 +132,7 @@ class CommandBase:
         for pre_exec_hook in self._pre_exec_hooks:
             pre_exec_hook(self, executor)
 
-    def on_post_execution(self, execution) -> None:
+    async def on_post_execution(self, execution) -> None:
         """
         This is called internally by the Executor after Execution
         instance is created (and started), causing all registered

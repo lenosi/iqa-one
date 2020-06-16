@@ -10,7 +10,7 @@ from iqa.components.brokers.broker_config import BrokerConfiguration
 from iqa.system.executor import ExecutorBase
 from iqa.system.executor import ExecutionBase
 from iqa.system.service import ServiceFakeArtemis
-from iqa.utils.iqa_exceptions import IQAConfigurationException
+from iqa.utils.exceptions import IQAConfigurationException
 from iqa.utils.utils import remove_prefix
 
 

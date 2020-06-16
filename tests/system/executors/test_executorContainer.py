@@ -15,10 +15,12 @@ class TestExecutorContainer:
         )
         return executor
 
-    def test_execute(self, executor: ExecutorDocker) -> None:
+    @pytest.mark.asyncio
+    async def test_execute(self, executor: ExecutorDocker) -> None:
 
         cmd: CommandBase = CommandBase(args=["whoami"])
 
-        execution: ExecutionBase = executor.execute(cmd)
+        execution: ExecutionBase = await executor.execute(cmd)
+        await execution.wait()
 
         assert execution.completed_successfully()

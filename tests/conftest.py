@@ -2,7 +2,7 @@ import logging
 import os
 import pytest
 
-from iqa.system.executor import ExecutorDocker
+from iqa.system.executor.docker.executor_docker import ExecutorDocker
 from iqa.system.node import NodeDocker
 from iqa.system.node.node import Node
 

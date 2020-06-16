@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 from iqa.system.command.command_base import CommandBase
 from iqa.system.executor.execution import ExecutionBase
 
-logger = logging.getLogger(__name__)
+from iqa.logger import logger
 
 
 class ExecutorBase(ABC):
@@ -16,9 +16,9 @@ class ExecutorBase(ABC):
     name = NotImplementedError
 
     def __init__(self, **kwargs) -> None:
-        self._logger: logging.Logger = logging.getLogger(self.__class__.__module__)
+        self._logger: logging.Logger = logger
 
-    def execute(self, command: CommandBase) -> ExecutionBase:
+    async def execute(self, command: CommandBase) -> ExecutionBase:
         """
         Executes the given command differently based on
         concrete implementation of this generic Executor.
@@ -29,27 +29,27 @@ class ExecutorBase(ABC):
         :return:
         """
 
-        # Call pre-execution hooks
-        command.on_pre_execution(self)
+        # # Call pre-execution hooks
+        # await command.on_pre_execution(self)
 
         # Delegate execution to concrete Executor
         self._logger.debug(
             'Executing command with [%s] - %s' % (self.__class__.__name__, command.args)
         )
-        execution: ExecutionBase = self._execute(command)
+        execution: ExecutionBase = await self._execute(command)
 
-        # If command is a not a daemon, wait for it
-        if not command.daemon:
-            execution.wait()
+        # # If command is a not a daemon, wait for it
+        # if command.wait_for:
+        #     await execution.wait()
 
-        # Processing post-execution hooks
-        command.on_post_execution(execution)
+        # # Processing post-execution hooks
+        # await command.on_post_execution(execution)
 
         # returning execution
         return execution
 
     @abstractmethod
-    def _execute(self, command: CommandBase) -> ExecutionBase:
+    async def _execute(self, command: CommandBase) -> ExecutionBase:
         """
         Abstract method that must be implemented by child classes.
         :param command:

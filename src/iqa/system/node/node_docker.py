@@ -9,7 +9,7 @@ from timeit import default_timer
 from docker.errors import APIError, NotFound
 from docker.models.containers import Container
 
-from iqa.system.executor import ExecutorDocker
+from iqa.system.executor.docker.executor_docker import ExecutorDocker
 from iqa.system.node.node import Node
 from iqa.utils.docker_util import get_container, get_container_ip
 

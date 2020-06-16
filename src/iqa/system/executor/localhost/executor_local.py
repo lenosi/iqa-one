@@ -1,5 +1,5 @@
-from iqa.system.executor import Execution
-from iqa.system.executor import ExecutorBase
+from iqa.system.command import CommandBase
+from iqa.system.executor import ExecutorBase, ExecutionBase
 
 """
 Runs a local command using SSH CLI.
@@ -17,5 +17,6 @@ class ExecutorLocal(ExecutorBase):
         super(ExecutorLocal, self).__init__(**kwargs)
         self.name: str = name
 
-    def _execute(self, command) -> Execution:
-        return Execution(command, self)  # type: ignore
+    async def _execute(self, command: CommandBase) -> ExecutionBase:
+        ex = ExecutionBase(command)
+        return ex

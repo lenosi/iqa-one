@@ -6,7 +6,6 @@ from asyncssh import SSHClientConnection, EXTENDED_DATA_STDERR
 from asyncssh.stream import SSHClientStreamSession, SSHWriter, SSHReader
 
 from iqa.abstract.connection import ConnectionBase
-from iqa.logger import logger
 from iqa.system.executor.asyncssh.session import AsyncSSHSession
 from iqa.utils.exceptions import IQAHostDisconnectException
 
@@ -15,8 +14,7 @@ class ConnectionAsyncSsh(ConnectionBase):
     """ SSH Connection Class """
 
     def __init__(self, host: str, port: int = 22, **kwargs) -> None:
-        self._host: str = host
-        self._port: int = port
+        super().__init__(host, port, **kwargs)
         self._conn_dict: dict = kwargs
         self._conn: Optional[SSHClientConnection] = None
         self.sessions: List[AsyncSSHSession] = []
@@ -60,10 +58,6 @@ class ConnectionAsyncSsh(ConnectionBase):
         self._logger.info("Host %s: Disconnecting", self.host)
         self._conn.close()
         await self._conn.wait_closed()
-
-    @property
-    def _logger(self) -> logging.Logger:
-        return logger.getChild("SSHConnection")
 
     @property
     def host(self) -> str:

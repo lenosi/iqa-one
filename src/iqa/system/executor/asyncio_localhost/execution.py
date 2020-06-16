@@ -1,13 +1,14 @@
+import asyncio
 import logging
-
-import iqa.logger
-from abc import ABC, abstractmethod
+from asyncio.subprocess import Process
 from typing import Optional, Union
 
 from iqa.system.command.command_base import CommandBase
+from iqa.system.executor import ExecutionBase
+
 from iqa.utils.timeout import TimeoutCallback
 
-logger = iqa.logger.logger
+logger = logging.getLogger(__name__)
 
 
 """
@@ -16,13 +17,7 @@ by the Executor implementations when a command is executed.
 """
 
 
-class ExecutionException(Exception):
-    """
-    Exception thrown if a given Execution instance could be created
-    """
-
-
-class ExecutionBase(ABC):
+class ExecutionAsyncio(ExecutionBase):
     """
     Represents the execution of a process that has been started by an Executor instance.
     It wraps the command that was triggered as well as the executor
@@ -37,72 +32,91 @@ class ExecutionBase(ABC):
         :param modified_args:
         :param env:
         """
-        self.command: CommandBase = command
-        self.stdout: Optional = None
-        self.stderr: Optional = None
-        self.env: dict = env
+        super().__init__(command, modified_args, env)
+        self._proc: Optional[Process] = None
 
-        # Flags to control whether execution timed out or was interrupted by user
-        self.timed_out: bool = False
-        self.interrupted: bool = False
-        self.failure: bool = False
+    async def __aenter__(self):
+        await self.run()
 
-        # Adjust time out settings if provided
-        self._timeout: Optional[TimeoutCallback] = None
-        if command.timeout and command.timeout > 0:
-            self._timeout = TimeoutCallback(command.timeout, self._on_timeout)
+    async def __aexit__(self, exc_type, exc, tb):
+        pass
 
-        # Avoids executors from modifying the command
-        self.args: list = self.command.args
-        if modified_args:
-            self.args = modified_args
-
-        self._logger: logging.Logger = logger
-
+    async def run(self):
         self._logger.debug('Executing: %s' % self.args)
+        await self._run()
 
-    @abstractmethod
     async def _run(self) -> None:
         """
         Executes the command with different execution strategies (subprocess or others).
         :return:
         """
-        raise NotImplementedError
 
-    @abstractmethod
+        _stdout = asyncio.subprocess.PIPE if self.command.stdout else None
+        _stderr = asyncio.subprocess.PIPE if self.command.stderr else None
+
+        self._proc = await asyncio.create_subprocess_shell(
+            str(self.command),
+            stdin=asyncio.subprocess.PIPE,
+            stdout=_stdout,
+            stderr=_stderr)
+
+        self.stdout, self.stderr = await self._proc.communicate()
+
     async def wait(self) -> None:
         """
         Waits for command execution to complete.
         :return:
         """
-        raise NotImplementedError
+        await self._proc.wait()
 
-    @abstractmethod
+    @property
+    def return_code(self):
+        return self._proc.returncode
+
     def is_running(self) -> bool:
         """
         Returns True if execution is still running and False otherwise.
         :return:
         """
-        raise NotImplementedError
+        return False if self.return_code else True
 
-    @abstractmethod
     def completed_successfully(self) -> bool:
         """
         Returns True if execution is done and no errors observed or False otherwise.
         :return:
         """
-        raise NotImplementedError
+        return True if self.return_code == 0 else False
 
-    @abstractmethod
     def on_timeout(self) -> None:
         raise NotImplementedError
 
-    @abstractmethod
     def terminate(self) -> None:
         """
         Terminates the execution.
         :return:
         """
+        self._proc.terminate()
+
+    async def read_stdout(self, lines: bool = False) -> Optional[Union[str, list]]:
+        """
+        Returns a string with the whole STDOUT content if the original
+        command has stdout property defined as True. Otherwise
+        None will be returned.
+        :param lines: whether to return stdout as a list of lines
+        :type lines: bool
+        :return: Stdout content as str if lines is False, or as a list
+        """
+        raise NotImplementedError
+
+    async def read_stderr(self, lines: bool = False) -> Optional[Union[str, list]]:
+        """
+        Returns a string with the whole STDERR content if the original
+        command has stderr property defined as True. Otherwise
+        None will be returned.
+        :param lines: whether to return stderr as a list of lines
+        :type lines: bool
+        :return: Stderr content as str if lines is False, or as a list
+       """
         raise NotImplementedError
 
     def _on_timeout(self) -> None:

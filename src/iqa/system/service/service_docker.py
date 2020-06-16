@@ -7,7 +7,8 @@ from docker.errors import APIError, NotFound
 from iqa.system.command.command_ansible import CommandBaseAnsible
 from iqa.system.command.command_base import CommandBase
 from iqa.system.command.command_container import CommandBaseContainer
-from iqa.system.executor import ExecutorAnsible, ExecutorDocker
+from iqa.system.executor.ansible.executor_ansible import ExecutorAnsible
+from iqa.system.executor.docker.executor_docker import ExecutorDocker
 from iqa.system.executor import ExecutionBase
 from iqa.system.service.service import Service, ServiceStatus
 from iqa.utils.docker_util import get_container
@@ -61,18 +62,18 @@ class ServiceDocker(Service):
 
         return ServiceStatus.UNKNOWN
 
-    def start(self) -> ExecutionBase:
-        return self.executor.execute(
+    async def start(self) -> ExecutionBase:
+        return await self.executor.execute(
             self._create_command(self.ServiceDockerState.STARTED)
         )
 
-    def stop(self) -> ExecutionBase:
-        return self.executor.execute(
+    async def stop(self) -> ExecutionBase:
+        return await self.executor.execute(
             self._create_command(self.ServiceDockerState.STOPPED)
         )
 
-    def restart(self) -> ExecutionBase:
-        return self.executor.execute(
+    async def restart(self) -> ExecutionBase:
+        return await self.executor.execute(
             self._create_command(self.ServiceDockerState.RESTARTED)
         )
 

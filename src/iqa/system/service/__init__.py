@@ -2,7 +2,8 @@ import logging
 from typing import Optional, TYPE_CHECKING
 
 from iqa.system.command.command_base import CommandBase
-from iqa.system.executor import ExecutorAnsible, ExecutorDocker
+from iqa.system.executor.docker.executor_docker import ExecutorDocker
+from iqa.system.executor.ansible.executor_ansible import ExecutorAnsible
 from iqa.system.executor import ExecutionBase
 from iqa.system.service.service import Service
 from .service_artemis import ServiceFakeArtemis

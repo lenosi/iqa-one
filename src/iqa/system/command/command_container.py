@@ -19,6 +19,6 @@ class CommandBaseContainer(CommandBase):
         encoding: str = 'utf-8',
     ) -> None:
         super(CommandBaseContainer, self).__init__(
-            args, stdout, stderr, daemon, timeout, encoding
+            args, stdout, stderr, timeout, encoding
         )
         self.docker_command: str = docker_command

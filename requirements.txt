@@ -1,5 +1,7 @@
 cython
 asyncssh
+aiologger
+elasticsearch-async
 nest_asyncio
 requests
 PyYAML

@@ -1,6 +1,8 @@
-from iqa.system.executor.localhost.execution_local import ExecutionProcess
+from typing import Optional
+
 from iqa.system.executor.executor import ExecutorBase
 from iqa.system.command.command_base import CommandBase
+from iqa.system.executor.asyncio_localhost.execution import ExecutionAsyncio
 from iqa.system.command.command_container import CommandBaseContainer
 
 """
@@ -27,14 +29,15 @@ class ExecutorDocker(ExecutorBase):
         self.name: str = name
         self.user: str = user
         self.docker_host: str = ''
+        self._command: Optional[CommandBaseContainer] = None
 
-    def _execute(self, command: CommandBase, user: str = '') -> ExecutionProcess:
+    async def _execute(self, command: CommandBase = None, user: str = '') -> ExecutionAsyncio:
 
         docker_args: list = ['docker']
 
         if isinstance(command, CommandBaseContainer):
             # Logging docker command to use
-            self._logger.debug('Using docker command: %s' % command.docker_command)
+            self._logger.debug('Using docker command: {}'.format(command.docker_command))
             docker_args.append(command.docker_command)
         else:
             docker_args.append('exec')
@@ -52,5 +55,6 @@ class ExecutorDocker(ExecutorBase):
         if self.docker_host:
             env['DOCKER_HOST'] = self.docker_host
 
-        # Set new args
-        return ExecutionProcess(command, self, modified_args=docker_args, env=env)
+        execution = ExecutionAsyncio(command=command, modified_args=docker_args, env=env)
+        await execution.run()
+        return execution

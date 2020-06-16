@@ -1,2 +1,3 @@
-from .executor_asyncssh import ExecutorAsyncSsh
+from .executor import ExecutorAsyncSsh
 from .execution_asyncssh import ExecutionAsyncSsh
+from .connection import ConnectionAsyncSsh

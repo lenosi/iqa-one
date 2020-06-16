@@ -13,7 +13,23 @@ setup(
     license='Apache 2.0',
     description='Messaging testing project',
     setup_requires=['pytest-runner', 'flake8'],
-    tests_require=['pytest', 'pytest-docker', 'nest_asyncio', 'pytest-asyncio', 'mock', 'pytest-mock', 'tox', ],
+    tests_require=[
+        'pytest',
+        'pytest-docker',
+        "pytest-cov",
+        'pytest-asyncio',
+        'mock',
+        'pytest-mock',
+        'nest_asyncio',
+        'tox',
+        "codecov",
+        "asynctest",
+        "freezegun",
+        "mypy",
+        "aiofiles",
+        "uvloop",
+    ],
+
     install_require=[
         'asyncssh'
         'requests',
