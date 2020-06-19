@@ -6,7 +6,6 @@ from docker.errors import APIError, NotFound
 
 from iqa.system.command.command_ansible import CommandBaseAnsible
 from iqa.system.command.command_base import CommandBase
-from iqa.system.command.command_container import CommandBaseContainer
 from iqa.system.executor.ansible.executor_ansible import ExecutorAnsible
 from iqa.system.executor.docker.executor_docker import ExecutorDocker
 from iqa.system.executor import ExecutionBase
@@ -121,8 +120,6 @@ class ServiceDocker(Service):
             )
         elif isinstance(self.executor, ExecutorDocker):
             state = service_state.system_state
-            return CommandBaseContainer(
-                [], docker_command=state, stdout=True, timeout=self.TIMEOUT
-            )
+            return CommandBase(['docker', state, self.executor.container_name])
         else:
             return CommandBase([])

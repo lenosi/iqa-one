@@ -11,7 +11,6 @@ class TestServiceDocker:
     @pytest.fixture
     def service(self, docker_services) -> ServiceDocker:
         executor: ExecutorDocker = ExecutorDocker(
-            name='Docker executor',
             container_name='sshd-container'
         )
 
@@ -38,4 +37,5 @@ class TestServiceDocker:
     async def test_service_stop(self, service: ServiceDocker) -> None:
         stop: ExecutionBase = await service.stop()
         await stop.wait()
+        print(stop.stdout)
         assert service.status() == ServiceStatus.STOPPED

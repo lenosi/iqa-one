@@ -13,7 +13,7 @@ class ExecutorBase(ABC):
     running a given Command instance similarly across different
     implementations.
     """
-    name = NotImplementedError
+    name: str = NotImplementedError
 
     def __init__(self, **kwargs) -> None:
         self._logger: logging.Logger = logger

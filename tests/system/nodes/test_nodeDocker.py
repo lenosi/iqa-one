@@ -15,7 +15,6 @@ class TestNodeDocker:
     def node(self, docker_services) -> Node:
 
         executor: ExecutorDocker = ExecutorDocker(
-            name="Docker executor",
             container_name='sshd-container'
         )
         node: NodeDocker = NodeDocker(hostname="sshd-container", executor=executor)

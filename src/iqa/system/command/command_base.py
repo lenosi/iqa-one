@@ -2,6 +2,7 @@
 Provides representation for Commands that can be executed against
 ExecutorBase instances.
 """
+from typing import Optional
 
 
 class CommandBase:
@@ -17,7 +18,8 @@ class CommandBase:
         stderr: bool = True,
         timeout: int = 0,
         encoding: str = 'utf-8',
-        wait_for: bool = False
+        wait_for: bool = False,
+        env: Optional[dict] = None
     ) -> None:
         """
         Creates an instance of a Command representation that can be passed to
@@ -32,12 +34,17 @@ class CommandBase:
         callbacks will be invoked.
         :param encoding: Encoding when reading stdout and stderr.
         """
+
         self._args: list = args
         self.stdout: bool = stdout
         self.stderr: bool = stderr
         self.timeout: int = timeout
         self.encoding: str = encoding
         self.wait_for: bool = wait_for
+
+        if env is None:
+            env = {}
+        self.env: dict = env
 
         self._timeout_callbacks: list = []
         self._interrupt_callbacks: list = []

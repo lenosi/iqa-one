@@ -1,12 +1,10 @@
 import asyncio
 import logging
 from asyncio.subprocess import Process
-from typing import Optional, Union
+from typing import Optional
 
 from iqa.system.command.command_base import CommandBase
 from iqa.system.executor import ExecutionBase
-
-from iqa.utils.timeout import TimeoutCallback
 
 logger = logging.getLogger(__name__)
 
@@ -54,8 +52,9 @@ class ExecutionAsyncio(ExecutionBase):
         _stdout = asyncio.subprocess.PIPE if self.command.stdout else None
         _stderr = asyncio.subprocess.PIPE if self.command.stderr else None
 
-        self._proc = await asyncio.create_subprocess_shell(
+        self._proc = await asyncio.create_subprocess_exec(
             str(self.command),
+            env=self.env,
             stdin=asyncio.subprocess.PIPE,
             stdout=_stdout,
             stderr=_stderr)
@@ -96,28 +95,6 @@ class ExecutionAsyncio(ExecutionBase):
         :return:
         """
         self._proc.terminate()
-
-    async def read_stdout(self, lines: bool = False) -> Optional[Union[str, list]]:
-        """
-        Returns a string with the whole STDOUT content if the original
-        command has stdout property defined as True. Otherwise
-        None will be returned.
-        :param lines: whether to return stdout as a list of lines
-        :type lines: bool
-        :return: Stdout content as str if lines is False, or as a list
-        """
-        raise NotImplementedError
-
-    async def read_stderr(self, lines: bool = False) -> Optional[Union[str, list]]:
-        """
-        Returns a string with the whole STDERR content if the original
-        command has stderr property defined as True. Otherwise
-        None will be returned.
-        :param lines: whether to return stderr as a list of lines
-        :type lines: bool
-        :return: Stderr content as str if lines is False, or as a list
-       """
-        raise NotImplementedError
 
     def _on_timeout(self) -> None:
         """

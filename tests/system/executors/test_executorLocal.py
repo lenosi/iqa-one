@@ -1,7 +1,7 @@
 import pytest
 
-from iqa.system.executor.asyncio_localhost.executor import ExecutorAsyncio
-from iqa.system.executor.asyncio_localhost.execution import ExecutionAsyncio
+from iqa.system.executor.localhost.executor import ExecutorAsyncio
+from iqa.system.executor.localhost.execution import ExecutionAsyncio
 
 from iqa.system.command.command_base import CommandBase
 
@@ -30,6 +30,8 @@ class TestExecutorContainer:
         cmd: CommandBase = CommandBase(args=["whoami"])
 
         execution: ExecutionAsyncio = ExecutionAsyncio(command=cmd)
+
         await execution.run()
         await execution.wait()
+
         assert execution.completed_successfully()

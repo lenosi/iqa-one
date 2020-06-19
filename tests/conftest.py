@@ -12,7 +12,6 @@ logging.basicConfig(level=logging.DEBUG)
 @pytest.fixture
 def node(docker_services) -> Node:
     executor: ExecutorDocker = ExecutorDocker(
-        name="Docker executor",
         container_name='sshd-container'
     )
     node: NodeDocker = NodeDocker(hostname="sshd-container", executor=executor)

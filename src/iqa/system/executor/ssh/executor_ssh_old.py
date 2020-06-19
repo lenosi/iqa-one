@@ -1,6 +1,6 @@
 import os
 
-from iqa.system.executor.localhost.execution_local import ExecutionProcess
+from iqa.system.executor.localhost_old.execution_local import ExecutionProcess
 from iqa.system.executor.executor import ExecutorBase
 
 """

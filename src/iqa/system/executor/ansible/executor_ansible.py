@@ -1,7 +1,7 @@
 from iqa.system.command.command_ansible import CommandBaseAnsible
 from iqa.system.command.command_base import CommandBase
 from iqa.system.executor.executor import ExecutorBase
-from iqa.system.executor.localhost.execution_local import ExecutionProcess
+from iqa.system.executor.localhost_old.execution_local import ExecutionProcess
 """
 Executor implementation that uses the "ansible" CLI to
 run the given Command instance on the target host.

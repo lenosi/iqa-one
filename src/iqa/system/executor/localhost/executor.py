@@ -1,7 +1,7 @@
 from typing import Optional
 import asyncio
 
-from iqa.system.executor.asyncio_localhost.execution import ExecutionAsyncio
+from iqa.system.executor.localhost.execution import ExecutionAsyncio
 from iqa.system.executor.executor import ExecutorBase
 from iqa.system.command import CommandBase
 

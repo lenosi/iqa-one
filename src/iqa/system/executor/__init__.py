@@ -5,7 +5,7 @@ from iqa.system.executor.ansible import *
 from iqa.system.executor.asyncssh import *
 from iqa.system.executor.docker import *
 from iqa.system.executor.kubernetes import *
-from iqa.system.executor.localhost import *
+from iqa.system.executor.localhost_old import *
 from iqa.system.executor.ssh import *
 from iqa.system.executor.execution import ExecutionBase
 from iqa.system.executor.executor import ExecutorBase

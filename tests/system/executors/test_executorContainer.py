@@ -10,7 +10,6 @@ class TestExecutorContainer:
     @pytest.fixture
     def executor(self, docker_services) -> ExecutorDocker:
         executor: ExecutorDocker = ExecutorDocker(
-            name="Docker executor",
             container_name='sshd-container'
         )
         return executor
@@ -18,9 +17,8 @@ class TestExecutorContainer:
     @pytest.mark.asyncio
     async def test_execute(self, executor: ExecutorDocker) -> None:
 
-        cmd: CommandBase = CommandBase(args=["whoami"])
-
+        cmd: CommandBase = CommandBase(args=["whoami", "&&", "echo", "'Hello World'"])
         execution: ExecutionBase = await executor.execute(cmd)
-        await execution.wait()
 
+        await execution.wait()
         assert execution.completed_successfully()
