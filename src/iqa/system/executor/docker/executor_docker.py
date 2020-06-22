@@ -45,11 +45,11 @@ class ExecutorDocker(ExecutorBase):
         docker_args += command.args
         docker_args.append('"')
 
-        inside_command = self._docker_command('exec', docker_args, command)
+        inside_command = self.docker_command('exec', docker_args, command)
         return inside_command
 
-    async def _docker_command(self, docker_command: Optional[str] = None, docker_args: Optional[list] = None,
-                              command: Optional[CommandBase] = None, docker_options: Optional[list] = None):
+    def docker_command(self, docker_command: Optional[str] = None, docker_args: Optional[list] = None,
+                             command: Optional[CommandBase] = None, docker_options: Optional[list] = None):
         """
 
         Args:
@@ -148,8 +148,13 @@ class ExecutorDocker(ExecutorBase):
         if inside_container:
             cmd = self._command_inside_container(command, user)
         else:
-            cmd = ExecutionAsyncio(command=command_builder, env=env)
+            cmd = command
 
         execution = ExecutionAsyncio(cmd)
         await execution.run()
+        return execution
+
+    async def execute_docker(self, *args, **kwargs):
+        cmd = self.docker_command(*args, **kwargs)
+        execution = await self._execute(command=cmd, inside_container=False)
         return execution
