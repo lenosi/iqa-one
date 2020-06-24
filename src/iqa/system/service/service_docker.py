@@ -120,6 +120,7 @@ class ServiceDocker(Service):
             )
         elif isinstance(self.executor, ExecutorDocker):
             state = service_state.system_state
-            return CommandBase(['docker', state, self.executor.container_name])
+            # return CommandBase(['docker', state, self.executor.container_name])
+            return ExecutorDocker.docker_command(docker_command=state)
         else:
             return CommandBase([])

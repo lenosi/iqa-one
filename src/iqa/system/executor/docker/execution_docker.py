@@ -11,7 +11,7 @@ class ExecutionDocker(ExecutionAsyncio):
         # define environment when docker_host provided
         env = dict()
         if docker_host:
-            env['DOCKER_HOST'] =docker_host
+            env['DOCKER_HOST'] = docker_host
 
         command_builder = CommandBase(args=docker_args, stdout=command.stdout, stderr=command.stderr,
                                       timeout=command.timeout, encoding=command.encoding)

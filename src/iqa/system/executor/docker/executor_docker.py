@@ -49,7 +49,7 @@ class ExecutorDocker(ExecutorBase):
         return inside_command
 
     def docker_command(self, docker_command: Optional[str] = None, docker_args: Optional[list] = None,
-                             command: Optional[CommandBase] = None, docker_options: Optional[list] = None):
+                       command: Optional[CommandBase] = None, docker_options: Optional[list] = None):
         """
 
         Args:
@@ -152,6 +152,7 @@ class ExecutorDocker(ExecutorBase):
 
         execution = ExecutionAsyncio(cmd)
         await execution.run()
+
         return execution
 
     async def execute_docker(self, *args, **kwargs):

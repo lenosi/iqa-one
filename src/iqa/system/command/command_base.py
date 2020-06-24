@@ -107,7 +107,7 @@ class CommandBase:
         """
         self._post_exec_hooks.append(post_exec_hook_method)
 
-    async def on_timeout(self, execution) -> None:
+    def on_timeout(self, execution) -> None:
         """
         Called by the Execution in case it times out. This method
         will call all registered timeout callbacks.
@@ -117,7 +117,7 @@ class CommandBase:
         for timeout_callback in self._timeout_callbacks:
             timeout_callback(execution)
 
-    async def on_interrupt(self, execution) -> None:
+    def on_interrupt(self, execution) -> None:
         """
         Called by the Execution instance in case it gets interrupted.
         Once interrupted, this method will call all registered
@@ -128,7 +128,7 @@ class CommandBase:
         for interrupt_callback in self._interrupt_callbacks:
             interrupt_callback(execution)
 
-    async def on_pre_execution(self, executor) -> None:
+    def on_pre_execution(self, executor) -> None:
         """
         This is called internally by the Executor when the execute()
         method is invoked, prior to creating the Execution instance.
@@ -139,7 +139,7 @@ class CommandBase:
         for pre_exec_hook in self._pre_exec_hooks:
             pre_exec_hook(self, executor)
 
-    async def on_post_execution(self, execution) -> None:
+    def on_post_execution(self, execution) -> None:
         """
         This is called internally by the Executor after Execution
         instance is created (and started), causing all registered
