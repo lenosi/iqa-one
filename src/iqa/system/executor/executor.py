@@ -1,5 +1,6 @@
 import logging
 from abc import ABC, abstractmethod
+from typing import List
 
 from iqa.system.command.command_base import CommandBase
 from iqa.system.executor.execution import ExecutionBase
@@ -17,6 +18,7 @@ class ExecutorBase(ABC):
 
     def __init__(self, **kwargs) -> None:
         self._logger: logging.Logger = logger
+        self._executions: List[ExecutionBase] = []
 
     async def execute(self, command: CommandBase) -> ExecutionBase:
         """

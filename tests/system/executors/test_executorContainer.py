@@ -18,6 +18,7 @@ class TestExecutorContainer:
     async def test_execute(self, executor: ExecutorDocker) -> None:
 
         cmd: CommandBase = CommandBase(args=["whoami", "&&", "echo", "'Hello World'"])
+
         execution: ExecutionBase = await executor.execute(cmd)
 
         await execution.wait()

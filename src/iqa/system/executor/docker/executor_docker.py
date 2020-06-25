@@ -30,7 +30,7 @@ class ExecutorDocker(ExecutorBase):
         self.docker_host: str = ''
         self._command: Optional[CommandBase] = None
 
-    async def _command_inside_container(self, command: CommandBase = None, user: Optional[str] = None):
+    def _command_inside_container(self, command: CommandBase = None, user: Optional[str] = None):
 
         docker_args: list = []
 
@@ -44,7 +44,6 @@ class ExecutorDocker(ExecutorBase):
         docker_args.extend(['sh', '-c', '"'])
         docker_args += command.args
         docker_args.append('"')
-
         inside_command = self.docker_command('exec', docker_args, command)
         return inside_command
 
@@ -53,6 +52,7 @@ class ExecutorDocker(ExecutorBase):
         """
 
         Args:
+            args: Optional list of args used for alternative to 'command'
             docker_command:
                 Management Commands:
                   builder     Manage builds
@@ -155,7 +155,9 @@ class ExecutorDocker(ExecutorBase):
 
         return execution
 
-    async def execute_docker(self, *args, **kwargs):
+    async def execute_docker_cli(self, docker_command: Optional[str] = None, docker_args: Optional[list] = None,
+                                 command: Optional[CommandBase] = None, docker_options: Optional[list] = None,
+                                 *args, **kwargs):
         cmd = self.docker_command(*args, **kwargs)
         execution = await self._execute(command=cmd, inside_container=False)
         return execution
