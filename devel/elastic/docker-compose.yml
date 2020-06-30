@@ -1,0 +1,90 @@
+version: "3.7"
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ES_VERSION}
+    container_name: elasticsearch
+    hostname: elasticsearch
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    environment:
+      - node.name=elasticsearch
+      - bootstrap.memory_lock=true
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    volumes:
+      - data:/usr/share/data
+    ports:
+      - 9200:9200
+    networks:
+      - elastic
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:${ES_VERSION}
+    container_name: kibana
+    hostname: kibana
+    volumes:
+      - data:/usr/share/data
+    ports:
+      - 5601:5601
+    depends_on:
+      - elasticsearch
+    environment:
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+    networks:
+      - elastic
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:${ES_VERSION}
+    container_name: logstash
+    hostname: logstash
+    command: bin/logstash -f /usr/share/logstash/pipeline/logstash.conf --config.reload.automatic
+    volumes:
+      - "/${PWD}/logstash.conf:/usr/share/logstash/pipeline/logstash.conf:Z"
+    networks:
+      - elastic
+
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:${ES_VERSION}
+    container_name: filebeat
+    hostname: filebeat
+    restart: on-failure
+    user: root
+    depends_on:
+      - elasticsearch
+    volumes:
+      - "/var/log/:/var/log/:Z"
+      - "/${PWD}/filebeat.yml:/usr/share/filebeat/filebeat.yml:Z"
+    networks:
+      - elastic
+
+  journalbeat:
+    image: docker.elastic.co/beats/journalbeat:${ES_VERSION}
+    container_name: journalbeat
+    hostname: journalbeat
+    restart: on-failure
+    depends_on:
+      - elasticsearch
+    volumes:
+      - "/var/log/journal/:/var/log/journal/:Z"
+      - "/${PWD}/journalbeat.yml:/usr/share/journalbeat/journalbeat.yml:Z"
+    networks:
+      - elastic
+
+  broker_logging:
+    image: rhmessagingqe/artemis:latest
+    container_name: broker_logging
+    hostname: broker_logging
+    networks:
+      - elastic
+
+volumes:
+  data:
+    driver: local
+
+networks:
+  elastic:
+    name: elastic
+    driver: bridge
