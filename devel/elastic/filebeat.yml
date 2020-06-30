@@ -1,0 +1,20 @@
+filebeat.config.modules:
+  enabled: true
+  path: ${path.config}/modules.d/*.yml
+
+filebeat.modules:
+- module: elasticsearch
+  
+filebeat.inputs:
+- type: log
+  paths:
+    - /var/log/*.log
+
+setup.ilm.enabled: false
+setup.template.enabled: false
+
+setup.kibana:
+  host: "kibana:5601"
+
+output.elasticsearch:
+  hosts: ["elasticsearch:9200"]
