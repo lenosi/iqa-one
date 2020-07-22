@@ -1,3 +1,4 @@
+import os
 from typing import Optional
 
 from iqa.system.executor.executor import ExecutorBase
@@ -44,15 +45,15 @@ class ExecutorDocker(ExecutorBase):
         docker_args.extend(['sh', '-c', '"'])
         docker_args += command.args
         docker_args.append('"')
-        inside_command = self.docker_command('exec', docker_args, command)
+        inside_command = self.docker_command(docker_command='exec', docker_args=docker_args)
         return inside_command
 
     def docker_command(self, docker_command: Optional[str] = None, docker_args: Optional[list] = None,
-                       command: Optional[CommandBase] = None, docker_options: Optional[list] = None):
+                       docker_options: Optional[list] = None):
         """
 
         Args:
-            args: Optional list of args used for alternative to 'command'
+            docker_args: Optional list of args used for alternative to 'command'
             docker_command:
                 Management Commands:
                   builder     Manage builds
@@ -122,22 +123,23 @@ class ExecutorDocker(ExecutorBase):
 
         """
         # define environment when docker_host provided
-        env = dict()
+
+        env = {**os.environ}
         if self.docker_host:
             env['DOCKER_HOST'] = self.docker_host
 
+        # start with building command
         docker_cmd = ['docker']
         if docker_options:
             docker_cmd.extend(docker_options)
 
         if docker_command:
-            docker_cmd.append(command)
+            docker_cmd.append(docker_command)
 
         if docker_args:
             docker_cmd.extend(docker_args)
 
-        docker_command_builder = CommandBase(args=docker_args, stdout=command.stdout, stderr=command.stderr,
-                                             timeout=command.timeout, encoding=command.encoding, env=env)
+        docker_command_builder = CommandBase(args=docker_cmd, env=env)
 
         return docker_command_builder
 
@@ -153,11 +155,4 @@ class ExecutorDocker(ExecutorBase):
         execution = ExecutionAsyncio(cmd)
         await execution.run()
 
-        return execution
-
-    async def execute_docker_cli(self, docker_command: Optional[str] = None, docker_args: Optional[list] = None,
-                                 command: Optional[CommandBase] = None, docker_options: Optional[list] = None,
-                                 *args, **kwargs):
-        cmd = self.docker_command(*args, **kwargs)
-        execution = await self._execute(command=cmd, inside_container=False)
         return execution

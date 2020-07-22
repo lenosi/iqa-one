@@ -52,7 +52,7 @@ class ExecutionAsyncio(ExecutionBase):
         _stdout = asyncio.subprocess.PIPE if self.command.stdout else None
         _stderr = asyncio.subprocess.PIPE if self.command.stderr else None
 
-        self._proc = await asyncio.create_subprocess_exec(
+        self._proc = await asyncio.create_subprocess_shell(
             str(self.command),
             env=self.env,
             stdin=asyncio.subprocess.PIPE,

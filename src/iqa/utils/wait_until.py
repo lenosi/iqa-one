@@ -3,7 +3,7 @@ import timeit
 
 
 def wait_until(check, timeout, pause, clock=timeit.default_timer):
-    """Wait until a service is responsive."""
+    """Wait until..."""
 
     ref = clock()
     now = ref

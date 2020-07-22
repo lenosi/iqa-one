@@ -2,7 +2,7 @@ import logging
 
 import iqa.logger
 from abc import ABC, abstractmethod
-from typing import Optional, Union
+from typing import Optional
 
 from iqa.system.command.command_base import CommandBase
 from iqa.utils.timeout import TimeoutCallback

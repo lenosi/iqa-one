@@ -1,6 +1,5 @@
 import pytest
 
-from iqa.system.executor import ExecutionBase
 from iqa.system.executor.docker.executor_docker import ExecutorDocker
 from iqa.system.service.service import ServiceStatus
 from iqa.system.service.service_docker import ServiceDocker
@@ -23,19 +22,15 @@ class TestServiceDocker:
 
     @pytest.mark.asyncio
     async def test_service_start(self, service: ServiceDocker) -> None:
-        start: ExecutionBase = await service.start()
-        await start.wait()
-        assert service.status() == ServiceStatus.RUNNING
+        await service.start()
+        assert service.status == ServiceStatus.RUNNING
 
     @pytest.mark.asyncio
     async def test_service_restart(self, service: ServiceDocker) -> None:
-        restart: ExecutionBase = await service.restart()
-        await restart.wait()
-        assert service.status() == ServiceStatus.RUNNING
+        await service.restart()
+        assert service.status == ServiceStatus.RUNNING
 
     @pytest.mark.asyncio
     async def test_service_stop(self, service: ServiceDocker) -> None:
-        stop: ExecutionBase = await service.stop()
-        await stop.wait()
-        print(stop.stdout)
-        assert service.status() == ServiceStatus.STOPPED
+        await service.stop()
+        assert service.status == ServiceStatus.STOPPED

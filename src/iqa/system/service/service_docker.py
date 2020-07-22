@@ -4,9 +4,6 @@ from typing import Optional
 
 from docker.errors import APIError, NotFound
 
-from iqa.system.command.command_ansible import CommandBaseAnsible
-from iqa.system.command.command_base import CommandBase
-from iqa.system.executor.ansible.executor_ansible import ExecutorAnsible
 from iqa.system.executor.docker.executor_docker import ExecutorDocker
 from iqa.system.executor import ExecutionBase
 from iqa.system.service.service import Service, ServiceStatus
@@ -25,16 +22,18 @@ class ServiceDocker(Service):
     def __init__(self, name: str, executor: ExecutorDocker) -> None:
         super().__init__(name, executor)
         self.docker_host: Optional[str] = executor.docker_host
+        self.container = get_container(name=self.name)
 
     class ServiceDockerState(Enum):
         STARTED = ('start', 'started')
-        STOPPED = ('stop', 'stopped')
+        STOPPED = ('stop', 'exited')
         RESTARTED = ('restart', 'started')
 
         def __init__(self, system_state, ansible_state) -> None:
             self.system_state = system_state
             self.ansible_state = ansible_state
 
+    @property
     def status(self) -> ServiceStatus:
         """
         Returns the status based on status of container name.
@@ -42,17 +41,20 @@ class ServiceDocker(Service):
         :rtype: ServiceStatus
         """
         try:
-            container = get_container(name=self.name)
-            if not container:
+            self.container.reload()
+
+            if not self.container:
                 ServiceDocker._logger.debug('Service: %s - Status: UNKNOWN' % self.name)
                 return ServiceStatus.UNKNOWN
 
-            if container.status == 'running':
+            if self.container.status == 'running':
                 ServiceDocker._logger.debug('Service: %s - Status: RUNNING' % self.name)
                 return ServiceStatus.RUNNING
-            elif container.status == 'exited':
+
+            elif self.container.status == 'exited':
                 ServiceDocker._logger.debug('Service: %s - Status: STOPPED' % self.name)
                 return ServiceStatus.STOPPED
+
         except APIError or NotFound:
             ServiceDocker._logger.exception(
                 'Error retrieving status of docker container'
@@ -62,19 +64,13 @@ class ServiceDocker(Service):
         return ServiceStatus.UNKNOWN
 
     async def start(self) -> ExecutionBase:
-        return await self.executor.execute(
-            self._create_command(self.ServiceDockerState.STARTED)
-        )
+        return self.container.start()
 
     async def stop(self) -> ExecutionBase:
-        return await self.executor.execute(
-            self._create_command(self.ServiceDockerState.STOPPED)
-        )
+        return self.container.stop()
 
     async def restart(self) -> ExecutionBase:
-        return await self.executor.execute(
-            self._create_command(self.ServiceDockerState.RESTARTED)
-        )
+        return self.container.restart()
 
     def enable(self) -> Optional[ExecutionBase]:
         """
@@ -89,38 +85,3 @@ class ServiceDocker(Service):
         :return:
         """
         return None
-
-    def _create_command(self, service_state: ServiceDockerState) -> CommandBase:
-        """
-        Creates a Command instance based on executor type and state
-        that is specific to each type of command.
-        :param service_state:
-        :return:
-        """
-        if isinstance(self.executor, ExecutorAnsible):
-            state = service_state.ansible_state
-            restart = 'no'
-            if service_state == self.ServiceDockerState.RESTARTED:
-                restart = 'yes'
-
-            print(
-                'name=%s state=%s restart=%s docker_host=%s'
-                % (self.name, state, restart, self.docker_host)
-            )
-
-            docker_host_opt = (
-                'docker_host=%s' % self.docker_host if self.docker_host else ""
-            )
-            return CommandBaseAnsible(
-                'name=%s state=%s restart=%s %s'
-                % (self.name, state, restart, docker_host_opt),
-                ansible_module='docker_container',
-                stdout=True,
-                timeout=self.TIMEOUT,
-            )
-        elif isinstance(self.executor, ExecutorDocker):
-            state = service_state.system_state
-            # return CommandBase(['docker', state, self.executor.container_name])
-            return ExecutorDocker.docker_command(docker_command=state)
-        else:
-            return CommandBase([])

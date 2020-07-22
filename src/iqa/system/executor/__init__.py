@@ -28,11 +28,11 @@ def create_executor(implementation: str, **kwargs) -> ExecutorType:
 
     """
     try:
-        ex: Any = get_subclasses(
+        exc: Any = get_subclasses(
             given_name=implementation,
             in_class=ExecutorBase,
             in_class_property='implementation'
         )
-        return ex(**kwargs)  # type: ExecutorType
+        return exc(**kwargs)  # type: ExecutorType
     except ValueError:
         logger.error('Implementation of "%s" executor was not found!' % implementation)
